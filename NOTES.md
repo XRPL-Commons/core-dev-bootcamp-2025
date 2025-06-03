@@ -1,0 +1,1 @@
+1. For the testing homework. Have them run a test that they want, and then explain what the test does to everyone.
