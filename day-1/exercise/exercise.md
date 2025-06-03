@@ -1,0 +1,208 @@
+# Running Rippled in Standalone Mode
+
+## Step 1: Copy Configuration Files
+
+After successfully building rippled, you need to copy the configuration files to the build directory:
+
+```bash
+# Navigate to your build directory (if not already there)
+cd ~/projects/rippled/build
+
+# Copy the configuration folder
+cp ../config -r ./config/
+
+# Alternative: Create the config directory if it doesn't exist
+mkdir -p config
+cp ../config/* ./config/
+```
+
+## Step 2: Run Standalone Mode
+
+Choose one of the following options based on your needs:
+
+### Basic Standalone Mode
+```bash
+./rippled -a --config=./config/rippled.cfg
+```
+
+### Standalone Mode with Genesis Ledger
+```bash
+./rippled -a --config=./config/rippled.cfg ledger_file=./config/genesis.json
+```
+
+**Command Breakdown:**
+- `-a` or `--standalone`: Runs rippled in standalone mode (no network consensus)
+- `--config`: Specifies the configuration file path
+- `ledger_file`: (Optional) Loads a specific genesis ledger state
+
+## Step 3: Verify Rippled is Running
+
+Once started, rippled should display startup logs. Look for:
+- Server initialization messages
+- Port binding confirmations (typically WebSocket on port 6018, JSON-RPC on port 5015)
+- "Application starting" or similar success messages
+
+## Standalone Mode Interactions
+
+### Launch XRPL Explorer
+
+1. **Open the Explorer**: Navigate to https://explorer.xrplf.org/ws:localhost:6018
+   - This connects the web-based explorer to your local rippled instance
+   - The explorer will show real-time ledger data and transactions
+
+2. **Verify Connection**: 
+   - The explorer should show "Connected" status
+   - You should see ledger information updating
+   - If connection fails, ensure rippled is running and ports are accessible
+
+### Using the Explorer Command Interface
+
+The XRPL Explorer provides a convenient web interface for sending commands to your rippled node:
+
+1. **Access the Command Interface**: 
+   - Navigate to https://explorer.xrplf.org/ws:localhost:6018/command
+   - This opens the command console interface
+
+2. **Execute Server Commands**: 
+   You can enter rippled API commands directly in the web interface:
+
+   ```json
+   // Check server status
+   {
+     "command": "server_info"
+   }
+   ```
+
+   ```json
+   // Get current ledger information
+   {
+     "command": "ledger",
+     "ledger_index": "current"
+   }
+   ```
+
+   ```json
+   // Check account information (replace with actual address)
+   {
+     "command": "account_info",
+     "account": "rAccount..."
+   }
+   ```
+
+3. **Common Commands to Try**:
+   - `server_info` - View server status and configuration
+   - `ledger_current` - Get current ledger index
+   - `account_currencies` - List currencies for an account
+   - `gateway_balances` - View gateway balances
+   - `book_offers` - Check order book offers
+
+4. **Web Socket API Tool**
+
+   - https://xrpl.org/resources/dev-tools/websocket-api-tool#subscribe
+
+### Playground Setup and Usage
+
+#### Navigate to Playground Directory
+```bash
+# Open a new terminal session
+cd ~/core-dev-bootcamp-2025/playground
+
+# Install dependencies (if not already done)
+yarn install
+```
+
+#### Connect to Your Local Node
+```bash
+ts-node src/connect.ts
+```
+
+**Expected Output:**
+- Connection confirmation to localhost:6018
+- Server information (version, ledger index, etc.)
+- Network ID and other node details
+
+#### Fund Test Accounts
+```bash
+ts-node src/fund.ts
+```
+
+**What This Does:**
+- Creates new test accounts with XRP funding
+- In standalone mode, you can generate XRP without constraints
+- Displays account addresses and balances
+- Copy these addresses to use in the Explorer command interface
+
+#### Monitor Activity in Explorer
+After running the fund script:
+1. **Go to the Main Explorer**: https://explorer.xrplf.org/ws:localhost:6018
+2. **Check Recent Transactions**: You should see the funding transactions
+3. **Use the Command Interface**: Go to `/command` and query the funded accounts:
+   ```json
+   {
+     "method": "account_info",
+     "params": [{"account": "rYourFundedAccountAddress"}]
+   }
+   ```
+4. **Monitor Ledger Changes**: Watch as new ledgers close with your transactions
+
+#### Using Command Interface for Testing
+After creating test accounts and transactions, use the Explorer's `/command` interface to:
+
+1. **Query Transaction History**:
+   ```json
+   {
+     "command": "account_tx",
+     "account": "rYourAccountAddress"
+   }
+   ```
+
+2. **Check Account Lines**:
+   ```json
+   {
+     "command": "account_lines",
+     "account": "rYourAccountAddress"
+   }
+   ```
+
+3. **Validate Transactions**:
+   ```json
+   {
+     "command": "tx",
+     "transaction": "YourTransactionHash"
+   }
+   ```
+
+## Alternative Command Methods
+
+### Using cURL (Command Line)
+```bash
+# Check server status
+curl -X POST http://localhost:5015 -d '{"method": "server_info"}'
+
+# Get ledger information
+curl -X POST http://localhost:5015 -d '{"method": "ledger", "params": [{"ledger_index": "current"}]}'
+
+# List account info
+curl -X POST http://localhost:5015 -d '{"method": "account_info", "params": [{"account": "rAccount..."}]}'
+```
+
+### Using WebSocket (Advanced)
+```javascript
+// Connect via WebSocket for real-time data
+const ws = new WebSocket('ws://localhost:6018');
+ws.on('open', () => {
+  ws.send(JSON.stringify({
+    "method": "subscribe",
+    "streams": ["ledger"]
+  }));
+});
+```
+
+## Next Steps
+
+Once your standalone environment is running smoothly:
+1. Explore the playground scripts to understand XRPL interactions
+2. Use the Explorer's command interface to test API calls
+3. Develop and test your own applications against the local node
+4. Experiment with different transaction types and features
+5. Consider setting up a multi-node test network for advanced scenarios

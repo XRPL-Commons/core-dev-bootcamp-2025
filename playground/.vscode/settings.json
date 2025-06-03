@@ -1,0 +1,13 @@
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "cmake.configureOnOpen": false,
+  "cmake.sourceDirectory": "/Users/dustedfloor/projects/xrpl-labs/the-hooks-library/binaryen/test/lit",
+  "C_Cpp.errorSquiggles": "disabled"
+}
