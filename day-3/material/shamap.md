@@ -45,10 +45,114 @@ This document provides a detailed, code-based breakdown of the SHAMap data struc
 
 ## SHAMap Overview
 
-- SHAMap is a Merkle tree and a radix trie of radix 16 ([README](src/xrpld/shamap/README.md)).
-- It enables O(1) comparison of subtrees or entire trees by comparing hashes.
-- Used for storing transactions (with or without metadata) or account state; all leaves in a SHAMap are of a uniform type.
-- The root node is always a SHAMapInnerNode.
+SHAMap is a specialized data structure used in the XRP Ledger that combines features of:
+
+- **Merkle Tree**: Each non-leaf node is labeled with the hash of its children.
+- **Patricia Trie (Radix Tree)**: Efficient prefix tree with path compression.
+- **Hexary Tree**: Each inner node can have up to 16 children (one for each hex nibble).
+
+SHAMaps support fast, verifiable access to state and transaction data in a ledger.
+
+---
+
+## Data Structure
+
+### Node Types
+
+#### 1. `InnerNode`
+
+- Represents a branch point in the tree.
+- Contains up to 16 children (0–15), corresponding to hex nibbles.
+- Empty slots represent absent paths.
+- Stores:
+  - A bitmap or mask indicating which children are present.
+  - The hash of each present child.
+- Hash is computed from the ordered set of **all 16 child positions**.
+
+#### 2. `LeafNode`
+
+- Contains a single key-value pair (a `SHAMapItem`).
+- Represents the endpoint of a path in the tree.
+- Hash is computed from both the key and value with appropriate prefix.
+
+---
+
+### `SHAMapItem`
+
+Encapsulates the actual ledger data stored at a leaf node.
+
+- `key`: 256-bit hash used to place the item in the trie.
+- `value`: Serialized ledger object (e.g., Account, Offer, NFT).
+
+---
+
+### Tree Structure
+
+- Keys are 256-bit hashes → 64 hex nibbles → max depth = 64.
+- Each level corresponds to one hex digit (4 bits).
+- Nodes compress paths where possible (if only one child exists).
+- Leaf nodes appear conceptually at depth 64.
+
+---
+
+## Hash Calculation
+
+### InnerNode Hash
+
+**Critical**: InnerNode hashes **must include all 16 child positions** in order:
+
+```
+innerNodeHash = SHA512Half(
+    HashPrefixInnerNode +     // 4-byte prefix: 0x4D494E00
+    childHash[0] +            // 32 bytes (or zeros if empty)
+    childHash[1] +            // 32 bytes (or zeros if empty)
+    ...
+    childHash[15]             // 32 bytes (or zeros if empty)
+)
+```
+
+- Empty child positions contribute 32 zero bytes
+- Total input: 4 + (16 × 32) = 516 bytes
+- If node has no children, hash is zero (all zeros)
+
+### LeafNode Hash
+
+Depends on leaf type:
+
+**Account State Leaf:**
+
+```
+leafHash = SHA512Half(
+    HashPrefixLeafNode +      // 4-byte prefix: 0x4D4C4E00
+    itemData +                // Serialized account data
+    itemKey                   // 32-byte key
+)
+```
+
+**Transaction Leaf (no metadata):**
+
+```
+leafHash = SHA512Half(
+    HashPrefixTransactionID + // 4-byte prefix: 0x54584E00
+    transactionData           // Serialized transaction
+)
+```
+
+**Transaction Leaf (with metadata):**
+
+```
+leafHash = SHA512Half(
+    HashPrefixTxNode +        // 4-byte prefix: 0x534E4400
+    transactionData +         // Serialized transaction + metadata
+    transactionKey            // 32-byte transaction hash
+)
+```
+
+### Root Hash
+
+The root hash is simply the hash of the root InnerNode, calculated using the InnerNode hash algorithm above.
+
+- rippled README ([README](src/xrpld/shamap/README.md)).
 
 ---
 
@@ -342,3 +446,4 @@ This document provides a detailed, code-based breakdown of the SHAMap data struc
 - [detail/TaggedPointer.ipp](src/xrpld/shamap/detail/TaggedPointer.ipp)
 
 ---
+
