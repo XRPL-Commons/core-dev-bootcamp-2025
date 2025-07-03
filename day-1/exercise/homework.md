@@ -46,8 +46,8 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
    [ips]
    r.ripple.com 51235
    sahyadri.isrdc.in 51235
-   s1.ripple.com 51235
-   s2.ripple.com 51235
+   hubs.xrpkuwait.com 51235
+   hub.xrpl-commons.org 51235
    ```
 
 4. **Ensure proper database path:**
@@ -76,7 +76,24 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
    - Ledger sync progress
    - Any error messages
 
-### Task 4: Analyze Debug Logs
+### Task 4: Find Your Node on the Network
+1. **Get your node ID:**
+   ```bash
+   ./rippled server_info
+   ```
+   Look for the `pubkey_node` field in the response - this is your node's public key identifier.
+
+2. **View your node on the network:**
+   - Visit [https://livenet.xrpl.org/network/nodes](https://livenet.xrpl.org/network/nodes)
+   - Search for your node using the `pubkey_node` from the server_info response
+   - Take a screenshot or note the information displayed about your node
+
+3. **Document node visibility:**
+   - Is your node visible on the network explorer?
+   - What information is shown (uptime, version, location, etc.)?
+   - How long did it take for your node to appear after starting?
+
+### Task 5: Analyze Debug Logs
 1. Locate your debug log file (typically in `debug.log` or `logs/debug.log`)
 
 2. **Examine the following sections:**
@@ -95,6 +112,11 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
    ```
 
 ## 📝 Deliverables
+
+#### Node Visibility
+- Screenshot or description of your node on the network explorer
+- Your node's public key (pubkey_node)
+- Time taken for your node to appear on the network after startup
 
 #### Connection Analysis
 - How many peers did your node connect to initially?
@@ -123,6 +145,12 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
 - Review the peering information like peers, peer_disconnects, etc
 - Document the lag between your node and the network
 
+### Bonus 2: Node Monitoring
+- Compare your node's stats with other nodes on the network explorer
+- Monitor how your node's connectivity changes over time
+- Document any patterns in peer connections
+
 ## 📚 Resources
 - [Rippled Configuration Documentation](https://xrpl.org/docs/infrastructure/configuration/connect-your-rippled-to-the-xrp-test-net)
 - [XRPL Mainnet Explorer](https://livenet.xrpl.org/)
+- [XRPL Network Nodes](https://livenet.xrpl.org/network/nodes)
