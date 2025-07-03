@@ -47,6 +47,6 @@
 ---
 
 **If You Get Stuck:**
-- Ask your instructor or TA for help.
+- Ask your instructor for help.
 - Pair up with another team for a fresh perspective.
-- Focus on what you can trace—it’s okay if you don’t understand every line!
+- Focus on what you can trace. It’s okay if you don’t understand every line!
