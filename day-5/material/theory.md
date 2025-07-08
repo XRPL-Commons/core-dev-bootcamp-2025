@@ -129,15 +129,6 @@ It guarantees reliability and correctness, especially under high load or in comp
 
 ---
 
-## 11. Monitoring and Reporting
-
-Continuous **monitoring** tracks the health and performance of the overlay and its peers. **Reporting** provides insights for operators or automated systems.
-
-**Why monitor and report?**  
-This enables early detection of issues, informed decision-making, and ongoing optimization of the network.
-
----
-
 ## Conclusion
 
 Peering (Overlay) functionality is the backbone of distributed networks, enabling nodes to discover, connect, communicate, and cooperate efficiently and securely.
