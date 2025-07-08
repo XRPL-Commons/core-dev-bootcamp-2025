@@ -76,11 +76,18 @@ Helpers are utility classes and functions that make test code concise and expres
   ```cpp
   env(pay(alice, bob, USD(50)));
   ```
-- **account_set** (`account_set.cpp`/`account_set.h`): Sets account flags or properties.
+- **balance** (`balance.cpp`/`balance.h`): Returns the account balance.
   ```cpp
-  env(account_set(alice, asfRequireAuth));
+  // XRP
+  env.balance(alice);
+  // IOU
+  env.balance(alice, USD(50));
   ```
-- **flags** (`flags.cpp`/`flags.h`): Checks or sets account flags.
+- **fset** (`flags.cpp`/`flags.h`): Sets account flags or properties.
+  ```cpp
+  env(fset(alice, asfRequireAuth));
+  ```
+- **flags** (`flags.cpp`/`flags.h`): Checks for account flags.
   ```cpp
   env.require(flags(alice, asfRequireAuth));
   ```
@@ -271,8 +278,10 @@ Each test file typically contains a single test suite class.
 | fund        | Fund accounts with XRP                       | `env.fund(XRP(1000), alice);`        |
 | trust       | Create trust lines for IOUs                  | `env(trust(bob, USD(100)));`         |
 | pay         | Send payments                                | `env(pay(alice, bob, USD(50)));`     |
-| account_set | Set account flags                            | `env(account_set(alice, asfRequireAuth));` |
-| flags       | Check/set account flags                      | `env.require(flags(alice, asfRequireAuth));` |
+| balance     | Get account balance                          | `env.balance(alice);`                |
+| fset        | Set account flags                            | `env(fset(alice, asfRequireAuth));` |
+| flags       | Check account has flags                      | `env.require(flags(alice, asfRequireAuth));` |
+| nflags      | Check account no flags                       | `env.require(nflags(alice, asfRequireAuth));` |
 | require     | Assert ledger state                          | `env.require(balance(bob, USD(50)));`|
 | Feature     | Enable protocol amendments                   | `featureSingleAssetVault`            |
 | Suite       | Group and run test cases                     | `struct MyTestSuite : public suite`  |

@@ -75,7 +75,7 @@ Pick one of these test functions to analyze (or find another one you're interest
 
 ### From Other Test Files:
 - Look in `src/test/app/` for other test files
-- Examples: `Payment_test.cpp`, `TrustSet_test.cpp`, `Offer_test.cpp`
+- Examples: `DID_test.cpp`, `Check_test.cpp`, `Escrow_test.cpp`
 
 ---
 
