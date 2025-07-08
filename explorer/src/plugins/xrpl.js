@@ -3,13 +3,7 @@ import { XrplClient } from 'xrpl-client'
 export default {
   async install (Vue, options) {
     let _endpoint = process?.env?.VUE_APP_WSS_ENDPOINT
-    const customEndpoint = options.router?.options?.endpoint
-      ? options.router?.options?.endpoint
-      : typeof _endpoint === 'string' && _endpoint.match(/^\/[a-z0-9]/)
-        ? window.location.protocol.replace(/^http/, 'ws') + '//' + window.location.host + _endpoint
-        : typeof _endpoint === 'string' && _endpoint.match(/^:[0-9]+[/a-z0-9]{0,}/)
-          ? window.location.protocol.replace(/^http/, 'ws') + '//' + window.location.host.split(':')[0] + _endpoint
-          : ''
+    const customEndpoint = _endpoint
 
     // console.log({
     //   _endpoint,
@@ -34,7 +28,7 @@ export default {
       test: endpoint.match(/rippletest|\/testnet\.xrpl-labs/),
       xahaulive: endpoint.match(/xahau.*network/),
       xahautest: endpoint.match(/xahau.*test/),
-      custom: customEndpoint !== ''
+      custom: endpoint.match(/localhost/)
     }
 
     Vue.prototype.$net = net
