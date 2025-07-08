@@ -1,1 +1,0 @@
-Homework is the exercise for the next day. Allowing you to get a jump on the exercise.

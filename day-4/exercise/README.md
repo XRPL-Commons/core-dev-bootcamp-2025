@@ -1,98 +1,146 @@
-# 🐛 Bug Hunt Dev Challenge: Quantum Validator Exploit
-**Day 4 Homework Assignment**
+# XRPL Cryptography Deep Dive: Transaction Signing & Verification
 
----
+## 🎯 Exercise Overview
 
-## Challenge Overview
+This exercise will guide you through the XRPL (XRP Ledger) codebase to understand how transactions are cryptographically signed and verified. You'll explore the core security mechanisms that protect the network from fraudulent transactions.
 
-Your development team has been presented with a critical security scenario:
+### Learning Objectives
+- Understand the transaction signature verification pipeline
+- Identify cryptographic methods used in XRPL
+- Trace public key validation flows
+- Explore multi-signature implementation
+- Analyze security measures against replay attacks
 
-**The Situation:** You have obtained validator keys for an XRPL network and gained access to a quantum computer capable of breaking classical cryptographic algorithms (such as ECDSA and secp256k1).
+## 🔍 Quest Tasks
 
-**Your Mission:** Analyze and demonstrate how these combined capabilities could be used to exploit the XRPL system, considering both the cryptographic vulnerabilities and the consensus mechanism implications.
+### Task 1: Signature Verification Discovery
+**Objective**: Find where rippled verifies transaction signatures
 
----
+**Steps**:
+1. Start your investigation at `Transactor::apply()` in `src/ripple/app/tx/impl/Transactor.cpp`
+2. Follow the call chain through `preflight()` and `checkSign()`
+3. Identify the core verification function
 
-## Scenario Details
+**Questions to Answer**:
+- Which function performs the actual signature check?
+- What cryptographic method is used (ed25519, secp256k1, or both)?
+- How does the system handle different signature algorithms?
 
-### Given Resources:
-- **Validator Keys:** Complete access to one or more validator's private keys
-- **Quantum Computing Power:** Theoretical ability to break:
-  - secp256k1 elliptic curve cryptography
-  - ECDSA digital signatures
-  - Classical hash functions (with sufficient time)
-  - RSA encryption
+> **Note:**  
+> - `Transactor::checkSign()` is responsible for verifying ledger permissions, such as checking for the use of a `RegularKey` or a `SignerList` (multi-signature).  
+> - `STTx::checkSign()` performs the actual cryptographic signature verification.  
+> - The function `checkValidity` is also involved in checking the validity of the transaction and its signatures.
 
-### Attack Categories to Consider:
-1. **Direct Cryptographic Attacks**
-   - Signature forgery
-   - Transaction manipulation
-   - Double-spending scenarios
-   - Historical ledger rewriting
+### Task 2: Public Key Flow Analysis
+**Objective**: Trace how public keys are retrieved and validated
 
-2. **Consensus-Level Attacks**
-   - Validator impersonation
-   - Network trust undermining
-   - Byzantine fault exploitation
-   - Fork creation and manipulation
+**Investigation Points**:
+- How does the network retrieve the public key for a signing account?
+- Where is the public key stored in the ledger?
+- What validation steps ensure the public key is legitimate?
 
-3. **Network Infrastructure Attacks**
-   - Peer-to-peer communication compromise
-   - SSL/TLS session hijacking
-   - Node identity spoofing
+**Files to Examine**:
+- `src/ripple/protocol/STTx.cpp`
+- Account object handling in ledger code
+- Public key extraction logic
 
----
+### Task 3: Multi-Signature Deep Dive
+**Objective**: Understand multi-signature implementation
 
-## Guiding Questions
+**Research Areas**:
+- Where is multisig logic implemented?
+- How does the verification process change for multi-signed transactions?
+- What are the requirements for valid multi-signature combinations?
 
-### Attack Vectors
-- What specific actions could you take with validator keys and quantum decryption capabilities?
-- How would you leverage the XRPL's consensus mechanism (XRP Ledger Consensus Protocol) in your attack?
-- What role do the different cryptographic components (signing, hashing, encoding) play in potential vulnerabilities?
+**Key Questions**:
+- How many signatures are required vs. how many are provided?
+- How does the system handle partial signature verification?
+- What happens when signature thresholds aren't met?
 
-### Impact Assessment
-- How would these actions compromise the integrity, security, or operation of the XRPL network?
-- What would be the cascade effects on network participants (validators, users, applications)?
-- How might the attack affect network finality and transaction confirmation?
+### Task 4: Security Mechanisms (Bonus Challenge)
+**Objective**: Identify anti-fraud measures
 
-### Vulnerability Analysis
-- What are the most critical vulnerabilities exposed by quantum attacks in this context?
-- Which cryptographic primitives are most at risk?
-- How do validator privileges amplify the potential damage?
+**Security Analysis**:
+- How does the network prevent signature reuse (replay attacks)?
+- What mechanisms detect forged signatures?
+- How are sequence numbers used in signature validation?
 
-### Defense Strategies
-- What countermeasures or protocol changes could mitigate these quantum-enabled risks?
-- How could the network transition to quantum-resistant cryptography?
-- What operational security measures could limit validator key compromise?
+**Advanced Challenge**:
+- Design a modification to support post-quantum signature schemes
+- Consider backward compatibility and migration strategies
+- Identify performance implications
 
----
+## 🔧 Investigation Starting Points
 
-## Technical Focus Areas
+### Core Files to Examine
+```
+src/ripple/app/tx/impl/Transactor.cpp     # Transaction processing entry point
+src/ripple/protocol/STTx.cpp              # Transaction structure and validation
+src/ripple/protocol/PublicKey.h           # Public key handling
+src/ripple/protocol/SecretKey.h           # Sign & Verify handling
+```
 
-### Cryptographic Components to Analyze:
-- **Key Management:** SecretKey, PublicKey classes and their vulnerabilities
-- **Digital Signatures:** secp256k1 and ed25519 signature schemes
-- **Hash Functions:** SHA-256, SHA-512, RIPEMD-160 weaknesses
-- **Base58 Encoding:** Token encoding/decoding attack vectors
-- **SSL/TLS:** make_SSLContext and handshake security
+### Key Functions to Trace
+```cpp
+// Starting points for investigation
+Transactor::apply()           // Main transaction processing
+STTx::checkSign()            // Signature verification
+Transactor::checkSign()      // Permissions verification (RegularKey, SignerList)
+checkValidity()              // Transaction and signature validity
+verify()                     // Core crypto verification
+```
 
-### XRPL-Specific Targets:
-- **Consensus Process:** Validator voting and proposal mechanisms
-- **Transaction Processing:** Signature verification bypass
-- **Ledger History:** Retroactive transaction modification
-- **Network Identity:** Peer authentication and trust
+## 📝 Deliverables
 
-## Resources and References
+### Required Output
+Create a **technical write-up** (GitHub issue style) that includes:
 
-### Code References:
-- `src/libxrpl/protocol/SecretKey.cpp` - Key management vulnerabilities
-- `src/libxrpl/protocol/PublicKey.cpp` - Public key operations
-- `src/libxrpl/crypto/csprng.cpp` - Random number generation
-- `src/xrpld/overlay/detail/Handshake.cpp` - Network handshake process
-- Consensus protocol implementation files
+1. **Signature Verification Pipeline**
+   - Function call flow diagram
+   - Key decision points
+   - Error handling paths
 
-### Research Areas:
-- Post-quantum cryptography standards (NIST)
-- Quantum computing threat timeline
-- Blockchain quantum resistance research
-- XRPL technical documentation
+2. **Cryptographic Methods Analysis**
+   - Supported signature schemes
+   - Algorithm selection logic
+   - Performance characteristics
+
+3. **Public Key Validation Process**
+   - Key retrieval mechanism
+   - Validation steps
+   - Storage and caching
+
+4. **Multi-Signature Implementation**
+   - Architecture overview
+   - Verification differences
+   - Threshold handling
+
+5. **Security Measures**
+   - Anti-replay mechanisms
+   - Forgery detection
+   - Sequence number validation
+
+### Optional Enhancements
+- **Visual Diagram**: Flow chart showing signature validation path
+- **Annotated Code Snippets**: Key functions with explanatory comments
+- **Performance Analysis**: Benchmarking different signature schemes
+- **Post-Quantum Proposal**: Design document for quantum-resistant signatures
+
+## 🎯 Success Criteria
+
+Your investigation is complete when you can:
+- [ ] Explain the complete signature verification flow
+- [ ] Identify all cryptographic methods used
+- [ ] Trace public key validation end-to-end
+- [ ] Describe multi-signature handling
+- [ ] Analyze security mechanisms
+- [ ] Propose post-quantum modifications
+
+## 💡 Investigation Tips
+
+### Code Navigation Strategy
+1. **Start High-Level**: Begin at transaction processing entry points
+2. **Follow the Data**: Trace signature data through the system
+3. **Identify Abstractions**: Look for crypto interface boundaries
+4. **Check Error Paths**: Understand failure modes
+5. **Review Tests**: Unit tests often reveal implementation details
