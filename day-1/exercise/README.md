@@ -22,12 +22,12 @@ Choose one of the following options based on your needs:
 
 ### Basic Standalone Mode
 ```bash
-./rippled -a --config=./config/rippled.cfg
+./rippled -a --conf ./config/rippled.cfg
 ```
 
 ### Standalone Mode with Genesis Ledger
 ```bash
-./rippled -a --config=./config/rippled.cfg ledger_file=./config/genesis.json
+./rippled -a --conf ./config/rippled.cfg --ledgerfile ./config/genesis.json
 ```
 
 **Command Breakdown:**
