@@ -39,20 +39,20 @@ Choose one of the following options based on your needs:
 
 Once started, rippled should display startup logs. Look for:
 - Server initialization messages
-- Port binding confirmations (typically WebSocket on port 6018, JSON-RPC on port 5015)
+- Port binding confirmations (typically WebSocket on port 6008, JSON-RPC on port 5005)
 - "Application starting" or similar success messages
 
 ## Standalone Mode Interactions
 
 ### Launch XRPL Explorer
 
-1. **Open the Explorer**: Navigate to https://explorer.xrplf.org/ws:localhost:6018
+1. **Open the Explorer**: Navigate to https://explorer.xrplf.org/ws:localhost:6008
    - This connects the web-based explorer to your local rippled instance
    - The explorer will show real-time ledger data and transactions
 
 2. **Verify Connection**: 
-   - The explorer should show "Connected" status
-   - You should see ledger information updating
+   - The explorer should show "Waiting for the next ledger to close..." status
+   - Standalone does not make forward progress. You can make your own forward progress by pressing the "Close Ledger" button.
    - If connection fails, ensure rippled is running and ports are accessible
 
 ### Using the Explorer Command Interface
@@ -60,7 +60,7 @@ Once started, rippled should display startup logs. Look for:
 The XRPL Explorer provides a convenient web interface for sending commands to your rippled node:
 
 1. **Access the Command Interface**: 
-   - Navigate to https://explorer.xrplf.org/ws:localhost:6018/command
+   - Navigate to https://explorer.xrplf.org/ws:localhost:6008/command
    - This opens the command console interface
 
 2. **Execute Server Commands**: 
@@ -117,7 +117,7 @@ ts-node src/connect.ts
 ```
 
 **Expected Output:**
-- Connection confirmation to localhost:6018
+- Connection confirmation to localhost:6008
 - Server information (version, ledger index, etc.)
 - Network ID and other node details
 
@@ -134,7 +134,7 @@ ts-node src/fund.ts
 
 #### Monitor Activity in Explorer
 After running the fund script:
-1. **Go to the Main Explorer**: https://explorer.xrplf.org/ws:localhost:6018
+1. **Go to the Main Explorer**: https://explorer.xrplf.org/ws:localhost:6008
 2. **Check Recent Transactions**: You should see the funding transactions
 3. **Use the Command Interface**: Go to `/command` and query the funded accounts:
    ```json
@@ -177,19 +177,19 @@ After creating test accounts and transactions, use the Explorer's `/command` int
 ### Using cURL (Command Line)
 ```bash
 # Check server status
-curl -X POST http://localhost:5015 -d '{"method": "server_info"}'
+curl -X POST http://localhost:5005 -d '{"method": "server_info"}'
 
 # Get ledger information
-curl -X POST http://localhost:5015 -d '{"method": "ledger", "params": [{"ledger_index": "current"}]}'
+curl -X POST http://localhost:5005 -d '{"method": "ledger", "params": [{"ledger_index": "current"}]}'
 
 # List account info
-curl -X POST http://localhost:5015 -d '{"method": "account_info", "params": [{"account": "rAccount..."}]}'
+curl -X POST http://localhost:5005 -d '{"method": "account_info", "params": [{"account": "rAccount..."}]}'
 ```
 
 ### Using WebSocket (Advanced)
 ```javascript
 // Connect via WebSocket for real-time data
-const ws = new WebSocket('ws://localhost:6018');
+const ws = new WebSocket('ws://localhost:6008');
 ws.on('open', () => {
   ws.send(JSON.stringify({
     "method": "subscribe",
