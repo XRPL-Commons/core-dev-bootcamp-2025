@@ -75,7 +75,7 @@ pyenv install 3.10-dev
 pyenv global 3.10-dev
 eval "$(pyenv init -)"
 
-# Install Conan package manager
+# Install Conan package manager & cmake
 pip install 'conan<2'
 pip install 'cmake<4'
 ```
