@@ -38,7 +38,10 @@ The Field ID is a compact encoding of the type code and field code:
 UInt32 values are serialized as 4 bytes in big-endian format:
 
 - Value: 12345 (decimal)
-- Hex: 0x00003039
+- **Use the XRPL Hex Visualizer** to convert: https://transia-rnd.github.io/xrpl-hex-visualizer/
+  - Enter `12345` in the input field
+  - Look for the **uint32: BE** result in the conversion output
+  - The result will be `00003039` (already properly formatted as 4 bytes)
 - Binary: `00 00 30 39` (4 bytes, big-endian)
 
 ### Step 4: Combine Field ID + Value
@@ -51,25 +54,40 @@ Complete serialization:
 ## Your Task
 
 1. **Verify the calculation above** - work through each step manually
-2. **Calculate serialization for different values**:
+2. **Calculate serialization for different values** (use the hex visualizer for conversions):
    - sfSequence = 1
    - sfSequence = 255 
    - sfSequence = 65535
    - sfSequence = 4294967295 (max UInt32)
 
-3. **Use the XRPL Binary Visualizer** to verify your answers:
-   - Visit: https://transia-rnd.github.io/xrpl-binary-visualizer/
-   - Enter your hex values and see the parsed output
-   - Verify the field name shows as "Sequence" and the value matches
+### Using the Tools
+
+**For decimal-to-hex conversion:**
+- Visit: https://transia-rnd.github.io/xrpl-hex-visualizer/
+- Enter your decimal value in the input field
+- Look for the **uint32: BE** result in the conversion output
+- This gives you the properly formatted 4-byte big-endian hex representation
+
+**For verification:**
+- Visit: https://transia-rnd.github.io/xrpl-binary-visualizer/
+- Enter your complete serialized hex string
+- Verify the field name shows as "Sequence" and the value matches
 
 ## Expected Results
 
-| Value | Hex Value | Field ID | Complete Serialization |
-|-------|-----------|----------|------------------------|
-| 1 | 0x00000001 | 0x24 | `0x2400000001` |
-| 255 | 0x000000FF | 0x24 | `0x24000000FF` |
-| 65535 | 0x0000FFFF | 0x24 | `0x240000FFFF` |
-| 4294967295 | 0xFFFFFFFF | 0x24 | `0x24FFFFFFFF` |
+| Value | uint32: BE from Hex Visualizer | Field ID | Complete Serialization |
+|-------|--------------------------------|----------|------------------------|
+| 1 | `00000001` | 0x24 | `0x2400000001` |
+| 255 | `000000FF` | 0x24 | `0x24000000FF` |
+| 65535 | `0000FFFF` | 0x24 | `0x240000FFFF` |
+| 4294967295 | `FFFFFFFF` | 0x24 | `0x24FFFFFFFF` |
+
+## Step-by-Step Workflow
+
+1. **Enter decimal value** in the hex visualizer
+2. **Use the uint32: BE result** (this is already properly formatted as 4 bytes)
+3. **Prepend Field ID** (0x24 for sfSequence)
+4. **Verify** using the binary visualizer
 
 ## Verification Using XRPL Binary Visualizer
 
@@ -116,13 +134,13 @@ This means:
 
 Since Field Code = 17 ≥ 16, we need 2 bytes:
 - **First byte**: Type code in high nibble, 0 in low nibble = `0x20`
-- **Second byte**: Field code = `0x11` (17 in hex)
+- **Second byte**: Field code = `0x11` (use hex visualizer: 17 → `11`)
 - **Field ID**: `0x2011` (2 bytes total)
 
 ### Complete Serialization: sfDestinationTag = 42
 
 - Field ID: `0x2011` (2 bytes)
-- Value: `0x0000002A` (4 bytes, big-endian)
+- Value: Use hex visualizer, get **uint32: BE** result for 42: `0000002A`
 - **Final Result**: `0x20110000002A` (6 bytes total)
 
 ### Comparison Table
@@ -140,13 +158,15 @@ Calculate the serialization for these UInt32 fields with field codes ≥ 16:
 2. **sfSourceTag** (Type 2, Field 18) = 12345
 3. **sfTransferFee** (Type 2, Field 19) = 1000
 
+**Hint**: Use the hex visualizer to convert the decimal values (use the **uint32: BE** result), then calculate the field IDs.
+
 ### Expected Results
 
-| Field | Field Code | Field ID | Value | Complete Serialization |
-|-------|------------|----------|-------|------------------------|
-| sfDestinationTag | 17 | `0x2011` | 999999 | `0x2011000F423F` |
-| sfSourceTag | 18 | `0x2012` | 12345 | `0x201200003039` |
-| sfTransferFee | 19 | `0x2013` | 1000 | `0x2013000003E8` |
+| Field | Field Code | Field ID | Value (uint32: BE) | Complete Serialization |
+|-------|------------|----------|-------------------|------------------------|
+| sfDestinationTag | 17 | `0x2011` | `000F423F` | `0x2011000F423F` |
+| sfSourceTag | 18 | `0x2012` | `00003039` | `0x201200003039` |
+| sfTransferFee | 19 | `0x2013` | `000003E8` | `0x2013000003E8` |
 
 ## Extension Exercise
 
@@ -157,12 +177,23 @@ Try serializing a complete minimal transaction with these fields:
 - sfAmount = 1000000 (1 XRP in drops)
 - sfDestinationTag = 42
 
-Use the visualizer to verify your complete transaction serialization!
+Use both visualizers to convert values and verify your complete transaction serialization!
 
 ## Key Takeaways
 
 - Field serialization = Field ID + Value
 - Field ID encoding depends on type code and field code values
 - UInt32 values are always 4 bytes in big-endian format
-- The XRPL Binary Visualizer is invaluable for verification
+- **Use the XRPL Hex Visualizer** for easy decimal ↔ hex conversion
+- **Use the XRPL Binary Visualizer** for verification and debugging
 - Understanding serialization is crucial for transaction signing and validation
+
+## Tool Summary
+
+- **Hex Visualizer**: https://transia-rnd.github.io/xrpl-hex-visualizer/
+  - Enter decimal values and use the **uint32: BE** result
+  - No need to manually pad - the tool provides proper 4-byte formatting
+  
+- **Binary Visualizer**: https://transia-rnd.github.io/xrpl-binary-visualizer/
+  - Parse and verify complete serialized data
+  - Shows field names and decoded values

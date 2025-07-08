@@ -1,5 +1,3 @@
-
-
 1. Network & Servers
 
 - https://xrpl.org/docs/concepts/networks-and-servers
