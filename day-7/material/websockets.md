@@ -304,7 +304,7 @@ void BaseWSPeer<Handler, Impl>::on_read(error_code const& ec)
 
 ### Message Processing and onWSMessage
 
-- The handler's `onWSMessage` ([src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the incoming message:
+- The handler's `onWSMessage` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the incoming message:
 
 ```cpp
 void ServerHandler::onWSMessage(
@@ -456,7 +456,7 @@ void BaseWSPeer<Handler, Impl>::close(boost::beast::websocket::close_reason cons
 
 ### WSInfoSub
 
-- `WSInfoSub` ([src/xrpld/rpc/detail/WSInfoSub.h.txt]) is a specialized subscription object for WebSocket sessions.
+- `WSInfoSub` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h.txt]) is a specialized subscription object for WebSocket sessions.
 - It holds a weak pointer to the associated `WSSession` and user/forwarded-for information.
 - The `send` method transmits a JSON message to the WebSocket client:
 
@@ -482,7 +482,7 @@ void send(Json::Value const& jv, bool) override {
 
 ### onHandoff and WebSocket Upgrade
 
-- `ServerHandler::onHandoff` ([src/xrpld/rpc/detail/ServerHandler.cpp.txt]) handles HTTP requests that may be upgraded to WebSocket:
+- `ServerHandler::onHandoff` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) handles HTTP requests that may be upgraded to WebSocket:
 
 ```cpp
 if (!is_ws)
@@ -525,7 +525,7 @@ return handoff;
 ### onWSMessage and processSession
 
 - `onWSMessage` (see above) posts the message to the job queue for processing.
-- `processSession` ([src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the request and returns a JSON result, which is sent back to the client.
+- `processSession` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the request and returns a JSON result, which is sent back to the client.
 
 ---
 
@@ -547,5 +547,5 @@ return handoff;
 - [include/xrpl/server/detail/BaseWSPeer.h.txt]
 - [include/xrpl/server/detail/PlainWSPeer.h.txt]
 - [include/xrpl/server/detail/SSLWSPeer.h.txt]
-- [src/xrpld/rpc/detail/ServerHandler.cpp.txt]
-- [src/xrpld/rpc/detail/WSInfoSub.h.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h.txt]

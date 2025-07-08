@@ -5,7 +5,7 @@
 **Your Role:** You're a new transaction just submitted to a `rippled` server
 
 ### Key Implementation Files:
-- **File**: `src/xrpld/overlay/detail/PeerImp.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp`
 - **Function**: `onMessage()` and `handleTransaction()`
 - **Lines**: ~1200-1300
 
@@ -39,7 +39,7 @@ void PeerImp::handleTransaction(
 **Your Role:** You're now in the server's open ledger awaiting consensus
 
 ### Key Implementation Files:
-- **File**: `src/xrpld/app/ledger/OpenLedger.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/OpenLedger.cpp`
 - **Function**: `apply_one()` and `modify()`
 - **Lines**: ~200-300
 
@@ -53,7 +53,7 @@ auto OpenLedger::apply_one(
     beast::Journal j) -> std::pair<TER, bool>
 ```
 
-- **File**: `src/xrpld/app/misc/detail/TxQ.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/TxQ.cpp`
 - **Function**: `apply()` and `canBeHeld()`
 - **Lines**: ~400-500
 
@@ -75,7 +75,7 @@ auto OpenLedger::apply_one(
 **Your Role:** You're part of an initial proposal when the ledger closes
 
 ### Key Implementation Files:
-- **File**: `src/xrpld/app/consensus/RCLConsensus.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp`
 - **Function**: `timerEntry()` and proposal creation
 - **Lines**: ~800-900
 
@@ -83,7 +83,7 @@ auto OpenLedger::apply_one(
 void RCLConsensus::timerEntry(NetClock::time_point const& now)
 ```
 
-- **File**: `src/xrpld/consensus/Consensus.ipp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.ipp`
 - **Function**: `startRound()`
 - **Lines**: ~400-500
 
@@ -105,7 +105,7 @@ void RCLConsensus::timerEntry(NetClock::time_point const& now)
 **Your Role:** You're being negotiated through multiple consensus rounds
 
 ### Key Implementation Files:
-- **File**: `src/xrpld/consensus/Consensus.ipp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.ipp`
 - **Function**: `updateOurPositions()` and `haveConsensus()`
 - **Lines**: ~600-700
 
@@ -115,7 +115,7 @@ void Consensus<Adaptor>::updateOurPositions(
     NetClock::time_point const& now)
 ```
 
-- **File**: `src/xrpld/app/misc/NetworkOPs.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NetworkOPs.cpp`
 - **Function**: `processTrustedProposal()`
 - **Lines**: ~1800-1900
 
@@ -137,7 +137,7 @@ void Consensus<Adaptor>::updateOurPositions(
 **Your Role:** You're in the final accepted transaction set
 
 ### Key Implementation Files:
-- **File**: `src/xrpld/app/ledger/BuildLedger.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/BuildLedger.cpp`
 - **Function**: `buildLedger()`
 - **Lines**: ~100-200
 
@@ -152,7 +152,7 @@ std::shared_ptr<Ledger> buildLedger(
     CanonicalTXSet& retriableTxs)
 ```
 
-- **File**: `src/xrpld/app/consensus/RCLValidations.cpp`
+- **File**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.cpp`
 - **Function**: `doValidation()`
 - **Lines**: ~200-300
 
@@ -172,13 +172,13 @@ std::shared_ptr<Ledger> buildLedger(
 ## Key Reference Points for Code Exploration
 
 ### Network Layer Functions:
-- **Overlay Network**: `src/xrpld/overlay/detail/PeerImp.cpp`
-- **Peer Protocol**: `src/xrpld/overlay/README.md` (documentation)
+- **Overlay Network**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp`
+- **Peer Protocol**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/README.md` (documentation)
 - **Connection Management**: `PeerImp` constructor and message handlers
 
 ### Consensus Layer Functions:
-- **Validator Trust**: `src/xrpld/app/misc/ValidatorList.cpp`
-- **Proposal Mechanisms**: `src/xrpld/consensus/Consensus.ipp`
+- **Validator Trust**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/ValidatorList.cpp`
+- **Proposal Mechanisms**: `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.ipp`
 - **Trust Relationships**: `NetworkOPs::processTrustedProposal()`
 
 ### Validation Points:
@@ -190,7 +190,7 @@ std::shared_ptr<Ledger> buildLedger(
 1. `NetworkOPs::processTransaction()` - Entry point
 2. `TxQ::apply()` - Queue management  
 3. `OpenLedger::apply_one()` - Open ledger application
-4. `apply()` in `src/xrpld/app/tx/apply.cpp` - Core apply logic
+4. `apply()` in `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/apply.cpp` - Core apply logic
 5. Transaction-specific `doApply()` methods (Payment, Offer, etc.)
 
 ### Status Tracking:

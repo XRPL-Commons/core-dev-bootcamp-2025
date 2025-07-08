@@ -40,8 +40,8 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 ## Ledger Overview
 
 - The XRPL ledger is the authoritative record of the network's state at a given point in time. It contains all account balances, offers, escrows, and other objects, as well as a record of all transactions included in that ledger.
-- Every server always has an open ledger. All received new transactions are applied to the open ledger. The open ledger can't close until consensus is reached on the previous ledger and either there is at least one transaction or the ledger's close time has been reached ([README](src/xrpld/app/ledger/README.md)).
-- The ledger header contains the sequence number, parent hash, hash of the previous ledger, hash of the root node of the state tree, and other metadata ([README](src/xrpld/app/ledger/README.md)).
+- Every server always has an open ledger. All received new transactions are applied to the open ledger. The open ledger can't close until consensus is reached on the previous ledger and either there is at least one transaction or the ledger's close time has been reached ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/README.md)).
+- The ledger header contains the sequence number, parent hash, hash of the previous ledger, hash of the root node of the state tree, and other metadata ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/README.md)).
 
 ---
 
@@ -49,7 +49,7 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 
 ### Ledger Class
 
-- Defined in [Ledger.h](src/xrpld/app/ledger/Ledger.h.txt) and implemented in [Ledger.cpp](src/xrpld/app/ledger/Ledger.cpp.txt).
+- Defined in [Ledger.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.h.txt) and implemented in [Ledger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.cpp.txt).
 - Represents a single ledger instance, managing state and transaction data.
 - Key members:
   - `LedgerInfo info_`: Metadata about the ledger (sequence, hash, parent hash, close time, etc.).
@@ -64,7 +64,7 @@ This document provides a detailed, code-based breakdown of the Ledger functional
   - When constructed, the ledger's hash is calculated and stored in `info_.hash`.
 - Immutability:
   - Once a ledger is finalized, `setImmutable()` is called, which sets `mImmutable = true` and marks the SHAMaps as immutable.
-  - Only immutable ledgers can be set in a `LedgerHolder` ([LedgerHolder.h](src/xrpld/app/ledger/LedgerHolder.h.txt)).
+  - Only immutable ledgers can be set in a `LedgerHolder` ([LedgerHolder.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHolder.h.txt)).
 
 ### LedgerInfo
 
@@ -94,7 +94,7 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 
 ### LedgerHolder
 
-- Defined in [LedgerHolder.h](src/xrpld/app/ledger/LedgerHolder.h.txt).
+- Defined in [LedgerHolder.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHolder.h.txt).
 - Manages a thread-safe, immutable shared pointer to a Ledger object.
 - Methods:
   - `set(std::shared_ptr<Ledger const> ledger)`: Sets a new immutable ledger.
@@ -103,7 +103,7 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 
 ### LedgerHistory
 
-- Defined in [LedgerHistory.h](src/xrpld/app/ledger/LedgerHistory.h.txt) and implemented in [LedgerHistory.cpp](src/xrpld/app/ledger/LedgerHistory.cpp.txt).
+- Defined in [LedgerHistory.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.h.txt) and implemented in [LedgerHistory.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp.txt).
 - Manages the storage, retrieval, and validation of ledger objects.
 - Maintains:
   - `m_ledgers_by_hash`: Cache of ledgers by hash.
@@ -120,20 +120,20 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 
 ### LedgerMaster
 
-- Defined in [LedgerMaster.h](src/xrpld/app/ledger/LedgerMaster.h.txt) and implemented in [LedgerMaster.cpp](src/xrpld/app/ledger/detail/LedgerMaster.cpp.txt).
+- Defined in [LedgerMaster.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerMaster.h.txt) and implemented in [LedgerMaster.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerMaster.cpp.txt).
 - Central manager for ledger state, acquisition, validation, and publication.
 - Tracks:
   - Last published ledger (`mPubLedger`).
   - Last validated ledger (`mValidLedger`).
   - Ledger history (`mLedgerHistory`).
-- Orchestrates the acquisition of missing historical ledgers via `doAdvance()` and `fetchForHistory()` ([README](src/xrpld/app/ledger/README.md)).
-- Example: When a gap is detected (e.g., ledgers 603 and 600 are present, but 601 and 602 are missing), `LedgerMaster` requests ledger 602 first, then back-fills 601 ([README](src/xrpld/app/ledger/README.md)).
+- Orchestrates the acquisition of missing historical ledgers via `doAdvance()` and `fetchForHistory()` ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/README.md)).
+- Example: When a gap is detected (e.g., ledgers 603 and 600 are present, but 601 and 602 are missing), `LedgerMaster` requests ledger 602 first, then back-fills 601 ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/README.md)).
 
 ### InboundLedgers and InboundLedger
 
-- [InboundLedgers.h](src/xrpld/app/ledger/InboundLedgers.h.txt) defines the abstract interface for managing inbound ledger acquisitions.
-- [InboundLedgers.cpp](src/xrpld/app/ledger/detail/InboundLedgers.cpp.txt) implements `InboundLedgersImp`, which manages ongoing acquisitions, tracks failures, and processes incoming data.
-- [InboundLedger.cpp](src/xrpld/app/ledger/detail/InboundLedger.cpp.txt) implements `InboundLedger`, which handles the acquisition and assembly of a specific ledger.
+- [InboundLedgers.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/InboundLedgers.h.txt) defines the abstract interface for managing inbound ledger acquisitions.
+- [InboundLedgers.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedgers.cpp.txt) implements `InboundLedgersImp`, which manages ongoing acquisitions, tracks failures, and processes incoming data.
+- [InboundLedger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedger.cpp.txt) implements `InboundLedger`, which handles the acquisition and assembly of a specific ledger.
 - Acquisition process:
   - `InboundLedgers::acquire(hash, seq, reason)` is called to acquire a ledger.
   - If already in progress, returns the existing `InboundLedger`.
@@ -376,7 +376,7 @@ For each ledger entry type, the fields are specified as required (`soeREQUIRED`)
 ## Ledger RPC and Query Handlers
 
 - The RPC layer provides handlers for querying ledger data.
-- [LedgerHandler.h](src/xrpld/rpc/handlers/LedgerHandler.h.txt) defines the handler for the `ledger` RPC command.
+- [LedgerHandler.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LedgerHandler.h.txt) defines the handler for the `ledger` RPC command.
 - [LedgerEntry.cpp.txt] implements the handler for the `ledger_entry` RPC command, supporting all entry types.
 - [RPCHelpers.cpp.txt] provides helper functions for resolving ledgers by hash, index, or shortcut (current, closed, validated), and for injecting ledger entry data into JSON responses.
 - The handlers support both JSON and binary output formats, and provide detailed error handling for malformed requests or missing data.
@@ -417,20 +417,20 @@ For each ledger entry type, the fields are specified as required (`soeREQUIRED`)
 
 ## References to Source Code
 
-- [Ledger.h](src/xrpld/app/ledger/Ledger.h.txt)
-- [Ledger.cpp](src/xrpld/app/ledger/Ledger.cpp.txt)
-- [LedgerHolder.h](src/xrpld/app/ledger/LedgerHolder.h.txt)
-- [LedgerHistory.h](src/xrpld/app/ledger/LedgerHistory.h.txt)
-- [LedgerHistory.cpp](src/xrpld/app/ledger/LedgerHistory.cpp.txt)
-- [LedgerMaster.h](src/xrpld/app/ledger/LedgerMaster.h.txt)
-- [LedgerMaster.cpp](src/xrpld/app/ledger/detail/LedgerMaster.cpp.txt)
-- [InboundLedgers.h](src/xrpld/app/ledger/InboundLedgers.h.txt)
-- [InboundLedgers.cpp](src/xrpld/app/ledger/detail/InboundLedgers.cpp.txt)
-- [InboundLedger.cpp](src/xrpld/app/ledger/detail/InboundLedger.cpp.txt)
+- [Ledger.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.h.txt)
+- [Ledger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.cpp.txt)
+- [LedgerHolder.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHolder.h.txt)
+- [LedgerHistory.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.h.txt)
+- [LedgerHistory.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp.txt)
+- [LedgerMaster.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerMaster.h.txt)
+- [LedgerMaster.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerMaster.cpp.txt)
+- [InboundLedgers.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/InboundLedgers.h.txt)
+- [InboundLedgers.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedgers.cpp.txt)
+- [InboundLedger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedger.cpp.txt)
 - [ledger_entries.macro](include/xrpl/protocol/detail/ledger_entries.macro.txt)
-- [LedgerHandler.h](src/xrpld/rpc/handlers/LedgerHandler.h.txt)
-- [LedgerEntry.cpp](src/xrpld/rpc/handlers/LedgerEntry.cpp.txt)
-- [RPCHelpers.cpp](src/xrpld/rpc/detail/RPCHelpers.cpp.txt)
-- [LedgerCleaner.cpp](src/xrpld/app/ledger/detail/LedgerCleaner.cpp.txt)
-- [Node.cpp](src/xrpld/app/rdb/backend/detail/Node.cpp.txt)
-- [SQLiteDatabase.cpp](src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp.txt)
+- [LedgerHandler.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LedgerHandler.h.txt)
+- [LedgerEntry.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LedgerEntry.cpp.txt)
+- [RPCHelpers.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/RPCHelpers.cpp.txt)
+- [LedgerCleaner.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerCleaner.cpp.txt)
+- [Node.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/Node.cpp.txt)
+- [SQLiteDatabase.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp.txt)

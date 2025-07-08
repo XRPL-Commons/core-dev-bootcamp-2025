@@ -88,7 +88,7 @@ Your development team has been presented with a critical security scenario:
 - `src/libxrpl/protocol/SecretKey.cpp` - Key management vulnerabilities
 - `src/libxrpl/protocol/PublicKey.cpp` - Public key operations
 - `src/libxrpl/crypto/csprng.cpp` - Random number generation
-- `src/xrpld/overlay/detail/Handshake.cpp` - Network handshake process
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp` - Network handshake process
 - Consensus protocol implementation files
 
 ### Research Areas:

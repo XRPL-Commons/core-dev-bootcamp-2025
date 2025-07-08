@@ -53,7 +53,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ## Transactor Overview
 
-- The `Transactor` class is the base class for all transaction types in the XRPL server ([Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt)).
+- The `Transactor` class is the base class for all transaction types in the XRPL server ([Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h)).
 - It encapsulates the logic for applying a transaction to the ledger, including validation, fee deduction, sequence/ticket management, signature and permission checks, and the orchestration of transaction-specific logic via the `doApply()` method.
 - All transaction types (e.g., Payment, OfferCreate, EscrowCreate, etc.) inherit from `Transactor` and implement their own `doApply()`.
 
@@ -63,7 +63,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Core Members and Construction
 
-- **Members** ([Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt)):
+- **Members** ([Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h)):
   - `ApplyContext& ctx_`: The context for transaction application, including the transaction, ledger view, flags, etc.
   - `beast::Journal const j_`: Logging facility.
   - `AccountID const account_`: The account submitting the transaction.
@@ -76,7 +76,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Lifecycle Methods
 
-- **operator()()**: Orchestrates the full transaction lifecycle ([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt)).
+- **operator()()**: Orchestrates the full transaction lifecycle ([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp)).
 - **apply()**: Applies the transaction to the ledger, handling generic steps before delegating to `doApply()`.
 - **doApply()**: Pure virtual; implemented by derived classes for transaction-specific logic.
 - **preCompute()**: Virtual; can be overridden for pre-application computation.
@@ -94,7 +94,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 - **Purpose**: Performs stateless and context-free checks on the transaction, such as field presence, type correctness, and basic invariants.
 - **Where Called**: The preflight step is invoked before any ledger state is accessed, typically as the first step in transaction processing.
-- **How Called**: The function `invoke_preflight(PreflightContext const& ctx)` in [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt) dispatches to the static `preflight` method of the transaction type using the transaction's type field.
+- **How Called**: The function `invoke_preflight(PreflightContext const& ctx)` in [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp) dispatches to the static `preflight` method of the transaction type using the transaction's type field.
 - **Steps**:
   - The transaction type is determined.
   - The corresponding transaction class's static `preflight` method is called with the `PreflightContext`.
@@ -105,7 +105,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 - **Purpose**: Performs contextual checks that require access to the current ledger state, such as account existence, balance, and reserve requirements.
 - **Where Called**: The preclaim step is invoked after preflight, but before the transaction is actually applied to the ledger.
-- **How Called**: The function `invoke_preclaim(PreclaimContext const& ctx)` in [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt) dispatches to the static `preclaim` method of the transaction type.
+- **How Called**: The function `invoke_preclaim(PreclaimContext const& ctx)` in [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp) dispatches to the static `preclaim` method of the transaction type.
 - **Steps**:
   - The transaction type is determined.
   - The corresponding transaction class's static `preclaim` method is called with the `PreclaimContext`.
@@ -115,11 +115,11 @@ This document provides a detailed, code-based breakdown of the Transactor system
 #### Orchestration
 
 - The transaction processing pipeline first calls preflight, then preclaim, and only if both succeed does it proceed to the main application logic (`Transactor::operator()()` and `apply()`).
-- These steps are orchestrated in [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt) and are required for all transaction types.
+- These steps are orchestrated in [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp) and are required for all transaction types.
 
 ### Preflight Validation Pipeline
 
-- The preflight process is further divided into three stages: `preflight0`, `preflight1`, and `preflight2` ([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt)):
+- The preflight process is further divided into three stages: `preflight0`, `preflight1`, and `preflight2` ([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp)):
   - **preflight0**: Initial stateless checks (e.g., transaction size, field presence).
   - **preflight1**: Additional stateless checks (e.g., flags, network ID).
   - **preflight2**: Signature and local validity checks.
@@ -127,7 +127,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::operator()()
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Logs the transaction application and sets up protocol rule guards.
 - (Debug builds) Serializes and deserializes the transaction to check for equivalence.
@@ -159,7 +159,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::apply
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Calls `preCompute()` to perform any necessary pre-computation.
 - Retrieves the account's ledger entry (`SLE`) via `view().peek(keylet::account(account_))`.
@@ -174,7 +174,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::doApply
 
-([Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt))
+([Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h))
 
 - Pure virtual function: `virtual TER doApply() = 0;`
 - Implemented by each derived transaction class (e.g., Payment, OfferCreate, EscrowCreate, etc.).
@@ -189,7 +189,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::checkSeqProxy
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Retrieves the account ID from the transaction's `sfAccount` field.
 - Looks up the account's ledger entry in the provided ledger view.
@@ -199,7 +199,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::consumeSeqProxy
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Asserts that the provided account SLE is not null.
 - Retrieves the sequence proxy from the transaction context.
@@ -214,7 +214,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::checkPriorTxAndLastLedger
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Extracts the AccountID from the transaction's `sfAccount` field.
 - Reads the account's ledger entry from the current ledger view.
@@ -227,7 +227,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::calculateBaseFee
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Retrieves the base fee from the ledger view: `view.fees().base`.
 - Counts the number of signers in the transaction (`sfSigners` field).
@@ -235,14 +235,14 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::minimumFee
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Calls `scaleFeeLoad(baseFee, app.getFeeTrack(), fees, flags & tapUNLIMITED)`.
 - Returns the minimum fee required for the transaction, after applying scaling for network load and privilege.
 
 #### Transactor::checkFee
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Checks if the fee is native XRP; if not, returns `temBAD_FEE`.
 - Retrieves the fee paid from the transaction.
@@ -256,7 +256,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Transactor::payFee
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Retrieves the fee paid from the transaction.
 - If the ledger is open, calculates the minimum required fee and compares; if insufficient, returns `telINSUF_FEE_P`.
@@ -272,7 +272,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::checkSign
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Retrieves the signing public key from the transaction.
 - For batch inner transactions, ensures no signatures or signers are present; if present, returns `temINVALID_FLAG`.
@@ -283,7 +283,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::checkBatchSign
 
-([Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt), [Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h), [Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Static method: `static NotTEC checkBatchSign(PreclaimContext const& ctx);`
 - Used to validate batch signatures in the context of batch transactions.
@@ -292,7 +292,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::checkSingleSign
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Static method.
 - Verifies the validity of a single-signature on a transaction.
@@ -301,7 +301,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::checkMultiSign
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Static method.
 - Verifies the validity of a multi-signature on a transaction.
@@ -314,7 +314,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::checkPermission
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Checks if the transaction is permitted, especially for delegated transactions.
 - If no delegate, returns `tesSUCCESS`.
@@ -328,7 +328,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::reset
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Discards any uncommitted changes in the transaction context.
 - Fetches the transaction account's ledger entry; if not found, returns `tefINTERNAL`.
@@ -347,7 +347,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transactor::ticketDelete
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Retrieves the Ticket ledger entry using its index.
 - If not found, logs a fatal error and returns `tefBAD_LEDGER`.
@@ -376,13 +376,13 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 #### Batch Application and Validation Logic
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt), [apply.cpp](src/xrpld/app/tx/detail/apply.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp), [apply.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/apply.cpp))
 
 - Batch transactions cannot contain more than 8 transactions.
 - Duplicate transactions within a batch are not allowed.
 - Nested batch transactions are not allowed.
 - Batch transactions are validated and applied using special logic, including signature checks (`checkBatchSign`) and fee rules (batch fee must be zero).
-- Batch application supports different modes (all-or-nothing, until-failure, only-one), as referenced in [apply.cpp](src/xrpld/app/tx/detail/apply.cpp.txt).
+- Batch application supports different modes (all-or-nothing, until-failure, only-one), as referenced in [apply.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/apply.cpp).
 
 ---
 
@@ -390,7 +390,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Transaction Queue (TxQ)
 
-([TxQ.cpp](src/xrpld/app/misc/detail/TxQ.cpp.txt))
+([TxQ.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/TxQ.cpp))
 
 - The transaction queue (TxQ) manages transactions that cannot be immediately applied to the open ledger.
 - TxQ handles queuing, prioritization, and eventual application or removal of transactions.
@@ -398,7 +398,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### Blocker Transactions
 
-([XChainBridge.h](src/xrpld/app/tx/detail/XChainBridge.h.txt), [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt))
+([XChainBridge.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/XChainBridge.h), [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp))
 
 - The `ConsequencesFactoryType::Blocker` enum value is used to mark certain transaction types as "blocker" transactions.
 - Blocker transactions interact with the queue by preventing other transactions from being queued for the same account until the blocker is processed.
@@ -410,7 +410,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### ConsequencesFactoryType Enum
 
-([Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt))
+([Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h))
 
 - Enum: `enum ConsequencesFactoryType { Normal, Blocker, Custom };`
   - **Normal**: Standard consequence calculation.
@@ -419,7 +419,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### makeTxConsequences Static Method
 
-([CreateOffer.h](src/xrpld/app/tx/detail/CreateOffer.h.txt), [XChainBridge.h](src/xrpld/app/tx/detail/XChainBridge.h.txt), [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt))
+([CreateOffer.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateOffer.h), [XChainBridge.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/XChainBridge.h), [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp))
 
 - Some transaction types implement a static `makeTxConsequences(PreflightContext const& ctx)` method to provide custom consequence calculation.
 - The transaction processing pipeline uses the `ConsequencesFactoryType` to determine how to calculate consequences:
@@ -431,7 +431,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ## trapTransaction Method
 
-([Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt))
+([Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp))
 
 - Method: `void Transactor::trapTransaction(uint256 txHash) const`
 - Used for debugging/trapping specific transactions.
@@ -441,7 +441,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ## Extensibility: Derived Transaction Types
 
-- All transaction types inherit from `Transactor` and implement their own `doApply()` ([e.g., CreateOffer.h](src/xrpld/app/tx/detail/CreateOffer.h.txt), [Escrow.h](src/xrpld/app/tx/detail/Escrow.h.txt), [PayChan.h](src/xrpld/app/tx/detail/PayChan.h.txt), [AMMCreate.h](src/xrpld/app/tx/detail/AMMCreate.h.txt), [XChainBridge.h](src/xrpld/app/tx/detail/XChainBridge.h.txt), [SetSignerList.h](src/xrpld/app/tx/detail/SetSignerList.h.txt), [DID.h](src/xrpld/app/tx/detail/DID.h.txt), [Credentials.h](src/xrpld/app/tx/detail/Credentials.h.txt)).
+- All transaction types inherit from `Transactor` and implement their own `doApply()` ([e.g., CreateOffer.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateOffer.h), [Escrow.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Escrow.h), [PayChan.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/PayChan.h), [AMMCreate.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/AMMCreate.h), [XChainBridge.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/XChainBridge.h), [SetSignerList.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetSignerList.h), [DID.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/DID.h), [Credentials.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Credentials.h)).
 - Each derived class provides static methods for preflight and preclaim checks, and implements `doApply()` for transaction-specific logic.
 - The transaction type is mapped to its handler class via macros in [transactions.macro](include/xrpl/protocol/detail/transactions.macro).
 
@@ -511,19 +511,19 @@ The following table lists transaction types as defined in [transactions.macro](i
 
 ## References to Source Code
 
-- [Transactor.h](src/xrpld/app/tx/detail/Transactor.h.txt)
-- [Transactor.cpp](src/xrpld/app/tx/detail/Transactor.cpp.txt)
-- [CreateOffer.h](src/xrpld/app/tx/detail/CreateOffer.h.txt)
-- [CreateOffer.cpp](src/xrpld/app/tx/detail/CreateOffer.cpp.txt)
-- [Escrow.h](src/xrpld/app/tx/detail/Escrow.h.txt)
-- [PayChan.h](src/xrpld/app/tx/detail/PayChan.h.txt)
-- [AMMCreate.h](src/xrpld/app/tx/detail/AMMCreate.h.txt)
-- [XChainBridge.h](src/xrpld/app/tx/detail/XChainBridge.h.txt)
-- [SetSignerList.h](src/xrpld/app/tx/detail/SetSignerList.h.txt)
-- [DID.h](src/xrpld/app/tx/detail/DID.h.txt)
-- [Credentials.h](src/xrpld/app/tx/detail/Credentials.h.txt)
+- [Transactor.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h)
+- [Transactor.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp)
+- [CreateOffer.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateOffer.h)
+- [CreateOffer.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateOffer.cpp)
+- [Escrow.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Escrow.h)
+- [PayChan.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/PayChan.h)
+- [AMMCreate.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/AMMCreate.h)
+- [XChainBridge.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/XChainBridge.h)
+- [SetSignerList.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetSignerList.h)
+- [DID.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/DID.h)
+- [Credentials.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Credentials.h)
 - [transactions.macro](include/xrpl/protocol/detail/transactions.macro)
-- [applySteps.cpp](src/xrpld/app/tx/detail/applySteps.cpp.txt)
-- [InvariantCheck.h](src/xrpld/app/tx/detail/InvariantCheck.h.txt)
-- [TxQ.cpp](src/xrpld/app/misc/detail/TxQ.cpp.txt)
-- [apply.cpp](src/xrpld/app/tx/detail/apply.cpp.txt)
+- [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp)
+- [InvariantCheck.h](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/InvariantCheck.h)
+- [TxQ.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/TxQ.cpp)
+- [apply.cpp](https://github.com/XRPLF/rippled/blob/develop/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/apply.cpp)

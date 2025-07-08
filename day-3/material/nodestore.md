@@ -28,7 +28,7 @@ This document provides a detailed, code-driven breakdown of the XRPL NodeStore s
 
 The NodeStore subsystem provides a persistent storage interface for `NodeObject`s, which are the primary representation of ledger entries in XRPL. All ledger entries are stored as `NodeObject`s, which must be persisted between launches. If a `NodeObject` is not in memory, it is retrieved from the database.
 
-Source: [/src/xrpld/nodestore/README.md]
+Source: [/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/README.md]
 
 ---
 
@@ -83,7 +83,7 @@ The NodeStore supports multiple backend types, selectable at runtime via the `[n
 | Memory          | For testing   | In-memory only, non-persistent          |
 | none            | For testing   | No-op backend, disables storage         |
 
-Source: [/src/xrpld/nodestore/README.md], backend factory implementations
+Source: [/https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/README.md], backend factory implementations
 
 ### Configuration Parameters
 
@@ -296,21 +296,21 @@ Source: [Types.h]
 
 ## References
 
-- [NodeObject.h](src/xrpld/nodestore/NodeObject.h.txt)
-- [NodeObject.cpp](src/xrpld/nodestore/detail/NodeObject.cpp.txt)
-- [Backend.h](src/xrpld/nodestore/Backend.h.txt)
-- [Database.h](src/xrpld/nodestore/Database.h.txt)
-- [DatabaseNodeImp.h](src/xrpld/nodestore/detail/DatabaseNodeImp.h.txt)
-- [DatabaseNodeImp.cpp](src/xrpld/nodestore/detail/DatabaseNodeImp.cpp.txt)
-- [DatabaseRotatingImp.h](src/xrpld/nodestore/detail/DatabaseRotatingImp.h.txt)
-- [DatabaseRotatingImp.cpp](src/xrpld/nodestore/detail/DatabaseRotatingImp.cpp.txt)
-- [Manager.h](src/xrpld/nodestore/Manager.h.txt)
-- [Factory.h](src/xrpld/nodestore/Factory.h.txt)
-- [EncodedBlob.h](src/xrpld/nodestore/detail/EncodedBlob.h.txt)
-- [DecodedBlob.h](src/xrpld/nodestore/detail/DecodedBlob.h.txt)
-- [DecodedBlob.cpp](src/xrpld/nodestore/detail/DecodedBlob.cpp.txt)
-- [Types.h](src/xrpld/nodestore/Types.h.txt)
-- [README.md](src/xrpld/nodestore/README.md)
-- [SHAMapStore.h/.cpp](src/xrpld/app/misc/SHAMapStore.h.txt, src/xrpld/app/misc/SHAMapStoreImp.cpp.txt)
-- [Application.cpp](src/xrpld/app/main/Application.cpp.txt)
-- [NodeFamily.h](src/xrpld/shamap/NodeFamily.h.txt)
+- [NodeObject.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/NodeObject.h.txt)
+- [NodeObject.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/NodeObject.cpp.txt)
+- [Backend.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Backend.h.txt)
+- [Database.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Database.h.txt)
+- [DatabaseNodeImp.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DatabaseNodeImp.h.txt)
+- [DatabaseNodeImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DatabaseNodeImp.cpp.txt)
+- [DatabaseRotatingImp.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DatabaseRotatingImp.h.txt)
+- [DatabaseRotatingImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DatabaseRotatingImp.cpp.txt)
+- [Manager.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Manager.h.txt)
+- [Factory.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Factory.h.txt)
+- [EncodedBlob.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/EncodedBlob.h.txt)
+- [DecodedBlob.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DecodedBlob.h.txt)
+- [DecodedBlob.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/detail/DecodedBlob.cpp.txt)
+- [Types.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Types.h.txt)
+- [README.md](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/README.md)
+- [SHAMapStore.h/.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/SHAMapStore.h.txt, https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/SHAMapStoreImp.cpp.txt)
+- [Application.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/Application.cpp.txt)
+- [NodeFamily.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/shamap/NodeFamily.h.txt)

@@ -189,7 +189,7 @@ Implemented in [`Log.cpp`](src/libxrpl/basics/Log.cpp):
 
 - Log files are managed by the `Logs::File` class.
 - Log rotation is supported via the `rotate()` method.
-- The `doLogRotate` RPC handler ([LogRotate.cpp](src/xrpld/rpc/handlers/LogRotate.cpp)) allows log rotation to be triggered via RPC:
+- The `doLogRotate` RPC handler ([LogRotate.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LogRotate.cpp)) allows log rotation to be triggered via RPC:
   ```cpp
   context.app.getPerfLog().rotate();
   return RPC::makeObjectValue(context.app.logs().rotate());
@@ -224,7 +224,7 @@ Implemented in [`Log.cpp`](src/libxrpl/basics/Log.cpp):
 
 ## Performance Logging (PerfLog)
 
-Defined in [`PerfLog.h`](src/xrpld/perflog/PerfLog.h) and implemented in [`PerfLogImp.cpp`](src/xrpld/perflog/detail/PerfLogImp.cpp):
+Defined in [`PerfLog.h`](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/perflog/PerfLog.h) and implemented in [`PerfLogImp.cpp`](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/perflog/detail/PerfLogImp.cpp):
 
 - `PerfLog` is an interface for performance logging, tracking RPC calls and job queue activities.
 - `PerfLogImp` implements the interface, maintaining counters for started, finished, and errored RPCs and jobs.
@@ -295,12 +295,12 @@ Defined in [`PerfLog.h`](src/xrpld/perflog/PerfLog.h) and implemented in [`PerfL
 
 - [Log.h](src/xrpl/basics/Log.h)
 - [Log.cpp](src/libxrpl/basics/Log.cpp)
-- [PerfLog.h](src/xrpld/perflog/PerfLog.h)
-- [PerfLogImp.h](src/xrpld/perflog/detail/PerfLogImp.h)
-- [PerfLogImp.cpp](src/xrpld/perflog/detail/PerfLogImp.cpp)
-- [LogRotate.cpp](src/xrpld/rpc/handlers/LogRotate.cpp)
-- [LedgerHistory.cpp](src/xrpld/app/ledger/LedgerHistory.cpp)
-- [Application.cpp](src/xrpld/app/main/Application.cpp)
-- [NetworkOPs.cpp](src/xrpld/app/misc/NetworkOPs.cpp)
-- [JobTypeData.h](src/xrpld/core/JobTypeData.h)
+- [PerfLog.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/perflog/PerfLog.h)
+- [PerfLogImp.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/perflog/detail/PerfLogImp.h)
+- [PerfLogImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/perflog/detail/PerfLogImp.cpp)
+- [LogRotate.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LogRotate.cpp)
+- [LedgerHistory.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp)
+- [Application.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/Application.cpp)
+- [NetworkOPs.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NetworkOPs.cpp)
+- [JobTypeData.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/JobTypeData.h)
 - [beast/utility/Journal.h](src/xrpl/beast/utility/Journal.h)

@@ -45,10 +45,10 @@ This document provides a detailed, code-based breakdown of the Consensus_Amendme
 
 Consensus_Amendments is the subsystem responsible for managing protocol amendments (features/upgrades) in the XRPL. It tracks supported and enabled amendments, collects validator votes, determines amendment majorities, and coordinates the activation of amendments through the consensus process. Amendments are only enabled if they achieve at least 80% validator support for a two-week period, as enforced by the consensus and ledger logic.
 
-- Amendments are proposed protocol changes that affect transaction processing and consensus ([README](src/xrpld/app/misc/README.md)).
+- Amendments are proposed protocol changes that affect transaction processing and consensus ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/README.md)).
 - Amendments must be accepted by a network majority through a consensus process before being utilized.
 - An Amendment must receive at least an 80% approval rate from validating nodes for a period of two weeks before being accepted.
-- Validators that support an amendment that is not yet enabled announce their support in their validations. If 80% support is achieved, they will introduce a pseudo-transaction to track the amendment's majority status in the ledger. If an amendment holds majority status for two weeks, validators will introduce a pseudo-transaction to enable the amendment ([README](src/xrpld/app/misc/README.md)).
+- Validators that support an amendment that is not yet enabled announce their support in their validations. If 80% support is achieved, they will introduce a pseudo-transaction to track the amendment's majority status in the ledger. If an amendment holds majority status for two weeks, validators will introduce a pseudo-transaction to enable the amendment ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/README.md)).
 
 ---
 
@@ -58,7 +58,7 @@ The consensus process in XRPL is divided into phases and states, which directly 
 
 ### Consensus Phases
 
-Defined in [ConsensusTypes.h](src/xrpld/consensus/ConsensusTypes.h.txt):
+Defined in [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt):
 
 - **open**: The ledger is open for transaction proposals.
 - **establish**: Validators exchange proposals and attempt to reach agreement.
@@ -66,7 +66,7 @@ Defined in [ConsensusTypes.h](src/xrpld/consensus/ConsensusTypes.h.txt):
 
 ### Consensus States
 
-Defined in [ConsensusTypes.h](src/xrpld/consensus/ConsensusTypes.h.txt):
+Defined in [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt):
 
 - **ConsensusState::No**: Consensus has not been reached.
 - **ConsensusState::Yes**: Consensus has been reached.
@@ -81,7 +81,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### AmendmentTable Interface
 
-- Defined in [AmendmentTable.h](src/xrpld/app/misc/AmendmentTable.h.txt).
+- Defined in [AmendmentTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/AmendmentTable.h.txt).
 - Provides methods for:
   - Finding, enabling, vetoing, and checking the status of amendments.
   - Handling voting and validation processes related to amendments.
@@ -92,7 +92,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### AmendmentTableImpl Implementation
 
-- Implements the AmendmentTable interface ([AmendmentTable.cpp](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
+- Implements the AmendmentTable interface ([AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
 - Manages:
   - Internal state of all known amendments (`amendmentMap_`).
   - Votes, support status, enabled status, and persistence to the database.
@@ -108,7 +108,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### AmendmentState Structure
 
-- Represents the state of a single amendment ([AmendmentTable.cpp](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- Represents the state of a single amendment ([AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - `AmendmentVote vote` (up, down, obsolete)
   - `bool enabled`
   - `bool supported`
@@ -120,7 +120,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### Supported, Obsolete, and Retired Amendments
 
-- Amendments are registered at startup using the `FeatureInfo` struct ([AmendmentTable.h](src/xrpld/app/misc/AmendmentTable.h.txt)):
+- Amendments are registered at startup using the `FeatureInfo` struct ([AmendmentTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/AmendmentTable.h.txt)):
   - `std::string const name`
   - `uint256 const feature`
   - `VoteBehavior const vote`
@@ -141,15 +141,15 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### TrustedVotes and AmendmentSet
 
-- `TrustedVotes` tracks votes from trusted validators and manages their timeouts ([AmendmentTable.cpp](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
-- `AmendmentSet` aggregates votes for each amendment and computes which amendments have enough votes to pass ([AmendmentSet](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- `TrustedVotes` tracks votes from trusted validators and manages their timeouts ([AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
+- `AmendmentSet` aggregates votes for each amendment and computes which amendments have enough votes to pass ([AmendmentSet](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - `hash_map<uint256, int> votes_`
   - `int trustedValidations_`
   - `int threshold_`
 
 ### Vote Collection and Threshold Calculation
 
-- Votes are collected from trusted validations in each consensus round ([AmendmentSet::AmendmentSet](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- Votes are collected from trusted validations in each consensus round ([AmendmentSet::AmendmentSet](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Calls `trustedVotes.getVotes(rules, lock)` to get the number of trusted validations and votes per amendment.
   - Computes the threshold for passing using `computeThreshold`:
     - If `fixAmendmentMajorityCalc` is not enabled, uses `preFixAmendmentMajorityCalcThreshold` (typically 80%).
@@ -158,7 +158,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### AmendmentSet::passes
 
-- Determines if an amendment has enough votes to pass ([AmendmentSet::passes](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- Determines if an amendment has enough votes to pass ([AmendmentSet::passes](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Looks up the amendment in `votes_`.
   - Returns true if the number of votes is greater than or equal to `threshold_`, false otherwise.
 
@@ -168,7 +168,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### doVoting: Amendment Voting Logic
 
-- `AmendmentTableImpl::doVoting` is called each consensus round to determine amendment actions ([AmendmentTableImpl::doVoting](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- `AmendmentTableImpl::doVoting` is called each consensus round to determine amendment actions ([AmendmentTableImpl::doVoting](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Updates trusted votes from current validations.
   - Builds an `AmendmentSet` to aggregate votes.
   - For each amendment:
@@ -183,9 +183,9 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### doValidation and getDesired
 
-- `doValidation` determines which amendments to advertise as supported in validation messages ([AmendmentTableImpl::doValidation](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- `doValidation` determines which amendments to advertise as supported in validation messages ([AmendmentTableImpl::doValidation](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Returns a sorted vector of amendment hashes that are supported, upvoted, and not already enabled.
-- `getDesired` calls `doValidation` with an empty set, returning all amendments the node desires to see enabled ([AmendmentTableImpl::getDesired](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
+- `getDesired` calls `doValidation` with an empty set, returning all amendments the node desires to see enabled ([AmendmentTableImpl::getDesired](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
 
 ---
 
@@ -193,7 +193,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### doValidatedLedger: Synchronizing State
 
-- `AmendmentTableImpl::doValidatedLedger` is called after a ledger is validated ([AmendmentTableImpl::doValidatedLedger](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- `AmendmentTableImpl::doValidatedLedger` is called after a ledger is validated ([AmendmentTableImpl::doValidatedLedger](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Enables all amendments marked as enabled in the ledger.
   - Updates internal state for amendments with majority but not yet enabled.
   - Tracks when unsupported amendments are expected to be enabled.
@@ -201,7 +201,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### Change::applyAmendment: Ledger Transaction Application
 
-- The `Change::applyAmendment` function applies amendment pseudo-transactions to the ledger ([Change.cpp](src/xrpld/app/tx/detail/Change.cpp.txt)):
+- The `Change::applyAmendment` function applies amendment pseudo-transactions to the ledger ([Change.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt)):
   - Retrieves the amendment hash from the transaction.
   - Checks if the amendment is already enabled; if so, returns `tefALREADY`.
   - Handles flags for `tfGotMajority` and `tfLostMajority`:
@@ -221,17 +221,17 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### persistVote and voteAmendment
 
-- `AmendmentTableImpl::persistVote` records the current vote for an amendment in the database ([persistVote](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- `AmendmentTableImpl::persistVote` records the current vote for an amendment in the database ([persistVote](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - Asserts the vote is not obsolete.
   - Obtains a database session and calls `voteAmendment`.
-- `voteAmendment` inserts a row into the `FeatureVotes` table with the amendment hash, name, and vote ([voteAmendment](src/xrpld/app/rdb/detail/Wallet.cpp.txt)):
+- `voteAmendment` inserts a row into the `FeatureVotes` table with the amendment hash, name, and vote ([voteAmendment](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/Wallet.cpp.txt)):
   - Begins a transaction.
   - Constructs and executes an SQL `INSERT` statement.
   - Commits the transaction.
 
 ### readAmendments
 
-- `readAmendments` reads the latest votes for amendments from the `FeatureVotes` table ([readAmendments](src/xrpld/app/rdb/detail/Wallet.cpp.txt)):
+- `readAmendments` reads the latest votes for amendments from the `FeatureVotes` table ([readAmendments](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/Wallet.cpp.txt)):
   - Uses a SQL window function to select the most recent entry for each amendment.
   - For each row, invokes a callback with the amendment hash, name, and vote.
   - The caller validates the fields and updates internal state accordingly.
@@ -240,10 +240,10 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ## Amendment State Query, RPC/Admin Interface, and JSON Representation
 
-- The `getJson` method provides a JSON representation of the amendment state ([AmendmentTableImpl::getJson](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
+- The `getJson` method provides a JSON representation of the amendment state ([AmendmentTableImpl::getJson](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)):
   - For each amendment, includes name, support status, enabled status, vote, and (if not enabled) vote counts and thresholds.
   - Used for API responses and monitoring.
-- The `doFeature` RPC handler ([Feature1.cpp](src/xrpld/rpc/handlers/Feature1.cpp.txt)):
+- The `doFeature` RPC handler ([Feature1.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Feature1.cpp.txt)):
   - Allows querying the status of all amendments or a specific amendment.
   - Admin users can veto or unveto amendments via RPC.
   - Returns detailed information about each feature, including majority status.
@@ -254,14 +254,14 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ### Consensus Class and RCLConsensus Adaptor
 
-- The consensus process is managed by the generic `Consensus` class ([Consensus.h](src/xrpld/consensus/Consensus.h.txt)), parameterized by an Adaptor.
-- The XRPL-specific adaptor is `RCLConsensus` ([RCLConsensus.cpp](src/xrpld/app/consensus/RCLConsensus.cpp.txt), [RCLConsensus.h](src/xrpld/app/consensus/RCLConsensus.h.txt)):
+- The consensus process is managed by the generic `Consensus` class ([Consensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt)), parameterized by an Adaptor.
+- The XRPL-specific adaptor is `RCLConsensus` ([RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt), [RCLConsensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.h.txt)):
   - Handles acquiring ledgers, sharing proposals, building new ledgers, and applying transactions.
   - Integrates with the amendment voting subsystem by calling `doVoting` and `doValidation` as part of the consensus round.
 
 ### Consensus Parameters and Thresholds
 
-- Consensus timing and thresholds are controlled by `ConsensusParms` ([ConsensusParms.h](src/xrpld/consensus/ConsensusParms.h.txt)):
+- Consensus timing and thresholds are controlled by `ConsensusParms` ([ConsensusParms.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h.txt)):
   - `minCONSENSUS_PCT` (typically 80%) is the minimum percentage of agreement required.
   - `ledgerMIN_CONSENSUS`, `ledgerMAX_CONSENSUS` control round durations.
   - The threshold for amendment passage is computed in `AmendmentSet::computeThreshold` based on the number of trusted validations and protocol rules.
@@ -270,7 +270,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ## Thread Safety and Synchronization
 
-- All amendment state changes are protected by a mutex (`mutex_`) in `AmendmentTableImpl` ([AmendmentTable.cpp](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
+- All amendment state changes are protected by a mutex (`mutex_`) in `AmendmentTableImpl` ([AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
 - Database operations are performed within transactions to ensure atomicity.
 - The consensus engine uses its own synchronization mechanisms to manage peer proposals and round progression.
 
@@ -278,7 +278,7 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ## Operational Consequences and Recovery for Unsupported Amendments
 
-- If a server detects that an unsupported amendment has been enabled ([Change.cpp](src/xrpld/app/tx/detail/Change.cpp.txt)):
+- If a server detects that an unsupported amendment has been enabled ([Change.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt)):
   - The server logs an error and sets itself as "amendment blocked" (`setAmendmentBlocked`).
   - While blocked, the server cannot participate in consensus or process new ledgers.
   - There is no mechanism to disable or revoke an enabled amendment.
@@ -288,16 +288,16 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 ## Edge Cases: Low Validator Count and Network Partitioning
 
-- The amendment threshold is always at least 1, but is typically 80% of trusted validations ([AmendmentSet::computeThreshold](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
+- The amendment threshold is always at least 1, but is typically 80% of trusted validations ([AmendmentSet::computeThreshold](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)).
 - If the validator count is low, the threshold calculation ensures at least one vote is required.
 - In the event of a network partition, amendments may not reach the required majority, and thus will not be enabled.
-- The consensus process (see [Consensus.cpp](src/xrpld/consensus/Consensus.cpp.txt)) handles cases where consensus cannot be reached (states: No, MovedOn, Expired).
+- The consensus process (see [Consensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.cpp.txt)) handles cases where consensus cannot be reached (states: No, MovedOn, Expired).
 
 ---
 
 ## Amendment Voting in Standalone Mode
 
-- In standalone mode ([RCLConsensus.cpp](src/xrpld/app/consensus/RCLConsensus.cpp.txt)), the node can still perform amendment voting logic, but there are no other validators to reach consensus with.
+- In standalone mode ([RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt)), the node can still perform amendment voting logic, but there are no other validators to reach consensus with.
 - The code path for voting and enabling amendments is still executed, but the node's actions are not propagated to a network.
 
 ---
@@ -305,26 +305,26 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 ## Interactions with Negative UNL
 
 - The Negative UNL (Unique Node List) feature is a protocol amendment that allows the network to temporarily ignore malfunctioning validators.
-- When the Negative UNL feature is enabled ([RCLConsensus.cpp](src/xrpld/app/consensus/RCLConsensus.cpp.txt)), amendment voting and Negative UNL voting can both occur in the same consensus round.
+- When the Negative UNL feature is enabled ([RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt)), amendment voting and Negative UNL voting can both occur in the same consensus round.
 - The code integrates Negative UNL voting with amendment voting, ensuring both processes are coordinated when the feature is active.
 
 ---
 
 ## References to Source Code
 
-- [AmendmentTable.h](src/xrpld/app/misc/AmendmentTable.h.txt)
-- [AmendmentTable.cpp](src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)
+- [AmendmentTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/AmendmentTable.h.txt)
+- [AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp.txt)
 - [Feature.cpp](src/libxrpl/protocol/Feature.cpp.txt)
 - [features.macro](include/xrpl/protocol/detail/features.macro)
-- [Wallet.cpp](src/xrpld/app/rdb/detail/Wallet.cpp.txt)
-- [Wallet.h](src/xrpld/app/rdb/Wallet.h.txt)
-- [Change.cpp](src/xrpld/app/tx/detail/Change.cpp.txt)
-- [Consensus.h](src/xrpld/consensus/Consensus.h.txt)
-- [Consensus.cpp](src/xrpld/consensus/Consensus.cpp.txt)
-- [ConsensusParms.h](src/xrpld/consensus/ConsensusParms.h.txt)
-- [ConsensusTypes.h](src/xrpld/consensus/ConsensusTypes.h.txt)
-- [RCLConsensus.cpp](src/xrpld/app/consensus/RCLConsensus.cpp.txt)
-- [RCLConsensus.h](src/xrpld/app/consensus/RCLConsensus.h.txt)
-- [README.md (Amendments)](src/xrpld/app/misc/README.md)
-- [README.md (Consensus)](src/xrpld/consensus/README.md)
-- [Feature1.cpp (RPC handler)](src/xrpld/rpc/handlers/Feature1.cpp.txt)
+- [Wallet.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/Wallet.cpp.txt)
+- [Wallet.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/Wallet.h.txt)
+- [Change.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt)
+- [Consensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt)
+- [Consensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.cpp.txt)
+- [ConsensusParms.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h.txt)
+- [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt)
+- [RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt)
+- [RCLConsensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.h.txt)
+- [README.md (Amendments)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/README.md)
+- [README.md (Consensus)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/README.md)
+- [Feature1.cpp (RPC handler)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Feature1.cpp.txt)

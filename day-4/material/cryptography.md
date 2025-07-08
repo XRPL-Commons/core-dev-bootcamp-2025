@@ -363,7 +363,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### buildHandshake
 
-- **Definition:** [src/xrpld/overlay/detail/Handshake.cpp.txt](src/xrpld/overlay/detail/Handshake.cpp)
+- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
 - **Purpose:** Constructs HTTP headers for the peer handshake process, including cryptographic proofs of node identity and session binding.
 - **Implementation:**
   - Inserts headers:
@@ -379,7 +379,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### verifyHandshake
 
-- **Definition:** [src/xrpld/overlay/detail/Handshake.cpp.txt](src/xrpld/overlay/detail/Handshake.cpp)
+- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
 - **Purpose:** Verifies the integrity and validity of handshake headers received from a peer.
 - **Implementation:**
   - Validates `Server-Domain` header (if present) using `isProperlyFormedTomlDomain`.
@@ -403,4 +403,4 @@ This document provides a detailed, code-based breakdown of the cryptography func
 - [src/libxrpl/protocol/digest.cpp.txt](src/libxrpl/protocol/digest.cpp)
 - [src/libxrpl/crypto/secure_erase.cpp.txt](src/libxrpl/crypto/secure_erase.cpp)
 - [src/libxrpl/basics/make_SSLContext.cpp.txt](src/libxrpl/basics/make_SSLContext.cpp)
-- [src/xrpld/overlay/detail/Handshake.cpp.txt](src/xrpld/overlay/detail/Handshake.cpp)
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)

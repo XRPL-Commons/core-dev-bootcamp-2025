@@ -44,8 +44,8 @@ This document provides a detailed, code-based breakdown of the RPC (Remote Proce
 
 ### JSON/WebSocket Handlers
 
-- Handler functions (e.g., `doAccountInfo`, `doBookOffers`) are declared in [src/xrpld/rpc/handlers/Handlers.h.txt].
-- Handlers are registered in a static handler table, defined in [src/xrpld/rpc/detail/Handler.cpp.txt]. Each entry specifies:
+- Handler functions (e.g., `doAccountInfo`, `doBookOffers`) are declared in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt].
+- Handlers are registered in a static handler table, defined in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]. Each entry specifies:
   - Method name (string)
   - Function pointer
   - Required user role
@@ -58,20 +58,20 @@ This document provides a detailed, code-based breakdown of the RPC (Remote Proce
 - To add a new gRPC method:
   1. Define the method in `xrp_ledger.proto` (method name should begin with a verb).
   2. Define request and response types in their own files, named `<MethodName>Request` and `<MethodName>Response`.
-  3. Instantiate the templated `CallData` class in `GRPCServerImpl::setupListeners()` ([src/xrpld/app/main/GRPCServer.cpp.txt]), specifying the request and response types.
+  3. Instantiate the templated `CallData` class in `GRPCServerImpl::setupListeners()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]), specifying the request and response types.
   4. Implement the handler in the appropriate file under `src/ripple/rpc/handlers/`, abstracting common logic if a JSON/WebSocket equivalent exists.
 - The gRPC server manages a set of `CallData` objects, each representing an active RPC call.
 
 ### Handler Discovery
 
-- The function `getHandlerNames()` ([src/xrpld/rpc/detail/Handler.h.txt]) returns the set of all registered handler names.
+- The function `getHandlerNames()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]) returns the set of all registered handler names.
 - The handler table supports versioning and beta flags, ensuring only valid handlers for the requested API version are accessible.
 
 ---
 
 ## Comprehensive Handler List
 
-The following is a direct, code-based list of all available handlers, their required roles, and preconditions, as defined in [src/xrpld/rpc/detail/Handler.cpp.txt]. (For brevity, only a representative subset is shown; see the source for the full list.)
+The following is a direct, code-based list of all available handlers, their required roles, and preconditions, as defined in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]. (For brevity, only a representative subset is shown; see the source for the full list.)
 
 | Method Name              | Handler Function         | Required Role | Preconditions           | API Version Range |
 |------------------------- |-------------------------|---------------|-------------------------|-------------------|
@@ -107,7 +107,7 @@ The following is a direct, code-based list of all available handlers, their requ
 | ledger_entry             | doLedgerEntry           | USER          | NO_CONDITION            | 1+                |
 | ...                      | ...                     | ...           | ...                     | ...               |
 
-*See [src/xrpld/rpc/detail/Handler.cpp.txt] for the complete, up-to-date handler table.*
+*See [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt] for the complete, up-to-date handler table.*
 
 ---
 
@@ -131,22 +131,22 @@ The following is a direct, code-based list of all available handlers, their requ
 
 ## Handler Lookup and Dispatch
 
-- The handler table is a multimap of method names to Handler objects ([src/xrpld/rpc/detail/Handler.cpp.txt]).
+- The handler table is a multimap of method names to Handler objects ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]).
 - The function `getHandler()` retrieves the handler for a given method, API version, and beta flag.
-- For gRPC, handlers are registered via `CallData` instantiation in [src/xrpld/app/main/GRPCServer.cpp.txt].
+- For gRPC, handlers are registered via `CallData` instantiation in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt].
 
 ---
 
 ## Precondition Checks
 
 - Each handler specifies required preconditions (e.g., network connectivity, ledger state).
-- The function `conditionMet()` ([src/xrpld/rpc/detail/Handler.h.txt]) checks these before handler execution.
+- The function `conditionMet()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]) checks these before handler execution.
 
 ---
 
 ## Command Validation and Dispatch
 
-- The function `fillHandler()` ([src/xrpld/rpc/detail/RPCHandler.cpp.txt]) validates the request, checks permissions, and locates the handler.
+- The function `fillHandler()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/RPCHandler.cpp.txt]) validates the request, checks permissions, and locates the handler.
 - The function `doCommand()` orchestrates handler execution and error handling.
 
 ---
@@ -156,7 +156,7 @@ The following is a direct, code-based list of all available handlers, their requ
 ### Error Propagation
 
 - Errors are propagated from handlers to clients using error codes and structured JSON responses.
-- For gRPC, errors are mapped to gRPC status codes and response messages ([src/xrpld/app/main/GRPCServer.cpp.txt]).
+- For gRPC, errors are mapped to gRPC status codes and response messages ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]).
 - Utilities in [include/xrpl/protocol/ErrorCodes.h.txt] and [src/libxrpl/protocol/ErrorCodes.cpp.txt] standardize error injection and formatting.
 
 ### Standard Error Handling and Logging
@@ -198,7 +198,7 @@ The following is a direct, code-based list of all available handlers, their requ
 ### Creation, Usage, and Destruction
 
 - Handler objects are not persistent; each request is dispatched to the appropriate handler function, which processes the request and returns a result.
-- For gRPC, each call is managed by a `CallData` object ([src/xrpld/app/main/GRPCServer.cpp.txt]):
+- For gRPC, each call is managed by a `CallData` object ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]):
   - Created when a request is received.
   - Processes the request asynchronously.
   - Destroys itself after sending the response.
@@ -231,8 +231,8 @@ The following is a direct, code-based list of all available handlers, their requ
 
 ### Exemplary Implementations
 
-- See [src/xrpld/rpc/handlers/Tx.cpp.txt] and [src/xrpld/rpc/handlers/AccountTx.cpp.txt] for shared logic and handler implementation.
-- Handler declarations in [src/xrpld/rpc/handlers/Handlers.h.txt] provide function signatures and organization.
+- See [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Tx.cpp.txt] and [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/AccountTx.cpp.txt] for shared logic and handler implementation.
+- Handler declarations in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt] provide function signatures and organization.
 
 ---
 
@@ -244,13 +244,13 @@ The following is a direct, code-based list of all available handlers, their requ
 
 ## References to Source Code
 
-- [src/xrpld/rpc/handlers/Handlers.h.txt]
-- [src/xrpld/rpc/detail/Handler.cpp.txt]
-- [src/xrpld/rpc/detail/Handler.h.txt]
-- [src/xrpld/app/main/GRPCServer.cpp.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]
 - [include/xrpl/protocol/ErrorCodes.h.txt]
 - [src/libxrpl/protocol/ErrorCodes.cpp.txt]
-- [src/xrpld/rpc/handlers/Tx.cpp.txt]
-- [src/xrpld/rpc/handlers/AccountTx.cpp.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Tx.cpp.txt]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/AccountTx.cpp.txt]
 - [include/xrpl/proto/org/xrpl/rpc/v1/README.md]
 - (See original documentation for additional references.)

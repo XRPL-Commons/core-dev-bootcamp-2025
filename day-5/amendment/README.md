@@ -88,10 +88,10 @@ Implement the account flag that enforces quantum-resistant signatures:
 - Add `asfForceQuantum = 11` to `include/xrpl/protocol/TxFlags.h`
 
 ### Implement SetAccount Transaction Support
-- Update `src/xrpld/app/tx/detail/SetAccount.cpp` to handle setting/clearing the ForceQuantum flag
+- Update `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetAccount.cpp` to handle setting/clearing the ForceQuantum flag
 
 ### Add Signature Validation
-- Update `src/xrpld/app/tx/detail/Transactor.cpp` in `checkSign()`:
+- Update `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.cpp` in `checkSign()`:
   - Check if account has `lsfForceQuantum` flag set
   - Reject transactions with non-Dilithium signatures when flag is active
 
