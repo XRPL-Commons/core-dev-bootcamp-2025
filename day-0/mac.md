@@ -103,6 +103,23 @@ conan profile update settings.compiler.cppstd=20 default
 conan config set general.revisions_enabled=1
 ```
 
+### Additional Setup for Apple Clang 15
+
+**If you're using Apple Clang 15**, you need additional boost/std string_view compatibility settings:
+
+```bash
+# Configure boost/std string_view compatibility (Clang 15 only)
+conan profile update 'conf.tools.build:cxxflags+=["-DBOOST_BEAST_USE_STD_STRING_VIEW"]' default
+conan profile update 'env.CXXFLAGS="-DBOOST_BEAST_USE_STD_STRING_VIEW"' default
+```
+
+**If you're using Apple Clang 16**, you can skip the above compatibility settings.
+
+**Verify your configuration:**
+```bash
+conan profile show default
+```
+
 **Example Conan profile for Apple Silicon Mac:**
 ```ini
 [settings]
@@ -119,23 +136,6 @@ compiler.cppstd=20
 [conf]
 [build_requires]
 [env]
-```
-
-### Additional Setup for Apple Clang 15
-
-**If you're using Apple Clang 15**, you need additional boost/std string_view compatibility settings:
-
-```bash
-# Configure boost/std string_view compatibility (Clang 15 only)
-conan profile update 'conf.tools.build:cxxflags+=["-DBOOST_BEAST_USE_STD_STRING_VIEW"]' default
-conan profile update 'env.CXXFLAGS="-DBOOST_BEAST_USE_STD_STRING_VIEW"' default
-```
-
-**If you're using Apple Clang 16**, you can skip the above compatibility settings.
-
-**Verify your configuration:**
-```bash
-conan profile show default
 ```
 
 ## Step 4: Build Rippled
@@ -190,6 +190,7 @@ If you encounter issues during the build process:
 
 ## Additional Resources
 
+- [Build Troubleshooting](https://github.com/XRPLF/rippled/blob/develop/BUILD.md#troubleshooting)
 - [Official Build Documentation](https://github.com/XRPLF/rippled/blob/develop/BUILD.md)
 - [Environment Setup Guide](https://github.com/XRPLF/rippled/blob/develop/docs/build/environment.md#macos)
 - [Rippled GitHub Repository](https://github.com/XRPLF/rippled)
