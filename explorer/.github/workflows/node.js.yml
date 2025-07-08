@@ -1,0 +1,56 @@
+name: Build explorer for local /ws
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+  schedule:
+    - cron: "1 0 1 * *"   # minute hour dayofmonth month dayofweek, at least once a month
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: NODE_OPTIONS=--openssl-legacy-provider VUE_APP_WSS_ENDPOINT=/ws npm run build
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: dist
+
+    - name: Archive
+      uses: thedoctor0/zip-release@0.7.5
+      with:
+        type: 'zip'
+        filename: 'explorer.zip'
+        directory: 'dist'
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        prerelease: false
+        draft: false
+        make_latest: true
+        name: autorelease
+        tag_name: autorelease
+        files: |
+          dist/explorer.zip
+        fail_on_unmatched_files: true

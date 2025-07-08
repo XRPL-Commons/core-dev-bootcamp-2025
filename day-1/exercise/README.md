@@ -46,11 +46,25 @@ Once started, rippled should display startup logs. Look for:
 
 ### Launch XRPL Explorer
 
-1. **Open the Explorer**: Navigate to https://explorer.xrplf.org/ws:localhost:6008
+1. **Setup the Local Explorer**:
+   ```bash
+   # Open a new terminal session
+   cd ~/core-dev-bootcamp-2025/explorer
+   
+   # Install dependencies (if not already done)
+   npm install
+   ```
+
+2. **Start the Explorer**:
+   ```bash
+   npm run serve
+   ```
+
+3. **Open the Explorer**: Navigate to http://localhost:8080/
    - This connects the web-based explorer to your local rippled instance
    - The explorer will show real-time ledger data and transactions
 
-2. **Verify Connection**: 
+4. **Verify Connection**: 
    - The explorer should show "Waiting for the next ledger to close..." status
    - Standalone does not make forward progress. You can make your own forward progress by pressing the "Close Ledger" button.
    - If connection fails, ensure rippled is running and ports are accessible
@@ -60,7 +74,7 @@ Once started, rippled should display startup logs. Look for:
 The XRPL Explorer provides a convenient web interface for sending commands to your rippled node:
 
 1. **Access the Command Interface**: 
-   - Navigate to https://explorer.xrplf.org/ws:localhost:6008/command
+   - Navigate to http://localhost:8080/command (or click the command interface link in the explorer)
    - This opens the command console interface
 
 2. **Execute Server Commands**: 
@@ -134,7 +148,7 @@ ts-node src/fund.ts
 
 #### Monitor Activity in Explorer
 After running the fund script:
-1. **Go to the Main Explorer**: https://explorer.xrplf.org/ws:localhost:6008
+1. **Go to the Main Explorer**: http://localhost:8080/
 2. **Check Recent Transactions**: You should see the funding transactions
 3. **Use the Command Interface**: Go to `/command` and query the funded accounts:
    ```json
