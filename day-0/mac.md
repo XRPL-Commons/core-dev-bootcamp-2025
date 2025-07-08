@@ -27,19 +27,21 @@ clang --version
 If your Clang version is not version 15 or 16, you'll need to install the correct Xcode version:
 
 1. **Download Xcode**
+
    - Visit [Apple Developer Downloads](https://developer.apple.com/download/more/)
    - Sign in with your Apple Developer account
    - Search for an Xcode version that includes **Apple Clang 15 or 16**
    - Download the `.xip` file
 
 2. **Install and Configure Xcode**
+
    ```bash
    # Extract the .xip file and rename for version management
    # Example: Xcode_16.2.app
-   
+
    # Move to Applications directory
    sudo mv Xcode_16.2.app /Applications/
-   
+
    # Set as default toolchain
    sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
    ```
@@ -60,7 +62,7 @@ Install Homebrew and essential build tools:
 
 # Update Homebrew and install dependencies
 brew update
-brew install xz pyenv cmake
+brew install xz pyenv ninja
 ```
 
 ### Setup Python Environment
@@ -73,8 +75,9 @@ pyenv install 3.10-dev
 pyenv global 3.10-dev
 eval "$(pyenv init -)"
 
-# Install Conan package manager
+# Install Conan package manager & cmake
 pip install 'conan<2'
+pip install 'cmake<4'
 ```
 
 ## Step 2: Clone Repository
@@ -99,6 +102,9 @@ conan profile new default --detect
 # Configure C++ standard
 conan profile update settings.compiler.cppstd=20 default
 
+# Configure build_type to Debug
+conan profile update settings.build_type=Debug default
+
 # Enable recipe revisions (Conan 1.x)
 conan config set general.revisions_enabled=1
 ```
@@ -116,11 +122,13 @@ conan profile update 'env.CXXFLAGS="-DBOOST_BEAST_USE_STD_STRING_VIEW"' default
 **If you're using Apple Clang 16**, you can skip the above compatibility settings.
 
 **Verify your configuration:**
+
 ```bash
 conan profile show default
 ```
 
 **Example Conan profile for Apple Silicon Mac:**
+
 ```ini
 [settings]
 os=Macos
