@@ -66,7 +66,7 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
 ### Task 3: Run Mainnet Sync
 1. Start rippled with your mainnet configuration:
    ```bash
-   ./rippled --config=./config/rippled.cfg
+   ./rippled --conf ./config/rippled.cfg
    ```
 
 2. Let the node run for **at least 30 minutes** to observe initial sync behavior
@@ -141,7 +141,7 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
 ## 🚀 Bonus Challenges
 
 ### Bonus 1: Network Exploration
-- Use `rippled server_info` command to check node status
+- Use `./rippled server_info` command to check node status
 - Review the peering information like peers, peer_disconnects, etc
 - Document the lag between your node and the network
 
