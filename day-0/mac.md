@@ -103,7 +103,7 @@ conan profile new default --detect
 conan profile update settings.compiler.cppstd=20 default
 
 # Configure build_type to Debug
-profile update settings.build_type=Debug default
+conan profile update settings.build_type=Debug default
 
 # Enable recipe revisions (Conan 1.x)
 conan config set general.revisions_enabled=1
@@ -208,4 +208,3 @@ If you encounter issues during the build process:
 - This build creates a debug version suitable for development
 - The process may take 30-60 minutes depending on your hardware
 - Ensure you have sufficient disk space (several GB) for dependencies and build artifacts
-
