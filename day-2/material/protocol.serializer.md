@@ -114,8 +114,7 @@ See the [Type List](#type-list) for all types, their codes, and serialization ru
 
 ### AccountID
 
-- 20 bytes, length-prefixed (prefix is always `0x14` for 20 bytes) if top-level field.
-- No length prefix when nested (e.g., in Amount.issuer).
+- 20 bytes, no length prefix.
 
 ### Amount
 
@@ -128,11 +127,13 @@ See the [Type List](#type-list) for all types, their codes, and serialization ru
 
 ### STArray
 
+- Start: Array Start Field ID (`0xf0`), no contents.
 - Each element: Field ID + serialized object.
 - End: Array End Field ID (`0xf1`), no contents.
 
 ### STObject
 
+- Start: Object Start Field ID (`0xe0`), no contents.
 - Members in canonical order.
 - Each: Field ID + value.
 - End: Object End Field ID (`0xe1`), no contents.
@@ -142,10 +143,6 @@ See the [Type List](#type-list) for all types, their codes, and serialization ru
 - 1–6 paths, each 1–8 steps.
 - Each step: type byte + fields (account, currency, issuer).
 - Path end: `0xff` (more paths) or `0x00` (end).
-
-### XChainBridge
-
-- 4 parts: locking chain door (length-prefixed AccountID), locking chain asset (STIssue), issuing chain door (length-prefixed AccountID), issuing chain asset (STIssue).
 
 ---
 
@@ -189,7 +186,3 @@ See the [Type List](#type-list) for all types, their codes, and serialization ru
 | 3    | Sort fields by (type code, field code) (see [Canonical Field Order](#canonical-field-order)) |
 | 4    | Prefix each field with its Field ID (see [Field IDs](#field-ids)) |
 | 5    | Concatenate all fields in order to produce the binary blob |
-
----
-
-**All statements above are strictly grounded in the provided documentation and source code.**
