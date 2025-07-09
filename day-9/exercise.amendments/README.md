@@ -34,7 +34,7 @@ ws://79.110.60.106:6026
 ```
 
 ### Required Tools
-- **Real-time Monitor**: [XRPL Win Monitor](https://xrplwin.com/monitor)
+- **Real-time Monitor**: [XRPL Win Monitor](https://xrplwin.com/monitor?server=wss%3A%2F%2Fbatch.nerdnest.xyz&unl=null&cachebust=17780078)
 - **Ledger Explorer**: [XRPLF Explorer](https://explorer.xrplf.org/wss:batch.nerdnest.xyz/)
 - **Feature Command Tool**: [Feature Command Interface](https://explorer.xrplf.org/wss:batch.nerdnest.xyz/command)
 - **Playground Scripts**: Pre-configured TypeScript scripts

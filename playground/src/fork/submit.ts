@@ -1,7 +1,7 @@
 import { Client, Wallet, IssuedCurrencyAmount, AccountSetAsfFlags, Payment, ECDSA } from "xrpl";
 import "dotenv/config";
 import { accountSet, isFunded, isSetup, pay, trust } from "../helpers";
-import { recurringPaymentClaim, recurringPaymentSet } from "./txns";
+import { escrowCreate, escrowFinish } from "./txns";
 
 async function sendAmount(client: Client, seed: string, destination: string, amount: string) {
   const master: Wallet = Wallet.fromSeed(seed, { algorithm: ECDSA.secp256k1 })
@@ -53,6 +53,10 @@ export async function setup(client: Client) {
 
   await accountSet(client, gw, AccountSetAsfFlags.asfDefaultRipple);
 
+  // Set the Token Locking Flag on the Gateway Account
+  // @ts-expect-error -- invalid flag
+  await accountSet(client, gw, 17);
+
   // SetTrust for alice and bob
   const limit: IssuedCurrencyAmount = {
     currency: "USD",
@@ -75,7 +79,6 @@ export async function main() {
   await client.connect();
   const alice: Wallet = Wallet.fromSeed("sEd7zAuRv5zW4UGnGXvgftjeUMBMcAS");
   const bob: Wallet = Wallet.fromSeed("sEd7VAUn5GcVVAZ9FFvgZzFWPsSGHyc");
-  const carol: Wallet = Wallet.fromSeed("sEdTxjMsnMFJejkd7GGcDXLtRUehG5d");
   const gw: Wallet = Wallet.fromSeed("sEdThN7Lx5oaXcQcYYEkLNFVGVYd8Fa");
 
   if (!(await isFunded(client, gw.classicAddress))) {
@@ -87,31 +90,21 @@ export async function main() {
   }
 
   // Create Escrow
-  const maxAmount: IssuedCurrencyAmount = {
+  const escrowAmount: IssuedCurrencyAmount = {
     currency: "USD",
     issuer: gw.classicAddress,
     value: "10",
   };
-  const frequency = 2592000; // 30 days in seconds
-  const tempKP: Wallet = Wallet.generate();
-  const rPaymentID = await recurringPaymentSet(
+  const offerSequence = await escrowCreate(
     client,
     alice,
     bob.classicAddress,
-    maxAmount,
-    frequency,
-    tempKP.publicKey
+    escrowAmount,
   );
 
   // wait 10 seconds before finishing the escrow
   await new Promise((resolve) => setTimeout(resolve, 12000));
-  const signature = ""
-  const claimAmount: IssuedCurrencyAmount = {
-    currency: "USD",
-    issuer: gw.classicAddress,
-    value: "10",
-  };
-  await recurringPaymentClaim(client, carol, rPaymentID, claimAmount, carol.classicAddress, signature);
+  await escrowFinish(client, bob, alice.classicAddress, offerSequence);
 
   await client.disconnect();
 }

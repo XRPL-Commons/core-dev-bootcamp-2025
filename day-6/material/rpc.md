@@ -1,25 +1,45 @@
 # XRPL RPC Functionality and Architecture: Comprehensive Lesson Plan
 
-This document provides a detailed, code-based breakdown of the RPC (Remote Procedure Call) subsystem in the XRPL (XRP Ledger) source code. It covers every aspect of the RPC system, including handler registration/discovery, a comprehensive handler list, error handling and propagation (including permission errors), handler/call lifecycle, testing requirements, and best practices. All explanations are strictly grounded in the provided source code and documentation.
+This document provides a detailed, code-based breakdown of the RPC (Remote Procedure Call) functionality in the XRPL (XRP Ledger) source code. It covers every aspect of the RPC system, including architecture, handler registration and dispatch, request/response flow, authentication and roles, error handling, resource management, batch and streaming support, gRPC integration, and supporting utilities. All explanations are strictly grounded in the provided source code and documentation. For any specific handler or feature, the referenced source files are the final authority.
 
 ---
 
 ## Table of Contents
 
 - [RPC Overview](#rpc-overview)
-- [Handler Registration and Discovery](#handler-registration-and-discovery)
-- [Comprehensive Handler List](#comprehensive-handler-list)
-- [RPC Request Lifecycle](#rpc-request-lifecycle)
-- [Role and Permission Management](#role-and-permission-management)
-- [Resource Management](#resource-management)
-- [Handler Lookup and Dispatch](#handler-lookup-and-dispatch)
-- [Precondition Checks](#precondition-checks)
-- [Command Validation and Dispatch](#command-validation-and-dispatch)
-- [Error Handling and Response Formatting](#error-handling-and-response-formatting)
-- [Permission Error Responses](#permission-error-responses)
-- [Handler/Call Lifecycle](#handlercall-lifecycle)
-- [Testing Requirements](#testing-requirements)
-- [Examples and Best Practices](#examples-and-best-practices)
+- [RPC Handler Registration and Dispatch](#rpc-handler-registration-and-dispatch)
+  - [Handler Structure and Table](#handler-structure-and-table)
+  - [Handler Lookup and Versioning](#handler-lookup-and-versioning)
+  - [Handler Registration](#handler-registration)
+- [Request/Response Flow](#requestresponse-flow)
+  - [HTTP/WS Entry Points](#httpws-entry-points)
+  - [Parsing, Validation, and Role Assignment](#parsing-validation-and-role-assignment)
+  - [Handler Invocation](#handler-invocation)
+  - [Batch Request Handling](#batch-request-handling)
+  - [Response Formatting and Masking](#response-formatting-and-masking)
+- [Authentication, Roles, and Permissions](#authentication-roles-and-permissions)
+  - [Role Determination](#role-determination)
+  - [Role Enforcement](#role-enforcement)
+  - [Resource Usage and Limits](#resource-usage-and-limits)
+  - [Blacklist and Gossip](#blacklist-and-gossip)
+- [Error Handling and Status Codes](#error-handling-and-status-codes)
+  - [Error Code Definitions](#error-code-definitions)
+  - [Error Injection and Reporting](#error-injection-and-reporting)
+  - [HTTP Status Mapping](#http-status-mapping)
+  - [Error Response Structure and Masking](#error-response-structure-and-masking)
+- [RPC Handler Implementation](#rpc-handler-implementation)
+  - [Handler Function Signatures](#handler-function-signatures)
+  - [Context Object](#context-object)
+  - [Common Handler Patterns](#common-handler-patterns)
+  - [Example Handlers](#example-handlers)
+  - [Handler Coverage](#handler-coverage)
+- [Streaming and Subscriptions](#streaming-and-subscriptions)
+  - [doSubscribe and doUnsubscribe](#dosubscribe-and-dounsubscribe)
+  - [Available Streams and Permissions](#available-streams-and-permissions)
+  - [RPCSub and Event Delivery](#rpcsub-and-event-delivery)
+- [gRPC Integration](#grpc-integration)
+  - [GRPCServer and CallData](#grpcserver-and-calldata)
+  - [Adding New gRPC Methods](#adding-new-grpc-methods)
 - [Supporting Classes and Utilities](#supporting-classes-and-utilities)
 - [References to Source Code](#references-to-source-code)
 
@@ -27,230 +47,259 @@ This document provides a detailed, code-based breakdown of the RPC (Remote Proce
 
 ## RPC Overview
 
-- The XRPL server exposes a comprehensive RPC interface for interacting with the ledger, submitting transactions, querying state, and managing server operations.
-- RPC requests can be made over HTTP, WebSocket, or gRPC (for select endpoints).
-- The RPC subsystem is responsible for:
-  - Parsing and validating incoming requests.
-  - Determining the required and actual user roles.
-  - Enforcing resource and rate limits.
-  - Locating and dispatching the correct handler for each command.
-  - Checking preconditions (network/ledger state).
-  - Executing the handler and formatting the response.
-  - Handling errors and masking sensitive information.
+- The XRPL server exposes a comprehensive RPC interface for client interaction, supporting both JSON-RPC (over HTTP/WebSocket) and gRPC ([Handlers.h](src/xrpld/rpc/handlers/Handlers.h.txt), [GRPCServer.cpp](src/xrpld/app/main/GRPCServer.cpp.txt)).
+- RPC commands cover all aspects of ledger access, transaction submission, account management, server control, pathfinding, NFT operations, AMM, validator management, and more.
+- Each RPC command is implemented as a handler function, registered in a central handler table, and invoked via a unified dispatch mechanism.
+- The canonical list of all available RPC handlers is declared in [Handlers.h](src/xrpld/rpc/handlers/Handlers.h.txt). This file serves as the authoritative reference for all supported RPC commands.
 
 ---
 
-## Handler Registration and Discovery
+## RPC Handler Registration and Dispatch
 
-### JSON/WebSocket Handlers
+### Handler Structure and Table
 
-- Handler functions (e.g., `doAccountInfo`, `doBookOffers`) are declared in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt].
-- Handlers are registered in a static handler table, defined in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]. Each entry specifies:
-  - Method name (string)
-  - Function pointer
-  - Required user role
-  - Required precondition
-  - API version range
-- The handler table is populated at server startup and is used for all JSON and WebSocket RPC dispatch.
+- The core structure for an RPC handler is `Handler` ([Handler.h](src/xrpld/rpc/detail/Handler.h.txt)):
+  - `name_`: The RPC method name (e.g., "account_info").
+  - `valueMethod_`: Function pointer to the handler implementation.
+  - `role_`: Required user role (e.g., USER, ADMIN).
+  - `condition_`: Required server/network condition (e.g., NEEDS_CURRENT_LEDGER).
+  - `minApiVer_`, `maxApiVer_`: Supported API version range.
 
-### gRPC Handlers
+- All handlers are registered in a static array and managed by `HandlerTable`, which ensures no overlapping API version ranges and provides lookup by name and version ([Handler.cpp](src/xrpld/rpc/detail/Handler.cpp.txt)).
 
-- To add a new gRPC method:
-  1. Define the method in `xrp_ledger.proto` (method name should begin with a verb).
-  2. Define request and response types in their own files, named `<MethodName>Request` and `<MethodName>Response`.
-  3. Instantiate the templated `CallData` class in `GRPCServerImpl::setupListeners()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]), specifying the request and response types.
-  4. Implement the handler in the appropriate file under `src/ripple/rpc/handlers/`, abstracting common logic if a JSON/WebSocket equivalent exists.
-- The gRPC server manages a set of `CallData` objects, each representing an active RPC call.
+### Handler Lookup and Versioning
 
-### Handler Discovery
+- Handlers are retrieved using `getHandler(version, betaEnabled, method)` ([Handler.h](src/xrpld/rpc/detail/Handler.h.txt), [Handler.cpp](src/xrpld/rpc/detail/Handler.cpp.txt)):
+  - Looks up the handler by name and checks if the requested API version is within the supported range.
+  - Supports beta API versioning and extensibility.
 
-- The function `getHandlerNames()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]) returns the set of all registered handler names.
-- The handler table supports versioning and beta flags, ensuring only valid handlers for the requested API version are accessible.
+### Handler Registration
+
+- Handlers are registered in a static array in [Handler.cpp](src/xrpld/rpc/detail/Handler.cpp.txt), e.g.:
+  - `{"account_info", byRef(&doAccountInfo), Role::USER, NO_CONDITION},`
+  - Each entry specifies the method name, function pointer, required role, and condition.
 
 ---
 
-## Comprehensive Handler List
+## Request/Response Flow
 
-The following is a direct, code-based list of all available handlers, their required roles, and preconditions, as defined in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]. (For brevity, only a representative subset is shown; see the source for the full list.)
+### HTTP/WS Entry Points
 
-| Method Name              | Handler Function         | Required Role | Preconditions           | API Version Range |
-|------------------------- |-------------------------|---------------|-------------------------|-------------------|
-| account_currencies       | doAccountCurrencies     | USER          | NO_CONDITION            | 1+                |
-| account_info             | doAccountInfo           | USER          | NO_CONDITION            | 1+                |
-| account_lines            | doAccountLines          | USER          | NO_CONDITION            | 1+                |
-| account_channels         | doAccountChannels       | USER          | NO_CONDITION            | 1+                |
-| account_nfts             | doAccountNFTs           | USER          | NO_CONDITION            | 1+                |
-| account_objects          | doAccountObjects        | USER          | NO_CONDITION            | 1+                |
-| account_offers           | doAccountOffers         | USER          | NO_CONDITION            | 1+                |
-| account_tx               | doAccountTxJson         | USER          | NEEDS_NETWORK_CONNECTION| 1+                |
-| amm_info                 | doAMMInfo               | USER          | NO_CONDITION            | 1+                |
-| book_offers              | doBookOffers            | USER          | NO_CONDITION            | 1+                |
-| book_changes             | doBookChanges           | USER          | NO_CONDITION            | 1+                |
-| black_list               | doBlackList             | ADMIN         | NO_CONDITION            | 1+                |
-| can_delete               | doCanDelete             | ADMIN         | NO_CONDITION            | 1+                |
-| channel_authorize        | doChannelAuthorize      | USER          | NO_CONDITION            | 1+                |
-| channel_verify           | doChannelVerify         | USER          | NO_CONDITION            | 1+                |
-| connect                  | doConnect               | ADMIN         | NO_CONDITION            | 1+                |
-| consensus_info           | doConsensusInfo         | ADMIN         | NO_CONDITION            | 1+                |
-| deposit_authorized       | doDepositAuthorized     | USER          | NO_CONDITION            | 1+                |
-| feature                  | doFeature               | USER          | NO_CONDITION            | 1+                |
-| fee                      | doFee                   | USER          | NEEDS_CURRENT_LEDGER    | 1+                |
-| fetch_info               | doFetchInfo             | ADMIN         | NO_CONDITION            | 1+                |
-| gateway_balances         | doGatewayBalances       | USER          | NO_CONDITION            | 1+                |
-| get_counts               | doGetCounts             | ADMIN         | NO_CONDITION            | 1+                |
-| get_aggregate_price      | doGetAggregatePrice     | USER          | NO_CONDITION            | 1+                |
-| ledger_accept            | doLedgerAccept          | ADMIN         | NEEDS_CURRENT_LEDGER    | 1+                |
-| ledger_cleaner           | doLedgerCleaner         | ADMIN         | NEEDS_NETWORK_CONNECTION| 1+                |
-| ledger_closed            | doLedgerClosed          | USER          | NEEDS_CLOSED_LEDGER     | 1+                |
-| ledger_current           | doLedgerCurrent         | USER          | NEEDS_CURRENT_LEDGER    | 1+                |
-| ledger_data              | doLedgerData            | USER          | NO_CONDITION            | 1+                |
-| ledger_entry             | doLedgerEntry           | USER          | NO_CONDITION            | 1+                |
-| ...                      | ...                     | ...           | ...                     | ...               |
+- Incoming HTTP and WebSocket requests are handled by `ServerHandler` ([ServerHandler.h](src/xrpld/rpc/ServerHandler.h.txt), [ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)):
+  - Accepts connections, parses requests, and manages sessions.
+  - Supports both single and batch JSON-RPC requests.
+  - Handles authentication, resource usage, and error responses.
 
-*See [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt] for the complete, up-to-date handler table.*
+### Parsing, Validation, and Role Assignment
 
----
+- Requests are parsed and validated for structure, method, and parameters ([ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)):
+  - Checks for required fields (`method`, `params`), correct types, and non-empty values.
+  - Determines the API version from the request.
+  - Assigns a user role using `roleRequired` and `requestRole`, based on method, API version, and authentication ([RPCHandler.cpp](src/xrpld/rpc/detail/RPCHandler.cpp.txt)).
 
-## RPC Request Lifecycle
+### Handler Invocation
 
-(As previously documented; see original for details.)
+- After validation, the appropriate handler is invoked via `doCommand` ([RPCHandler.h](src/xrpld/rpc/RPCHandler.h.txt), [RPCHandler.cpp](src/xrpld/rpc/detail/RPCHandler.cpp.txt)):
+  - Fills a `JsonContext` with request data, application state, and user info.
+  - Looks up the handler and checks conditions (network state, ledger availability) using `conditionMet`.
+  - Calls the handler function, passing the context and a result object.
+  - Handles exceptions and logs performance metrics.
+
+### Batch Request Handling
+
+- Batch requests are supported by detecting a `"method": "batch"` field and iterating over the `"params"` array ([ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)):
+  - Each sub-request is processed independently, with results collected into an array.
+  - Errors in individual sub-requests do not affect others.
+
+### Response Formatting and Masking
+
+- Responses are formatted according to the API version and request type ([ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)):
+  - For API v2.0+, errors are included as objects with `status`, `code`, and `message` fields.
+  - For earlier versions, errors are included as fields in the response object.
+  - Sensitive fields (e.g., `passphrase`, `secret`, `seed`, `seed_hex`) are masked in error responses.
+  - Batch responses are returned as arrays; single responses as objects.
+  - The response may include additional fields such as `jsonrpc`, `ripplerpc`, and `id` if present in the request.
 
 ---
 
-## Role and Permission Management
+## Authentication, Roles, and Permissions
 
-(As previously documented; see original for details.)
+### Role Determination
 
----
+- Roles are determined by `roleRequired` and `requestRole` ([RPCHandler.cpp](src/xrpld/rpc/detail/RPCHandler.cpp.txt)):
+  - Roles include ADMIN, USER, IDENTIFIED, PROXY, FORBID.
+  - Role assignment is based on method, API version, authentication headers, and server configuration.
 
-## Resource Management
+### Role Enforcement
 
-(As previously documented; see original for details.)
+- Each handler specifies a required role; requests from users with insufficient privileges are rejected with appropriate error codes ([Handler.cpp](src/xrpld/rpc/detail/Handler.cpp.txt), [ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)).
 
----
+### Resource Usage and Limits
 
-## Handler Lookup and Dispatch
+- Resource usage is tracked per request using `Resource::Consumer` ([ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)):
+  - Each request is charged a fee based on its type and load.
+  - Excessive or malformed requests are penalized, and clients may be disconnected if they exceed limits.
+  - Warnings are included in responses if resource usage is high.
 
-- The handler table is a multimap of method names to Handler objects ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]).
-- The function `getHandler()` retrieves the handler for a given method, API version, and beta flag.
-- For gRPC, handlers are registered via `CallData` instantiation in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt].
+### Blacklist and Gossip
 
----
-
-## Precondition Checks
-
-- Each handler specifies required preconditions (e.g., network connectivity, ledger state).
-- The function `conditionMet()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]) checks these before handler execution.
-
----
-
-## Command Validation and Dispatch
-
-- The function `fillHandler()` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/RPCHandler.cpp.txt]) validates the request, checks permissions, and locates the handler.
-- The function `doCommand()` orchestrates handler execution and error handling.
+- The server maintains a blacklist of IP addresses that are imposing significant load, using a mechanism called "Gossip" ([Resource README](include/xrpl/resource/README.md)):
+  - Each server in a cluster shares its blacklist with others to help identify and drop connections from abusive clients.
+  - The blacklist can be queried via the `doBlackList` handler.
 
 ---
 
-## Error Handling and Response Formatting
+## Error Handling and Status Codes
 
-### Error Propagation
+### Error Code Definitions
 
-- Errors are propagated from handlers to clients using error codes and structured JSON responses.
-- For gRPC, errors are mapped to gRPC status codes and response messages ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]).
-- Utilities in [include/xrpl/protocol/ErrorCodes.h.txt] and [src/libxrpl/protocol/ErrorCodes.cpp.txt] standardize error injection and formatting.
+- Error codes are defined in [ErrorCodes.h](include/xrpl/protocol/ErrorCodes.h.txt) and [ErrorCodes.cpp](src/libxrpl/protocol/ErrorCodes.cpp.txt):
+  - Enumerates all possible error codes (e.g., `rpcINVALID_PARAMS`, `rpcNO_PERMISSION`, `rpcNOT_READY`, etc.).
+  - Each code has a string token, message, and HTTP status.
 
-### Standard Error Handling and Logging
+### Error Injection and Reporting
 
-- Handlers return errors using `rpcError()` or `make_error()` utilities.
-- Errors are logged using the server's logging facilities (see [xrpl/basics/Log.h]).
-- Example error propagation:
-  ```cpp
-  if (!isUnlimited(context.role))
-      return rpcError(rpcNO_PERMISSION);
-  ```
-- For JSON/WebSocket, error responses include:
-  - `status: "error"`
-  - `error`: error token (e.g., "noPermission")
-  - `error_code`: numeric code (e.g., 401)
-  - `error_message`: human-readable message
-- For gRPC, errors are mapped to appropriate gRPC status codes and messages.
+- Utility functions inject errors into JSON responses ([ErrorCodes.h](include/xrpl/protocol/ErrorCodes.h.txt), [ErrorCodes.cpp](src/libxrpl/protocol/ErrorCodes.cpp.txt)):
+  - `inject_error`, `make_error`, `missing_field_error`, `invalid_field_error`, etc.
+  - Errors are included in the response with fields: `error`, `error_code`, `error_message`, and optionally `status`.
 
----
+### HTTP Status Mapping
 
-## Permission Error Responses
+- Error codes are mapped to HTTP status codes for proper client handling ([ErrorCodes.cpp](src/libxrpl/protocol/ErrorCodes.cpp.txt)):
+  - E.g., `rpcFORBIDDEN` → 403, `rpcNOT_READY` → 503, `rpcINTERNAL` → 500, `rpcNO_PERMISSION` → 401, `rpcUNKNOWN_COMMAND` → 405, etc.
 
-- Permission errors are indicated by the error code `rpcNO_PERMISSION` (value: 401), token `"noPermission"`, and message `"You don't have permission for this command."` ([include/xrpl/protocol/ErrorCodes.h.txt], [src/libxrpl/protocol/ErrorCodes.cpp.txt]).
-- Example JSON error response:
-  ```json
-  {
-    "status": "error",
-    "error": "noPermission",
-    "error_code": 401,
-    "error_message": "You don't have permission for this command."
-  }
-  ```
-- For gRPC, the error is mapped to a gRPC status code (e.g., `PERMISSION_DENIED`) with the same message.
+### Error Response Structure and Masking
+
+- For API v2.0+, error responses are structured as objects with `status`, `code`, and `message` fields.
+- For earlier versions, errors are included as fields in the response object, and the original request is included with sensitive fields masked (e.g., `passphrase`, `secret`, `seed`, `seed_hex`).
+- The error response may also include the original request, the error code, and a human-readable message.
 
 ---
 
-## Handler/Call Lifecycle
+## RPC Handler Implementation
 
-### Creation, Usage, and Destruction
+### Handler Function Signatures
 
-- Handler objects are not persistent; each request is dispatched to the appropriate handler function, which processes the request and returns a result.
-- For gRPC, each call is managed by a `CallData` object ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]):
-  - Created when a request is received.
-  - Processes the request asynchronously.
-  - Destroys itself after sending the response.
+- Each handler is a function taking a `RPC::JsonContext&` and returning a `Json::Value` ([Handlers.h](src/xrpld/rpc/handlers/Handlers.h.txt)):
+  - Example: `Json::Value doAccountInfo(RPC::JsonContext& context);`
 
-### Concurrency
+### Context Object
 
-- Multiple requests (across all interfaces) may be processed concurrently.
-- Handlers must be thread-safe and avoid shared mutable state.
-- The handler table and supporting caches are designed for concurrent access.
+- `JsonContext` encapsulates all request state ([Context.h](src/xrpld/rpc/Context.h.txt)):
+  - Application reference, ledger views, user role, resource usage, parameters, headers, and more.
+  - Used by handlers to access ledger data, configuration, and user info.
+
+### Common Handler Patterns
+
+- Handlers typically:
+  - Validate input parameters (using helpers like `accountFromString`, `readLimitField`).
+  - Look up ledger and account data.
+  - Perform the requested operation (e.g., fetch account info, submit transaction).
+  - Format and return the result as a JSON object.
+  - Handle errors using the error utilities.
+
+### Example Handlers
+
+- [doAccountInfo](src/xrpld/rpc/handlers/AccountInfo.cpp.txt): Retrieves account data, validates input, and returns account state.
+- [doBookOffers](src/xrpld/rpc/handlers/BookOffers.cpp.txt): Validates order book parameters, fetches offers, and returns paginated results.
+- [doTxJson](src/xrpld/rpc/handlers/Tx.cpp.txt): Retrieves transaction details by hash or CTID, validates input, and formats the response.
+- [doNoRippleCheck](src/xrpld/rpc/handlers/NoRippleCheck.cpp.txt): Checks account trust lines and flags, suggests corrective transactions, and returns issues found.
+
+### Handler Coverage
+
+- The XRPL server supports a wide range of RPC commands, including but not limited to:
+  - Account management: `account_info`, `account_objects`, `account_nfts`, `account_offers`, etc.
+  - Ledger operations: `ledger`, `ledger_data`, `ledger_entry`, `ledger_header`, etc.
+  - Transaction processing: `submit`, `sign`, `sign_for`, `submit_multisigned`, `tx`, `tx_history`, etc.
+  - Server and peer management: `server_info`, `server_state`, `peers`, `stop`, etc.
+  - NFT operations: `nft_buy_offers`, `nft_sell_offers`, etc.
+  - Pathfinding: `path_find`, `ripple_path_find`.
+  - Validator management: `validators`, `validator_info`, `unl_list`, etc.
+  - AMM and other features: `amm_info`, `feature`, etc.
+- The full, authoritative list is in [Handlers.h](src/xrpld/rpc/handlers/Handlers.h.txt).
 
 ---
 
-## Testing Requirements
+## Streaming and Subscriptions
 
-- After implementing a new handler, comprehensive testing is required.
-- For gRPC, see the "#### Testing" section in [include/xrpl/proto/org/xrpl/rpc/v1/README.md] (not fully included here).
-- All request/response types must be validated, and error conditions tested.
-- If a handler has both JSON/WebSocket and gRPC interfaces, both must be tested for consistency.
+### doSubscribe and doUnsubscribe
+
+- [doSubscribe](src/xrpld/rpc/handlers/Subscribe.cpp.txt) and [doUnsubscribe](src/xrpld/rpc/handlers/Subscribe.cpp.txt) manage real-time data streams:
+  - Clients can subscribe to streams such as `server`, `ledger`, `book_changes`, `transactions`, `validations`, `manifests`, `peer_status`, `consensus`, and more.
+  - Subscriptions are managed via `InfoSub` objects, with authentication and permission checks for certain streams (e.g., `peer_status` requires ADMIN).
+
+### Available Streams and Permissions
+
+- The following streams are available for subscription:
+  - `server`, `ledger`, `book_changes`, `manifests`, `transactions`, `transactions_proposed`/`rt_transactions`, `validations`, `peer_status`, `consensus`.
+  - Some streams (e.g., `peer_status`) require ADMIN privileges.
+  - Subscriptions can be made via WebSocket or via URL (the latter requires admin authentication).
+  - Subscriptions can include account and book monitoring, with immediate snapshots available if requested.
+
+### RPCSub and Event Delivery
+
+- [RPCSub.cpp](src/xrpld/net/detail/RPCSub.cpp.txt) implements the `RPCSubImp` class for delivering events to remote endpoints:
+  - Maintains a queue of events, supports authentication, and sends events asynchronously using `RPCCall::fromNetwork`.
+  - Handles connection details, SSL, and error logging.
+  - Factory function `make_RPCSub` creates instances for use by the server.
 
 ---
 
-## Examples and Best Practices
+## gRPC Integration
 
-### Best Practices
+### GRPCServer and CallData
 
-- Abstract common logic into helper functions when implementing both JSON/WebSocket and gRPC handlers (see `Tx.cpp` or `AccountTx.cpp`).
-- Follow naming conventions for request/response types.
-- Document every class and function.
-- Focus each module on a single problem, with one class per header and as much implementation hidden as possible.
+- [GRPCServer.cpp](src/xrpld/app/main/GRPCServer.cpp.txt) implements the gRPC server:
+  - Defines `GRPCServer` and `GRPCServerImpl`, which manage the server lifecycle and request processing.
+  - Uses a templated `CallData` class to handle each gRPC method, managing request/response, resource usage, and role determination.
+  - Supports endpoints such as `GetLedger`, `GetLedgerData`, `GetLedgerDiff`, `GetLedgerEntry`.
 
-### Exemplary Implementations
+### Adding New gRPC Methods
 
-- See [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Tx.cpp.txt] and [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/AccountTx.cpp.txt] for shared logic and handler implementation.
-- Handler declarations in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt] provide function signatures and organization.
+To add a new gRPC method ([README](include/xrpl/proto/org/xrpl/rpc/v1/README.md)):
+
+1. **Define the method in `xrp_ledger.proto`** with appropriate request/response types (request type suffixed with `Request`, response with `Response`).
+2. **Add an instantiation of `CallData`** in `GRPCServerImpl::setupListeners()`.
+3. **Implement the handler** in the appropriate file under `src/ripple/rpc/handlers/`.
+4. **If a JSON/WebSocket equivalent exists**, abstract common logic into helper functions (see `Tx.cpp` or `AccountTx.cpp` for examples).
 
 ---
 
 ## Supporting Classes and Utilities
 
-(As previously documented; see original for details.)
+- [RPCCall.cpp](src/xrpld/net/detail/RPCCall.cpp.txt): Implements parsing, constructing, and executing RPC commands from CLI or network, including authentication and error handling.
+- [RPCHelpers.h](src/xrpld/rpc/detail/RPCHelpers.h.txt): Provides helper functions for account parsing, ledger lookup, and parameter validation.
+- [Status.h](src/xrpld/rpc/Status.h.txt): Defines the `Status` class for representing handler execution results.
+- [Context.h](src/xrpld/rpc/Context.h.txt): Defines the `JsonContext` structure used by all handlers.
+- [BookChanges.h](src/xrpld/rpc/BookChanges.h.txt): Implements `computeBookChanges` for summarizing order book changes in a ledger.
 
 ---
 
 ## References to Source Code
 
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Handlers.h.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.cpp.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/Handler.h.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/GRPCServer.cpp.txt]
-- [include/xrpl/protocol/ErrorCodes.h.txt]
-- [src/libxrpl/protocol/ErrorCodes.cpp.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/Tx.cpp.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/AccountTx.cpp.txt]
-- [include/xrpl/proto/org/xrpl/rpc/v1/README.md]
-- (See original documentation for additional references.)
+- [Handlers.h](src/xrpld/rpc/handlers/Handlers.h.txt)
+- [Handler.h](src/xrpld/rpc/detail/Handler.h.txt)
+- [Handler.cpp](src/xrpld/rpc/detail/Handler.cpp.txt)
+- [RPCHandler.h](src/xrpld/rpc/RPCHandler.h.txt)
+- [RPCHandler.cpp](src/xrpld/rpc/detail/RPCHandler.cpp.txt)
+- [ServerHandler.h](src/xrpld/rpc/ServerHandler.h.txt)
+- [ServerHandler.cpp](src/xrpld/rpc/detail/ServerHandler.cpp.txt)
+- [RPCCall.cpp](src/xrpld/net/detail/RPCCall.cpp.txt)
+- [RPCCall.h](src/xrpld/net/RPCCall.h.txt)
+- [RPCHelpers.h](src/xrpld/rpc/detail/RPCHelpers.h.txt)
+- [ErrorCodes.h](include/xrpl/protocol/ErrorCodes.h.txt)
+- [ErrorCodes.cpp](src/libxrpl/protocol/ErrorCodes.cpp.txt)
+- [GRPCServer.cpp](src/xrpld/app/main/GRPCServer.cpp.txt)
+- [Subscribe.cpp](src/xrpld/rpc/handlers/Subscribe.cpp.txt)
+- [RPCSub.cpp](src/xrpld/net/detail/RPCSub.cpp.txt)
+- [BookOffers.cpp](src/xrpld/rpc/handlers/BookOffers.cpp.txt)
+- [AccountInfo.cpp](src/xrpld/rpc/handlers/AccountInfo.cpp.txt)
+- [Tx.cpp](src/xrpld/rpc/handlers/Tx.cpp.txt)
+- [NoRippleCheck.cpp](src/xrpld/rpc/handlers/NoRippleCheck.cpp.txt)
+- [BookChanges.h](src/xrpld/rpc/BookChanges.h.txt)
+- [LedgerHandler.cpp](src/xrpld/rpc/handlers/LedgerHandler.cpp.txt)
+- [LedgerHandler.h](src/xrpld/rpc/handlers/LedgerHandler.h.txt)
+- [TransactionSign.cpp](src/xrpld/rpc/detail/TransactionSign.cpp.txt)
+- [TransactionSign.h](src/xrpld/rpc/detail/TransactionSign.h.txt)
+- [NetworkOPs.cpp](src/xrpld/app/misc/NetworkOPs.cpp.txt)
+- [Main.cpp](src/xrpld/app/main/Main.cpp.txt)

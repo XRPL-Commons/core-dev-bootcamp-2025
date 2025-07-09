@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "unl:submit": "ts-node src/fork/submit.ts",
+    "amendment:vote": "ts-node src/amendment/vote.ts"
+  },
   "dependencies": {
+    "@transia/xrpld-publisher": "^2.0.4",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.5",
     "xrpl": "^4.3.0"

@@ -1,8 +1,8 @@
-# 🚀 Ripple(d) Storage Systems: 2-Hour Dev Challenge Series
+# 🚀 Ripple(d) Storage Systems: 1.5-Hour Dev Challenge Series
 
 ## 📅 Format
-- **Time per challenge:** 2 hours
-- **Team size:** 2–4 developers per team
+- **Time per challenge:** 1.5 hours
+- **Team size:** 6 developers per team
 - **Goal:** Locate initialization code, understand integration, and write functional tests
 
 ## 🌲 Team 1: SHAMap Deep Dive

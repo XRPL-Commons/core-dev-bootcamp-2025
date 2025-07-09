@@ -71,3 +71,5 @@ tmp/
 
 build/
 node_modules
+myvl.json
+/keystore

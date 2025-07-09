@@ -1,13 +1,13 @@
 # Group Activity: XRPL Transactor Breakdown Lab
 
 ## **A. Find Your Transactor**
-- Navigate to `src/ripple/app/tx/impl/`
-- Locate the file for your assigned transaction type (e.g., `Payment.cpp` for Payment, `OfferCreate.cpp` for OfferCreate, etc.)
+- Navigate to `https://github.com/XRPLF/rippled/tree/develop/src/xrpld/app/tx/detail/`
+- Locate the file for your assigned transaction type (e.g., `SetRegularKey.cpp` for SetRegularKey, `CheckCreate.cpp` for CheckCreate, etc.)
 
 ## **B. Map the Execution Flow**
 - **Start at the top:**
   - Identify the static `preflight()` and `preclaim()` methods.
-  - Find the class definition (e.g., `class Payment : public Transactor`).
+  - Find the class definition (e.g., `class SetRegularKey : public Transactor`).
 - **Trace the flow:**
   - See how `operator()()` calls `apply()`, which then calls `doApply()`.
   - In `doApply()`, look for:
