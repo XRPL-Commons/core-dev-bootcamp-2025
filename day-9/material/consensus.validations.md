@@ -250,13 +250,13 @@ The Negative UNL is factored into quorum calculations, ensuring that consensus c
 
 ## References to Source Code
 
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Validations.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Validations.h)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.h)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.cpp)
-- [src/libxrpl/protocol/STValidation.cpp](src/libxrpl/protocol/STValidation.cpp)
-- [include/xrpl/protocol/STValidation.h](include/xrpl/protocol/STValidation.h)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerMaster.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerMaster.cpp)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.h)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/ValidatorList.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/ValidatorList.h)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
+- [src/xrpld/consensus/Validations.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Validations.h)
+- [src/xrpld/app/consensus/RCLValidations.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.h)
+- [src/xrpld/app/consensus/RCLValidations.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLValidations.cpp)
+- [src/libxrpl/protocol/STValidation.cpp](https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/STValidation.cpp)
+- [include/xrpl/protocol/STValidation.h](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/STValidation.h)
+- [src/xrpld/app/ledger/detail/LedgerMaster.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/LedgerMaster.cpp)
+- [src/xrpld/app/ledger/LedgerHistory.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.cpp)
+- [src/xrpld/app/ledger/LedgerHistory.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/LedgerHistory.h)
+- [src/xrpld/app/misc/ValidatorList.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/ValidatorList.h)
+- [src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)

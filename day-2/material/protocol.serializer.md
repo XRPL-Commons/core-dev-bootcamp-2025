@@ -169,8 +169,8 @@ See the [Type List](#type-list) for all types, their codes, and serialization ru
 
 ## References
 
-- [SField.h](https://github.com/XRPLF/rippled/blob/master/include/xrpl/protocol/SField.h)
-- [sfields.macro](https://github.com/XRPLF/rippled/blob/master/include/xrpl/protocol/detail/sfields.macro)
+- [SField.h](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/SField.h)
+- [sfields.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/sfields.macro)
 - [STObject.cpp](https://github.com/XRPLF/rippled/blob/develop/src/ripple/protocol/impl/STObject.cpp)
 - [definitions.json](https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-binary-codec/src/enums/definitions.json)
 - [Serialization HTML Reference](serialization.html)

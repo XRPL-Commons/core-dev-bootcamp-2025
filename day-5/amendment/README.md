@@ -35,7 +35,7 @@ Verify the build system changes work before proceeding.
 
 Add the quantum signature feature to the amendment system:
 
-- Update `include/xrpl/protocol/detail/features.macro` to add:
+- Update `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro` to add:
   ```cpp
   XRPL_FEATURE(Quantum, Supported::yes, VoteBehavior::DefaultNo)
   ```
@@ -45,30 +45,30 @@ This creates a new amendment that validators can vote on to enable quantum-resis
 ## Step 3: Extend Cryptographic Key Support
 
 ### Update Key Type System
-- Extend `include/xrpl/protocol/KeyType.h` to add `dilithium = 2` as a new key type
+- Extend `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/KeyType.h` to add `dilithium = 2` as a new key type
 - Update `keyTypeFromString()` and `to_string()` functions to handle "dilithium"
 
 ### Modify PublicKey Class
-- Update `include/xrpl/protocol/PublicKey.h` to support variable-sized keys:
+- Update `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/PublicKey.h` to support variable-sized keys:
   - Change from fixed 33-byte buffer to 1312-byte buffer (Dilithium public key size)
   - Add size tracking since keys are now variable length
-- Update `src/libxrpl/protocol/PublicKey.cpp`:
+- Update `https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/PublicKey.cpp`:
   - Add Dilithium headers and API definitions
   - Implement Dilithium key type detection in `publicKeyType()`
   - Add Dilithium signature verification in `verify()`
 
 ### Modify SecretKey Class
-- Update `include/xrpl/protocol/SecretKey.h` to support larger secret keys:
+- Update `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/SecretKey.h` to support larger secret keys:
   - Change buffer size to 2528 bytes (Dilithium secret key size)
   - Add constructor for Dilithium-sized keys
-- Update `src/libxrpl/protocol/SecretKey.cpp`:
+- Update `https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/SecretKey.cpp`:
   - Add comprehensive Dilithium implementation including key generation, signing
   - Implement `randomSecretKey(KeyType type)` for type-specific key generation
   - Add custom Dilithium key pair generation from seeds
   - Update signing functions to handle Dilithium signatures
 
 ### Update Base58 Encoding
-- Modify `src/libxrpl/protocol/tokens.cpp` to handle larger key sizes:
+- Modify `https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/tokens.cpp` to handle larger key sizes:
   - Remove the 64-character limit that would block Dilithium keys
   - Add fallback to reference implementation for large keys
 
@@ -82,10 +82,10 @@ cmake --build . --target rippled --parallel 10
 Implement the account flag that enforces quantum-resistant signatures:
 
 ### Update Ledger Formats
-- Add `lsfForceQuantum = 0x02000000` flag to `include/xrpl/protocol/LedgerFormats.h`
+- Add `lsfForceQuantum = 0x02000000` flag to `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/LedgerFormats.h`
 
 ### Update Transaction Flags
-- Add `asfForceQuantum = 11` to `include/xrpl/protocol/TxFlags.h`
+- Add `asfForceQuantum = 11` to `https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/TxFlags.h`
 
 ### Implement SetAccount Transaction Support
 - Update `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetAccount.cpp` to handle setting/clearing the ForceQuantum flag

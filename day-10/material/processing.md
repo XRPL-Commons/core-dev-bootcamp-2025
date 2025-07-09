@@ -215,13 +215,13 @@ The doApply step performs the actual ledger modifications:
 
 ## References to Source Code
 
-- [CreateCheck.cpp (CheckCreate transaction logic)](src/xrpld/app/tx/detail/CreateCheck.cpp)
-- [CreateCheck.h (CheckCreate class definition)](src/xrpld/app/tx/detail/CreateCheck.h)
-- [Transactor.h (Transaction processing base class)](src/xrpld/app/tx/detail/Transactor.h)
-- [View.h (Ledger utility functions: balances, holds, freezing, authorization, directory)](src/xrpld/ledger/View.h)
-- [ApplyStateTable.cpp (Staging and applying ledger changes, threading)](src/xrpld/ledger/detail/ApplyStateTable.cpp)
-- [Ledger.cpp (Ledger entry management, reserve calculation)](src/xrpld/app/ledger/Ledger.cpp)
-- [InvariantCheck.cpp/h (Invariant enforcement during transaction application)](src/xrpld/app/tx/detail/InvariantCheck.cpp), [InvariantCheck.h](src/xrpld/app/tx/detail/InvariantCheck.h)
+- [CreateCheck.cpp (CheckCreate transaction logic)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateCheck.cpp)
+- [CreateCheck.h (CheckCreate class definition)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateCheck.h)
+- [Transactor.h (Transaction processing base class)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Transactor.h)
+- [View.h (Ledger utility functions: balances, holds, freezing, authorization, directory)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/ledger/View.h)
+- [ApplyStateTable.cpp (Staging and applying ledger changes, threading)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/ledger/detail/ApplyStateTable.cpp)
+- [Ledger.cpp (Ledger entry management, reserve calculation)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.cpp)
+- [InvariantCheck.cpp/h (Invariant enforcement during transaction application)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/InvariantCheck.cpp), [InvariantCheck.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/InvariantCheck.h)
 
 ---
 

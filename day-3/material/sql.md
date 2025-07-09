@@ -60,7 +60,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 - **Only SQLite is supported.** Although the interface and some comments mention `PostgresDatabase`, there is no implementation or support for Postgres in the codebase. Any attempt to configure a backend other than SQLite will result in a runtime error.
 - **Configuration:** The `[relational_db]` section with `backend=sqlite` is required for SQLite. If the section is missing, SQLite is used by default.
-- **Reference:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/RelationalDatabase.cpp], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/README.md]
+- **Reference:** [src/xrpld/app/rdb/detail/RelationalDatabase.cpp], [src/xrpld/app/rdb/README.md]
 
 ---
 
@@ -68,7 +68,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### RelationalDatabase::init
 
-- The entry point for initializing the SQLDatabase is the static method `RelationalDatabase::init` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/RelationalDatabase.cpp]):
+- The entry point for initializing the SQLDatabase is the static method `RelationalDatabase::init` ([src/xrpld/app/rdb/detail/RelationalDatabase.cpp]):
   - Checks the configuration for a `[relational_db]` section and a `backend` key.
   - If the backend is `"sqlite"` or the section is missing, it creates and returns a SQLite-based `RelationalDatabase`.
   - If the backend is set to any other value, it throws a runtime error.
@@ -86,15 +86,15 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Class Structure
 
-- `SQLiteDatabase` is an abstract interface derived from `RelationalDatabase` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/SQLiteDatabase.h]).
-- `SQLiteDatabaseImp` is the concrete implementation ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]).
+- `SQLiteDatabase` is an abstract interface derived from `RelationalDatabase` ([src/xrpld/app/rdb/backend/SQLiteDatabase.h]).
+- `SQLiteDatabaseImp` is the concrete implementation ([src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]).
 - The class manages two main database connections:
   - `lgrdb_`: for the ledger database.
   - `txdb_`: for the transaction database (optional, depending on config).
 
 ### Constructor and Database Setup
 
-- The constructor of `SQLiteDatabaseImp` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
+- The constructor of `SQLiteDatabaseImp` ([src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
   - Initializes member variables with the application, configuration, and logging.
   - Prepares a database connection setup struct using `setup_DatabaseCon`.
   - Calls `makeLedgerDBs` to create and initialize the main ledger and transaction databases, including setting up checkpointing and applying all required SQLite settings.
@@ -102,7 +102,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Database Connections: DatabaseCon
 
-- `DatabaseCon` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/DatabaseCon.h]) encapsulates a thread-safe connection to a SQLite database using SOCI.
+- `DatabaseCon` ([src/xrpld/core/DatabaseCon.h]) encapsulates a thread-safe connection to a SQLite database using SOCI.
 - It supports initialization with custom SQLite pragmas and SQL, and optional checkpointing for durability.
 - The constructor applies PRAGMA settings, executes schema initialization SQL, and sets up checkpointing if requested.
 - The class provides methods for session access, thread safety, and performance logging.
@@ -113,7 +113,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Ledger Database Schema (LgrDBInit)
 
-- The ledger database schema is defined in `LgrDBInit` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/DBInit.h]) as an array of SQL statements:
+- The ledger database schema is defined in `LgrDBInit` ([src/xrpld/app/main/DBInit.h]) as an array of SQL statements:
 
 1. BEGIN TRANSACTION;
 2. CREATE TABLE IF NOT EXISTS Ledgers (...);
@@ -123,7 +123,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Transaction Database Schema (TxDBInit)
 
-- The transaction database schema is defined in `TxDBInit` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/DBInit.h]) as an array of SQL statements:
+- The transaction database schema is defined in `TxDBInit` ([src/xrpld/app/main/DBInit.h]) as an array of SQL statements:
 
 1. BEGIN TRANSACTION;
 2. CREATE TABLE IF NOT EXISTS Transactions (...);
@@ -136,10 +136,10 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Secondary Databases: Wallet, Manifest, PeerFinder, State
 
-- **Wallet Database:** Schema in `WalletDBInit` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/DBInit.h]) includes tables for node identity, peer reservations, validator manifests, and publisher manifests.
-- **Manifest Database:** Managed via `ManifestCache` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/Manifest.h]), supports loading and saving manifests to a database.
-- **PeerFinder Database:** Used for peer discovery, schema and versioning managed in [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/PeerFinder.cpp].
-- **State Database:** Used for ledger deletion and rotation, schema includes `DbState` and `CanDelete` tables ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/State.cpp]).
+- **Wallet Database:** Schema in `WalletDBInit` ([src/xrpld/app/main/DBInit.h]) includes tables for node identity, peer reservations, validator manifests, and publisher manifests.
+- **Manifest Database:** Managed via `ManifestCache` ([src/xrpld/app/misc/Manifest.h]), supports loading and saving manifests to a database.
+- **PeerFinder Database:** Used for peer discovery, schema and versioning managed in [src/xrpld/app/rdb/detail/PeerFinder.cpp].
+- **State Database:** Used for ledger deletion and rotation, schema includes `DbState` and `CanDelete` tables ([src/xrpld/app/rdb/detail/State.cpp]).
 
 ---
 
@@ -147,7 +147,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### setup_DatabaseCon
 
-- The function `setup_DatabaseCon` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/DatabaseCon.h], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/DatabaseCon.cpp]) constructs a `DatabaseCon::Setup` struct with all configuration parameters for database connection.
+- The function `setup_DatabaseCon` ([src/xrpld/core/DatabaseCon.h], [src/xrpld/core/detail/DatabaseCon.cpp]) constructs a `DatabaseCon::Setup` struct with all configuration parameters for database connection.
 - It sets:
   - Startup type, standalone mode, data directory.
   - Global and table-specific PRAGMA settings for SQLite.
@@ -167,7 +167,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 | mmap_size           | [sqlite]        | integer                    | SQLite mmap size (default: 17179869184)                                      |
 | temp_store          | [sqlite]        | "file", "memory"           | SQLite temp store location                                                   |
 
-- **Reference:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/DatabaseCon.cpp], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/DBInit.h]
+- **Reference:** [src/xrpld/core/detail/DatabaseCon.cpp], [src/xrpld/app/main/DBInit.h]
 
 ### Pragma Settings
 
@@ -180,10 +180,10 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ## Checkpointing and Durability
 
-- Checkpointing is set up via the `setupCheckpointing` method in `DatabaseCon` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/DatabaseCon.h], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/DatabaseCon.cpp]).
+- Checkpointing is set up via the `setupCheckpointing` method in `DatabaseCon` ([src/xrpld/core/DatabaseCon.h], [src/xrpld/core/detail/DatabaseCon.cpp]).
 - A checkpointer object is created for the database session, enabling periodic or event-driven checkpoints to be scheduled via the job queue and logged.
 - If the job queue is not provided, a logic error is thrown.
-- **Operational Details:** The WALCheckpointer ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/SociDB.cpp]) schedules checkpoints when the WAL file grows beyond a threshold, using the job queue for asynchronous execution.
+- **Operational Details:** The WALCheckpointer ([src/xrpld/core/detail/SociDB.cpp]) schedules checkpoints when the WAL file grows beyond a threshold, using the job queue for asynchronous execution.
 
 ---
 
@@ -191,7 +191,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Ledger Sequence Queries
 
-- `getMinLedgerSeq`, `getMaxLedgerSeq` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
+- `getMinLedgerSeq`, `getMaxLedgerSeq` ([src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
   - Return the minimum/maximum ledger sequence in the database.
   - Use helper functions in the `detail` namespace to execute SQL queries.
 
@@ -207,7 +207,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
   - Return the number of transactions, account transactions, or ledgers.
   - Use SQL `COUNT(*)` queries and min/max queries.
 
-- `getKBUsedAll`, `getKBUsedLedger`, `getKBUsedTransaction` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/SociDB.h], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/SociDB.cpp]):
+- `getKBUsedAll`, `getKBUsedLedger`, `getKBUsedTransaction` ([src/xrpld/core/SociDB.h], [src/xrpld/core/detail/SociDB.cpp]):
   - `getKBUsedAll`: Returns the total memory usage (in kilobytes) of the SQLite library for the entire process, using `sqlite3_memory_used()`.
   - `getKBUsedDB`: Returns the current memory usage (in kilobytes) of the page cache for the specific SQLite database connection, using `sqlite3_db_status(..., SQLITE_DBSTATUS_CACHE_USED, ...)`.
 
@@ -249,7 +249,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Database Closing
 
-- `closeLedgerDB`, `closeTransactionDB` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
+- `closeLedgerDB`, `closeTransactionDB` ([src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]):
   - Close the respective database connection by resetting the unique pointer, releasing all associated resources.
 
 ---
@@ -270,17 +270,17 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 ## NodeStore/Non-Relational Database
 
 - The **SQLDatabase** (relational database) is used for storing ledger and transaction history, account transaction pagination, and related metadata.
-- The **NodeStore** is a separate, non-relational database system used for storing the main ledger state (SHAMap nodes, account state, etc.). It is managed by the `NodeStore::Database` interface ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/nodestore/Database.h]) and its implementations (e.g., NuDB, RocksDB).
+- The **NodeStore** is a separate, non-relational database system used for storing the main ledger state (SHAMap nodes, account state, etc.). It is managed by the `NodeStore::Database` interface ([src/xrpld/nodestore/Database.h]) and its implementations (e.g., NuDB, RocksDB).
 - **Distinction:** SQLDatabase is for history and metadata; NodeStore is for the main ledger state and SHAMap data.
 
 ---
 
 ## Error Handling and Edge Cases
 
-- **Initialization Errors:** If database creation or setup fails (e.g., invalid configuration, missing files, schema errors), a fatal error is logged and a runtime exception is thrown, preventing the database from being constructed ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]).
-- **Runtime SQL/Database Failures:** If SQL queries fail (e.g., deserialization errors, missing data), error codes are returned and warnings are logged ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/Node.cpp]).
-- **Low Disk Space:** If available disk space is less than 512MB, a fatal error is logged and the operation fails ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/Node.cpp]).
-- **Checkpointing Errors:** If checkpointing cannot be set up due to a missing job queue, a logic error is thrown ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/DatabaseCon.cpp]).
+- **Initialization Errors:** If database creation or setup fails (e.g., invalid configuration, missing files, schema errors), a fatal error is logged and a runtime exception is thrown, preventing the database from being constructed ([src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp]).
+- **Runtime SQL/Database Failures:** If SQL queries fail (e.g., deserialization errors, missing data), error codes are returned and warnings are logged ([src/xrpld/app/rdb/backend/detail/Node.cpp]).
+- **Low Disk Space:** If available disk space is less than 512MB, a fatal error is logged and the operation fails ([src/xrpld/app/rdb/backend/detail/Node.cpp]).
+- **Checkpointing Errors:** If checkpointing cannot be set up due to a missing job queue, a logic error is thrown ([src/xrpld/core/detail/DatabaseCon.cpp]).
 
 ---
 
@@ -289,14 +289,14 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 - The use of transaction tables is **optional** and controlled by the `useTxTables` configuration option (checked via `config.useTxTables()`).
 - If `useTxTables` is false, transaction-related tables and queries are not created or used. All transaction-related methods in `SQLiteDatabaseImp` check this flag and return early or zero if disabled.
 - **Implications:** Disabling transaction tables means transaction history and account transaction queries are unavailable.
-- **Reference:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/backend/detail/Node.cpp]
+- **Reference:** [src/xrpld/app/rdb/backend/detail/SQLiteDatabase.cpp], [src/xrpld/app/rdb/backend/detail/Node.cpp]
 
 ---
 
 ## Checkpointing Details
 
 - **Setup:** Checkpointing is set up during database initialization via `setupCheckpointing`, requiring a valid job queue and logging facility.
-- **Trigger:** The WALCheckpointer schedules checkpoints when the SQLite Write-Ahead Log (WAL) file grows beyond a threshold ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/core/detail/SociDB.cpp]).
+- **Trigger:** The WALCheckpointer schedules checkpoints when the SQLite Write-Ahead Log (WAL) file grows beyond a threshold ([src/xrpld/core/detail/SociDB.cpp]).
 - **Frequency:** The exact frequency is determined by WAL file growth and job queue scheduling.
 - **Operational Impact:** Checkpointing ensures durability and prevents unbounded WAL file growth, but may impact write performance during checkpoint operations.
 
@@ -306,7 +306,7 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 - **Schema Evolution:** There is no explicit support for schema migrations or upgrades in the provided code. The schema is initialized with `CREATE TABLE IF NOT EXISTS` statements, but there is no mechanism for applying migrations or handling out-of-date schemas.
 - **If the schema is out of date:** The system does not automatically migrate or update schemas; manual intervention may be required.
-- **Reference:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/main/DBInit.h], [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/PeerFinder.cpp] (PeerFinder does have schema versioning and migration logic).
+- **Reference:** [src/xrpld/app/main/DBInit.h], [src/xrpld/app/rdb/detail/PeerFinder.cpp] (PeerFinder does have schema versioning and migration logic).
 
 ---
 

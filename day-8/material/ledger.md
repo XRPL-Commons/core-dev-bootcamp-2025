@@ -224,7 +224,7 @@ This document provides a detailed, code-based breakdown of the Ledger functional
 
 ### Complete List of Ledger Entry Types
 
-The following is a complete, enumerated list of all ledger entry types as defined in [ledger_entries.macro](include/xrpl/protocol/detail/ledger_entries.macro):
+The following is a complete, enumerated list of all ledger entry types as defined in [ledger_entries.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/ledger_entries.macro):
 
 - ltNFTOKEN_OFFER (NFTokenOffer)
 - ltCHECK (Check)
@@ -427,7 +427,7 @@ For each ledger entry type, the fields are specified as required (`soeREQUIRED`)
 - [InboundLedgers.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/InboundLedgers.h)
 - [InboundLedgers.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedgers.cpp)
 - [InboundLedger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/detail/InboundLedger.cpp)
-- [ledger_entries.macro](include/xrpl/protocol/detail/ledger_entries.macro.txt)
+- [ledger_entries.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/ledger_entries.macro.txt)
 - [LedgerHandler.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LedgerHandler.h)
 - [LedgerEntry.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/handlers/LedgerEntry.cpp)
 - [RPCHelpers.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/RPCHelpers.cpp)

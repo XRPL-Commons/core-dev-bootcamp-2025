@@ -363,7 +363,7 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 ### ttBATCH Transaction Type
 
-([transactions.macro](include/xrpl/protocol/detail/transactions.macro))
+([transactions.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/transactions.macro))
 
 - **Type Code:** `ttBATCH` (71)
 - **Fields:**
@@ -443,13 +443,13 @@ This document provides a detailed, code-based breakdown of the Transactor system
 
 - All transaction types inherit from `Transactor` and implement their own `doApply()` ([e.g., CreateOffer.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/CreateOffer.h), [Escrow.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Escrow.h), [PayChan.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/PayChan.h), [AMMCreate.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/AMMCreate.h), [XChainBridge.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/XChainBridge.h), [SetSignerList.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetSignerList.h), [DID.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/DID.h), [Credentials.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Credentials.h)).
 - Each derived class provides static methods for preflight and preclaim checks, and implements `doApply()` for transaction-specific logic.
-- The transaction type is mapped to its handler class via macros in [transactions.macro](include/xrpl/protocol/detail/transactions.macro).
+- The transaction type is mapped to its handler class via macros in [transactions.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/transactions.macro).
 
 ---
 
 ## Comprehensive List of Transaction Types
 
-The following table lists transaction types as defined in [transactions.macro](include/xrpl/protocol/detail/transactions.macro):
+The following table lists transaction types as defined in [transactions.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/transactions.macro):
 
 | Type Code | Name                        | Handler Class              | Description (if present)                                 |
 |-----------|-----------------------------|---------------------------|----------------------------------------------------------|
@@ -505,7 +505,7 @@ The following table lists transaction types as defined in [transactions.macro](i
 | 71        | ttBATCH                     | Batch                     | Batches together transactions                            |
 | 100       | ttAMENDMENT                 | EnableAmendment           | System-generated, updates amendment status               |
 
-*This list is strictly based on the provided macro definitions in [transactions.macro](include/xrpl/protocol/detail/transactions.macro).*
+*This list is strictly based on the provided macro definitions in [transactions.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/transactions.macro).*
 
 ---
 
@@ -522,7 +522,7 @@ The following table lists transaction types as defined in [transactions.macro](i
 - [SetSignerList.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/SetSignerList.h)
 - [DID.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/DID.h)
 - [Credentials.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Credentials.h)
-- [transactions.macro](include/xrpl/protocol/detail/transactions.macro)
+- [transactions.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/transactions.macro)
 - [applySteps.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/applySteps.cpp)
 - [InvariantCheck.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/InvariantCheck.h)
 - [TxQ.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/TxQ.cpp)

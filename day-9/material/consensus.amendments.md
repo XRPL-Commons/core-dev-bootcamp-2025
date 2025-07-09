@@ -124,15 +124,15 @@ Amendment voting occurs during the consensus process, specifically in the "estab
   - `std::string const name`
   - `uint256 const feature`
   - `VoteBehavior const vote`
-- The list of supported amendments is constructed from the protocol's feature registry ([Feature.cpp](src/libxrpl/protocol/Feature.cpp), [features.macro](include/xrpl/protocol/detail/features.macro)).
-- **Obsolete Amendments**: Marked with `VoteBehavior::Obsolete` in the code and macro files. These are features that are no longer relevant but must remain supported in case they are ever enabled ([features.macro](include/xrpl/protocol/detail/features.macro)).
-- **Retired Amendments**: Marked with `XRPL_RETIRE` in [features.macro](include/xrpl/protocol/detail/features.macro). These are amendments that have been active for at least two years, their pre-amendment code has been removed, and their identifiers are deprecated.
+- The list of supported amendments is constructed from the protocol's feature registry ([Feature.cpp](https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/Feature.cpp), [features.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro)).
+- **Obsolete Amendments**: Marked with `VoteBehavior::Obsolete` in the code and macro files. These are features that are no longer relevant but must remain supported in case they are ever enabled ([features.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro)).
+- **Retired Amendments**: Marked with `XRPL_RETIRE` in [features.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro). These are amendments that have been active for at least two years, their pre-amendment code has been removed, and their identifiers are deprecated.
 
 ### Process for Registering New Amendments
 
 - To register a new amendment:
-  1. Add the amendment to [features.macro](include/xrpl/protocol/detail/features.macro) using `XRPL_FEATURE`, `XRPL_FIX`, or `XRPL_RETIRE` as appropriate.
-  2. Increment `numFeatures` in [Feature.h](include/xrpl/protocol/Feature.h).
+  1. Add the amendment to [features.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro) using `XRPL_FEATURE`, `XRPL_FIX`, or `XRPL_RETIRE` as appropriate.
+  2. Increment `numFeatures` in [Feature.h](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/Feature.h).
   3. The amendment will be included in the feature registry and available for voting and tracking.
 
 ---
@@ -314,8 +314,8 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 
 - [AmendmentTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/AmendmentTable.h)
 - [AmendmentTable.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/AmendmentTable.cpp)
-- [Feature.cpp](src/libxrpl/protocol/Feature.cpp)
-- [features.macro](include/xrpl/protocol/detail/features.macro)
+- [Feature.cpp](https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/Feature.cpp)
+- [features.macro](https://github.com/XRPLF/rippled/blob/develop/include/xrpl/protocol/detail/features.macro)
 - [Wallet.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/detail/Wallet.cpp)
 - [Wallet.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/rdb/Wallet.h)
 - [Change.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp)
