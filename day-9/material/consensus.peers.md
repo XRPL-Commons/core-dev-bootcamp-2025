@@ -42,7 +42,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### RCLConsensus::peerProposal
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp`
 - **Functionality:**
   - Entry point for processing a new peer proposal.
   - Acquires a lock on `mutex_` for thread safety.
@@ -50,7 +50,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::peerProposal
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   - Logs the incoming proposal.
   - Extracts the peer ID.
@@ -59,7 +59,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::peerProposalInternal
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. **Consensus Phase Check:** If `phase_ == ConsensusPhase::accepted`, returns `false`.
   2. **Update Time:** Sets `now_ = now;`
@@ -101,7 +101,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::createDisputes
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. Asserts that `result_` is set.
   2. Checks if the transaction set has already been compared; if so, returns.
@@ -118,7 +118,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### DisputedTx
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/DisputedTx.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/DisputedTx.h`
 - **Purpose:** Manages the state and voting process for transactions that are disputed during consensus.
 - **Key Methods:**
   - `setVote(NodeID_t const& peer, bool votesYes)`: Records or updates a peer's vote, updating `yays_` and `nays_` counters.
@@ -128,7 +128,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::updateDisputes
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. Asserts that `result_` is set.
   2. If the transaction set has not been compared, calls `createDisputes`.
@@ -142,7 +142,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::haveConsensus
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. Asserts that `result_` is set.
   2. Counts how many peers agree/disagree with the local proposal.
@@ -156,7 +156,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::leaveConsensus
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. If in `proposing` mode and not already bowed out:
      - Marks the position as "bowed out" and shares with the network.
@@ -164,7 +164,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::phaseEstablish
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. Logs entry into the establish phase and asserts `result_` is set.
   2. Increments counters for unchanged peers and establish rounds.
@@ -178,7 +178,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Consensus<Adaptor>::updateOurPositions
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
 - **Functionality:**
   1. Asserts that `result_` is set and retrieves consensus parameters.
   2. Computes cutoff times for peer and local proposals.
@@ -193,7 +193,7 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### RCLConsensus::Adaptor::share
 
-- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt`
+- **Location:** `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp`
 - **Functionality:**
   1. Constructs a `TMProposeSet` protocol message from a peer's proposal, including sequence, close time, transaction hash, previous ledger, public key, and signature.
   2. Relays this proposal to peers using the overlay network:
@@ -202,31 +202,31 @@ Consensus_Peers in XRPL is responsible for managing the set of network peers par
 
 ### Overlay and PeerSet
 
-- **Overlay:** Manages peer connections, message broadcasting, and relaying in the XRPL peer-to-peer network (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h.txt`).
-- **PeerSet:** Abstract interface for managing sets of network peers, adding peers, sending protocol messages, and retrieving peer IDs (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerSet.h.txt`).
-- **PeerImp:** Implements the core logic for a peer connection, including message sending/receiving, resource usage, and protocol handling (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h.txt`).
+- **Overlay:** Manages peer connections, message broadcasting, and relaying in the XRPL peer-to-peer network (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h`).
+- **PeerSet:** Abstract interface for managing sets of network peers, adding peers, sending protocol messages, and retrieving peer IDs (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerSet.h`).
+- **PeerImp:** Implements the core logic for a peer connection, including message sending/receiving, resource usage, and protocol handling (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h`).
 
 ---
 
 ## Supporting Data Structures and Utilities
 
-- **ConsensusParms:** Encapsulates configuration parameters for the consensus process, including timeouts, intervals, and consensus thresholds (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h.txt`).
-- **ConsensusCloseTimes:** Tracks proposed close times from peers and self (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt`).
-- **ConsensusResult:** Encapsulates the result of a consensus round, including the transaction set, proposal position, disputes, compared sets, round timing, consensus state, and proposer count (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt`).
-- **ConsensusMode/ConsensusPhase:** Enumerations for consensus modes (proposing, observing, wrongLedger, switchedLedger) and phases (open, establish, accepted) (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt`).
-- **RCLCxPeerPos:** Represents a peer's position (proposal) in the consensus process, including public key, signature, suppression ID, and proposal object (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLCxPeerPos.h.txt`).
+- **ConsensusParms:** Encapsulates configuration parameters for the consensus process, including timeouts, intervals, and consensus thresholds (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h`).
+- **ConsensusCloseTimes:** Tracks proposed close times from peers and self (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h`).
+- **ConsensusResult:** Encapsulates the result of a consensus round, including the transaction set, proposal position, disputes, compared sets, round timing, consensus state, and proposer count (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h`).
+- **ConsensusMode/ConsensusPhase:** Enumerations for consensus modes (proposing, observing, wrongLedger, switchedLedger) and phases (open, establish, accepted) (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h`).
+- **RCLCxPeerPos:** Represents a peer's position (proposal) in the consensus process, including public key, signature, suppression ID, and proposal object (`https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLCxPeerPos.h`).
 
 ---
 
 ## References to Source Code
 
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLCxPeerPos.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/DisputedTx.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerSet.h.txt`
-- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h.txt`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLCxPeerPos.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusParms.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/DisputedTx.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerSet.h`
+- `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h`

@@ -215,13 +215,13 @@ The doApply step performs the actual ledger modifications:
 
 ## References to Source Code
 
-- [CreateCheck.cpp (CheckCreate transaction logic)](src/xrpld/app/tx/detail/CreateCheck.cpp.txt)
-- [CreateCheck.h (CheckCreate class definition)](src/xrpld/app/tx/detail/CreateCheck.h.txt)
-- [Transactor.h (Transaction processing base class)](src/xrpld/app/tx/detail/Transactor.h.txt)
-- [View.h (Ledger utility functions: balances, holds, freezing, authorization, directory)](src/xrpld/ledger/View.h.txt)
-- [ApplyStateTable.cpp (Staging and applying ledger changes, threading)](src/xrpld/ledger/detail/ApplyStateTable.cpp.txt)
-- [Ledger.cpp (Ledger entry management, reserve calculation)](src/xrpld/app/ledger/Ledger.cpp.txt)
-- [InvariantCheck.cpp/h (Invariant enforcement during transaction application)](src/xrpld/app/tx/detail/InvariantCheck.cpp.txt), [InvariantCheck.h](src/xrpld/app/tx/detail/InvariantCheck.h.txt)
+- [CreateCheck.cpp (CheckCreate transaction logic)](src/xrpld/app/tx/detail/CreateCheck.cpp)
+- [CreateCheck.h (CheckCreate class definition)](src/xrpld/app/tx/detail/CreateCheck.h)
+- [Transactor.h (Transaction processing base class)](src/xrpld/app/tx/detail/Transactor.h)
+- [View.h (Ledger utility functions: balances, holds, freezing, authorization, directory)](src/xrpld/ledger/View.h)
+- [ApplyStateTable.cpp (Staging and applying ledger changes, threading)](src/xrpld/ledger/detail/ApplyStateTable.cpp)
+- [Ledger.cpp (Ledger entry management, reserve calculation)](src/xrpld/app/ledger/Ledger.cpp)
+- [InvariantCheck.cpp/h (Invariant enforcement during transaction application)](src/xrpld/app/tx/detail/InvariantCheck.cpp), [InvariantCheck.h](src/xrpld/app/tx/detail/InvariantCheck.h)
 
 ---
 

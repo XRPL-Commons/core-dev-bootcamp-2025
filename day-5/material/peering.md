@@ -49,7 +49,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 - Each peer maintains multiple outgoing and optional incoming connections to other peers, forming a connected directed graph of nodes (vertices: `rippled` instances, edges: persistent TCP/IP connections).
 - The overlay network is layered on top of the public and private Internet, forming an [overlay network](http://en.wikipedia.org/wiki/Overlay_network).
 - Each connection is represented by a _Peer_ object. The Overlay manager establishes, receives, and maintains connections to peers. Protocol messages are exchanged between peers and serialized using [Google Protocol Buffers](https://developers.google.com/protocol-buffers).
-- The OverlayImpl class manages the peer-to-peer overlay network, handling peer connections, peer discovery, message relaying, and network health monitoring ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)).
+- The OverlayImpl class manages the peer-to-peer overlay network, handling peer connections, peer discovery, message relaying, and network health monitoring ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)).
 
 ---
 
@@ -57,12 +57,12 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### Peer and PeerImp Classes
 
-- **Peer** ([Peer.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Peer.h.txt)):
+- **Peer** ([Peer.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Peer.h)):
   - Abstract base class representing a network peer.
   - Specifies pure virtual methods for peer communication, transaction queue management, resource charging, feature support, ledger and transaction set queries, and status reporting.
   - Methods include `send`, `getRemoteAddress`, `id`, `cluster`, `getNodePublic`, `json`, `supportsFeature`, and more.
 
-- **PeerImp** ([PeerImp.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h.txt), [PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+- **PeerImp** ([PeerImp.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h), [PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
   - Implements the core logic for a peer connection.
   - Manages state, communication, protocol handling, message sending/receiving, resource usage, protocol versioning, compression, transaction and ledger synchronization, and feature negotiation.
   - Tracks peer metrics, manages transaction and ledger queues, and handles protocol-specific messages.
@@ -71,7 +71,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### OverlayImpl Class
 
-- **OverlayImpl** ([OverlayImpl.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h.txt), [OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)):
+- **OverlayImpl** ([OverlayImpl.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h), [OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)):
   - Main implementation of the Overlay interface.
   - Manages peer connections, message broadcasting and relaying, peer discovery, resource management, and network metrics.
   - Handles the lifecycle of peer objects, tracks network traffic, manages timers and asynchronous operations, and provides JSON-based status and metrics reporting.
@@ -85,7 +85,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 **Function:**  
 `void OverlayImpl::connect(beast::IP::Endpoint const& remote_endpoint)`  
-([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt))
+([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp))
 
 **Step-by-step:**
 1. **Assert operational state:**  
@@ -106,12 +106,12 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### ConnectAttempt Lifecycle
 
-**ConnectAttempt::run** ([ConnectAttempt.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp.txt)):
+**ConnectAttempt::run** ([ConnectAttempt.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp)):
 - Initiates an asynchronous TCP connection to the remote peer using Boost.Asio.
 - Sets up the completion handler (`onConnect`) to be called when the connection attempt completes.
 - Ensures thread safety and object lifetime via strand and `shared_from_this()`.
 
-**ConnectAttempt::processResponse** ([ConnectAttempt.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp.txt)):
+**ConnectAttempt::processResponse** ([ConnectAttempt.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp)):
 - Handles the HTTP response from the remote peer.
 - If HTTP 503, parses "peer-ips" for alternative addresses and informs PeerFinder.
 - Checks for valid peer protocol upgrade.
@@ -138,13 +138,13 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### PeerImp::run and doAccept
 
-**PeerImp::run** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::run** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - Ensures execution on the correct strand for thread safety.
 - Parses handshake headers ("Closed-Ledger", "Previous-Ledger").
 - Stores parsed ledger hashes in peer state.
 - If inbound, calls `doAccept()`. If outbound, calls `doProtocolStart()`.
 
-**PeerImp::doAccept** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::doAccept** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - Asserts read buffer is empty.
 - Logs the accept event.
 - Generates shared value for session.
@@ -160,7 +160,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### OverlayImpl::add_active and activate
 
-**OverlayImpl::add_active** ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)):
+**OverlayImpl::add_active** ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)):
 - Acquires mutex lock for thread safety.
 - Inserts the peer into:
   - `m_peers` (slot to peer map)
@@ -169,17 +169,17 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 - Logs activation.
 - Calls `peer->run()` to start the peer's main processing loop.
 
-**OverlayImpl::activate** ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)):
+**OverlayImpl::activate** ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)):
 - Inserts the peer into the `ids_` map (ID to peer).
 - Logs activation.
 - Asserts nonzero peers.
 
 ### PeerImp::run and doProtocolStart
 
-**PeerImp::run** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::run** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - After handshake, stores ledger hashes and transitions to protocol start.
 
-**PeerImp::doProtocolStart** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::doProtocolStart** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - Calls `onReadMessage(error_code(), 0)` to start the asynchronous message receive loop.
 - If inbound and supports ValidatorListPropagation, sends validator lists.
 - Sends manifests message if available.
@@ -191,7 +191,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### OverlayImpl::relay
 
-**OverlayImpl::relay(protocol::TMProposeSet& m, uint256 const& uid, PublicKey const& validator)** ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)):
+**OverlayImpl::relay(protocol::TMProposeSet& m, uint256 const& uid, PublicKey const& validator)** ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)):
 - Calls `app_.getHashRouter().shouldRelay(uid)` to determine if the proposal should be relayed.
 - If not, returns an empty set.
 - If yes:
@@ -202,13 +202,13 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### Slot::update and Squelch Mechanism
 
-**Slot::update** ([Slot.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h.txt)):
+**Slot::update** ([Slot.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h)):
 - Tracks peer activity for a validator, incrementing message counts and considering peers for selection.
 - When enough peers reach the message threshold, randomly selects a subset to be "Selected" and squelches the rest (temporarily mutes them).
 - Squelched peers are unsquelched after expiration.
 - Handles all state transitions, logging, and squelch/unsquelch notifications via the SquelchHandler interface.
 
-**OverlayImpl::unsquelch** ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)):
+**OverlayImpl::unsquelch** ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)):
 - Looks up the peer by short ID.
 - If found, constructs a TMSquelch message with `squelch=false` for the validator.
 - Sends the message to the peer, instructing it to stop squelching messages from the validator.
@@ -219,7 +219,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### PeerImp::close
 
-**PeerImp::close** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::close** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - Asserts execution on the correct strand.
 - If the socket is open:
   - Sets `detaching_` to true.
@@ -230,7 +230,7 @@ This document provides a detailed, code-based breakdown of the peering (Overlay)
 
 ### PeerImp::~PeerImp
 
-**PeerImp::~PeerImp** ([PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)):
+**PeerImp::~PeerImp** ([PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)):
 - Checks if the peer is a cluster member.
 - Calls:
   - `overlay_.deletePeer(id_)` to remove the peer from slot management structures.
@@ -304,7 +304,7 @@ PeerFinder manages the process of discovering and connecting to peers in multipl
 
 ### PeerFinder Configuration Options
 
-PeerFinder is configured via a `Config` structure ([peerfinder/README.md](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/peerfinder/README.md), [PeerfinderConfig.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/peerfinder/detail/PeerfinderConfig.cpp.txt)):
+PeerFinder is configured via a `Config` structure ([peerfinder/README.md](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/peerfinder/README.md), [PeerfinderConfig.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/peerfinder/detail/PeerfinderConfig.cpp)):
 
 - **autoConnect**:  
   Enables automatic outbound connection attempts using learned addresses.
@@ -356,7 +356,7 @@ Incompatible changes can break interoperability and partition the network.
 
 ## Monitoring Output and JSON Structure
 
-- OverlayImpl provides JSON-based status and metrics reporting ([OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)).
+- OverlayImpl provides JSON-based status and metrics reporting ([OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)).
 - The `peers` command returns a JSON object with:
   - **Cluster Information**:  
     - `cluster` object: one entry per cluster member (configured or introduced).
@@ -394,33 +394,33 @@ Incompatible changes can break interoperability and partition the network.
 
 ## Supporting Classes and Utilities
 
-- **HashRouter** ([HashRouter.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/HashRouter.h.txt)):
+- **HashRouter** ([HashRouter.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/HashRouter.h)):
   - Tracks which peers have sent or relayed a given message, prevents redundant processing or relaying, and manages flags indicating the status of each message.
   - Used by OverlayImpl::relay to determine which peers should receive a message.
 
-- **Slot and Slots** ([Slot.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h.txt)):
+- **Slot and Slots** ([Slot.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h)):
   - Manage peer selection and squelching for reduce relay.
   - Track state of peers (Counting, Selected, Squelched) for a given validator.
 
-- **PeerReservationTable** ([PeerReservationTable.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerReservationTable.h.txt)):
+- **PeerReservationTable** ([PeerReservationTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerReservationTable.h)):
   - Manages a set of peer reservations for trusted connections.
 
-- **PeerSet** ([PeerSet.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerSet.cpp.txt)):
+- **PeerSet** ([PeerSet.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerSet.cpp)):
   - Manages sets of peers for ledger and transaction acquisition.
 
 ---
 
 ## References to Source Code
 
-- [OverlayImpl.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp.txt)
-- [OverlayImpl.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h.txt)
-- [Peer.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Peer.h.txt)
-- [PeerImp.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h.txt)
-- [PeerImp.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp.txt)
-- [ConnectAttempt.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp.txt)
-- [Slot.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h.txt)
+- [OverlayImpl.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.cpp)
+- [OverlayImpl.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/OverlayImpl.h)
+- [Peer.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Peer.h)
+- [PeerImp.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.h)
+- [PeerImp.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerImp.cpp)
+- [ConnectAttempt.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/ConnectAttempt.cpp)
+- [Slot.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/Slot.h)
 - [Peerfinder/README.md](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/peerfinder/README.md)
-- [HashRouter.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/HashRouter.h.txt)
-- [PeerReservationTable.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerReservationTable.h.txt)
-- [PeerSet.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerSet.cpp.txt)
+- [HashRouter.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/HashRouter.h)
+- [PeerReservationTable.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/PeerReservationTable.h)
+- [PeerSet.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/PeerSet.cpp)
 - [README.md](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/README.md)

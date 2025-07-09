@@ -106,7 +106,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## NegativeUNLVote Class and Responsibilities
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt), [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp), [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h)
 
 - Manages the entire voting process for the Negative UNL.
 - **Key responsibilities:**
@@ -121,7 +121,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Validator Scoring: buildScoreTable
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
 
 - **Purpose:** Constructs a score table mapping each validator NodeID in the current UNL to the number of trusted validations they have issued over a recent interval of ledgers.
 - **Edge Cases:**  
@@ -131,7 +131,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Candidate Selection: findAllCandidates
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
 
 - **Purpose:** Identifies which validators are candidates to be disabled (added to Negative UNL) or re-enabled (removed from Negative UNL).
 - **Edge Cases:**  
@@ -142,7 +142,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Deterministic Candidate Choice: choose
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
 
 - **Purpose:** Deterministically selects a single NodeID from a list of candidates using a randomizing pad (typically the previous ledger hash).
 
@@ -150,7 +150,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Negative UNL Transaction Construction: addTx
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
 
 - **Purpose:** Constructs and adds a Negative UNL modification transaction to the SHAMap of transactions for the next ledger.
 - **Failure Mode:**  
@@ -160,7 +160,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Voting Process: doVoting
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
 
 - **Purpose:** Orchestrates the entire Negative UNL voting process for a consensus round.
 - **Edge Cases:**  
@@ -170,7 +170,7 @@ Consensus in XRPL is tracked using the following states (see `ConsensusTypes.h`)
 
 ## Ledger Application: applyUNLModify
 
-**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt)
+**Location:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp)
 
 - **Purpose:** Processes a UNL_MODIFY transaction to either disable or re-enable a validator in the Negative UNL.
 - **Failure Modes:**  
@@ -254,11 +254,11 @@ static constexpr float negativeUNLMaxListed = 0.25;
 
 ## References to Source Code
 
-- [NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp.txt)
-- [NegativeUNLVote.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h.txt)
-- [Change.cpp (applyUNLModify)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp.txt)
-- [ValidatorList.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/ValidatorList.cpp.txt)
-- [Ledger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.cpp.txt)
-- [RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp.txt)
-- [Consensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h.txt)
-- [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h.txt)
+- [NegativeUNLVote.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.cpp)
+- [NegativeUNLVote.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/NegativeUNLVote.h)
+- [Change.cpp (applyUNLModify)](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/tx/detail/Change.cpp)
+- [ValidatorList.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/detail/ValidatorList.cpp)
+- [Ledger.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/ledger/Ledger.cpp)
+- [RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp)
+- [Consensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h)
+- [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h)

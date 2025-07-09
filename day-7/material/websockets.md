@@ -45,7 +45,7 @@ This document provides a detailed, code-based breakdown of the WebSocket functio
 
 ### Door and Detector
 
-- The `Door` class template ([include/xrpl/server/detail/Door.h.txt]) manages incoming TCP connections for the XRPL server.
+- The `Door` class template ([include/xrpl/server/detail/Door.h]) manages incoming TCP connections for the XRPL server.
 - The `run()` method starts the asynchronous accept loop:
   - Uses `boost::asio::spawn` to launch a coroutine on the strand.
   - The coroutine executes `do_accept`, which loops, accepting new connections.
@@ -70,7 +70,7 @@ if (ssl_ && plain_) {
 
 ### Peer Handler Creation
 
-- The `create` method ([include/xrpl/server/detail/Door.h.txt]) instantiates either an `SSLHTTPPeer` or `PlainHTTPPeer` and calls `run()` to start the session.
+- The `create` method ([include/xrpl/server/detail/Door.h]) instantiates either an `SSLHTTPPeer` or `PlainHTTPPeer` and calls `run()` to start the session.
 
 ```cpp
 template <class Handler>
@@ -113,7 +113,7 @@ Door<Handler>::create(
 
 ### PlainHTTPPeer and SSLHTTPPeer
 
-- `PlainHTTPPeer` ([include/xrpl/server/detail/PlainHTTPPeer.h.txt]) and `SSLHTTPPeer` ([include/xrpl/server/detail/SSLHTTPPeer.h.txt]) handle HTTP sessions over plain and SSL connections, respectively.
+- `PlainHTTPPeer` ([include/xrpl/server/detail/PlainHTTPPeer.h]) and `SSLHTTPPeer` ([include/xrpl/server/detail/SSLHTTPPeer.h]) handle HTTP sessions over plain and SSL connections, respectively.
 - Both implement the `Session` interface and provide a `websocketUpgrade()` method to upgrade the session to a WebSocket.
 
 #### PlainHTTPPeer::websocketUpgrade
@@ -156,7 +156,7 @@ SSLHTTPPeer<Handler>::websocketUpgrade()
 
 ### Session::websocketUpgrade
 
-- The `Session` interface ([include/xrpl/server/Session.h.txt]) declares:
+- The `Session` interface ([include/xrpl/server/Session.h]) declares:
 
 ```cpp
 virtual std::shared_ptr<WSSession>
@@ -171,7 +171,7 @@ websocketUpgrade() = 0;
 
 ### WSSession
 
-- The `WSSession` interface ([include/xrpl/server/WSSession.h.txt]) defines the contract for WebSocket sessions:
+- The `WSSession` interface ([include/xrpl/server/WSSession.h]) defines the contract for WebSocket sessions:
 
 ```cpp
 struct WSSession
@@ -201,8 +201,8 @@ struct WSSession
 
 ### BaseWSPeer, PlainWSPeer, SSLWSPeer
 
-- `BaseWSPeer` ([include/xrpl/server/detail/BaseWSPeer.h.txt]) is a template base class implementing `WSSession`.
-- `PlainWSPeer` ([include/xrpl/server/detail/PlainWSPeer.h.txt]) and `SSLWSPeer` ([include/xrpl/server/detail/SSLWSPeer.h.txt]) inherit from `BaseWSPeer` and implement plain and SSL WebSocket sessions, respectively.
+- `BaseWSPeer` ([include/xrpl/server/detail/BaseWSPeer.h]) is a template base class implementing `WSSession`.
+- `PlainWSPeer` ([include/xrpl/server/detail/PlainWSPeer.h]) and `SSLWSPeer` ([include/xrpl/server/detail/SSLWSPeer.h]) inherit from `BaseWSPeer` and implement plain and SSL WebSocket sessions, respectively.
 
 ---
 
@@ -304,7 +304,7 @@ void BaseWSPeer<Handler, Impl>::on_read(error_code const& ec)
 
 ### Message Processing and onWSMessage
 
-- The handler's `onWSMessage` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the incoming message:
+- The handler's `onWSMessage` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp]) processes the incoming message:
 
 ```cpp
 void ServerHandler::onWSMessage(
@@ -368,7 +368,7 @@ void ServerHandler::onWSMessage(
 
 ### Sending Messages
 
-- `WSSession::send` is implemented by `BaseWSPeer::send` ([include/xrpl/server/detail/BaseWSPeer.h.txt]):
+- `WSSession::send` is implemented by `BaseWSPeer::send` ([include/xrpl/server/detail/BaseWSPeer.h]):
 
 ```cpp
 void BaseWSPeer<Handler, Impl>::send(std::shared_ptr<WSMsg> w)
@@ -456,7 +456,7 @@ void BaseWSPeer<Handler, Impl>::close(boost::beast::websocket::close_reason cons
 
 ### WSInfoSub
 
-- `WSInfoSub` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h.txt]) is a specialized subscription object for WebSocket sessions.
+- `WSInfoSub` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h]) is a specialized subscription object for WebSocket sessions.
 - It holds a weak pointer to the associated `WSSession` and user/forwarded-for information.
 - The `send` method transmits a JSON message to the WebSocket client:
 
@@ -482,7 +482,7 @@ void send(Json::Value const& jv, bool) override {
 
 ### onHandoff and WebSocket Upgrade
 
-- `ServerHandler::onHandoff` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) handles HTTP requests that may be upgraded to WebSocket:
+- `ServerHandler::onHandoff` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp]) handles HTTP requests that may be upgraded to WebSocket:
 
 ```cpp
 if (!is_ws)
@@ -525,7 +525,7 @@ return handoff;
 ### onWSMessage and processSession
 
 - `onWSMessage` (see above) posts the message to the job queue for processing.
-- `processSession` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]) processes the request and returns a JSON result, which is sent back to the client.
+- `processSession` ([https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp]) processes the request and returns a JSON result, which is sent back to the client.
 
 ---
 
@@ -539,13 +539,13 @@ return handoff;
 
 ## References to Source Code
 
-- [include/xrpl/server/detail/Door.h.txt]
-- [include/xrpl/server/detail/PlainHTTPPeer.h.txt]
-- [include/xrpl/server/detail/SSLHTTPPeer.h.txt]
-- [include/xrpl/server/Session.h.txt]
-- [include/xrpl/server/WSSession.h.txt]
-- [include/xrpl/server/detail/BaseWSPeer.h.txt]
-- [include/xrpl/server/detail/PlainWSPeer.h.txt]
-- [include/xrpl/server/detail/SSLWSPeer.h.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp.txt]
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h.txt]
+- [include/xrpl/server/detail/Door.h]
+- [include/xrpl/server/detail/PlainHTTPPeer.h]
+- [include/xrpl/server/detail/SSLHTTPPeer.h]
+- [include/xrpl/server/Session.h]
+- [include/xrpl/server/WSSession.h]
+- [include/xrpl/server/detail/BaseWSPeer.h]
+- [include/xrpl/server/detail/PlainWSPeer.h]
+- [include/xrpl/server/detail/SSLWSPeer.h]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/ServerHandler.cpp]
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/rpc/detail/WSInfoSub.h]

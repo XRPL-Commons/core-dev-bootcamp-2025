@@ -58,7 +58,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### SecretKey Class
 
-- **Definition:** [include/xrpl/protocol/SecretKey.h.txt](src/libxrpl/protocol/SecretKey.h)
+- **Definition:** [include/xrpl/protocol/SecretKey.h](src/libxrpl/protocol/SecretKey.h)
 - **Purpose:** Securely encapsulates a 32-byte secret key.
 - **Key Features:**
   - Constructors for initialization from a byte array or a slice.
@@ -75,7 +75,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### PublicKey Class
 
-- **Definition:** [include/xrpl/protocol/PublicKey.h.txt](src/libxrpl/protocol/PublicKey.h)
+- **Definition:** [include/xrpl/protocol/PublicKey.h](src/libxrpl/protocol/PublicKey.h)
 - **Purpose:** Encapsulates a 33-byte public key (compressed for secp256k1, 0xED-prefixed for ed25519).
 - **Key Features:**
   - Construction from a byte slice.
@@ -93,7 +93,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 #### randomSecretKey
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Generates a new, random 32-byte secret key using a cryptographically secure random number generator.
 - **Implementation:**
   - Allocates a 32-byte buffer.
@@ -105,12 +105,12 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 #### generateSecretKey
 
-- **Declaration:** [include/xrpl/protocol/SecretKey.h.txt](src/libxrpl/protocol/SecretKey.h)
+- **Declaration:** [include/xrpl/protocol/SecretKey.h](src/libxrpl/protocol/SecretKey.h)
 - **Note:** No implementation provided in the supplied context. Cannot provide further details.
 
 #### generateKeyPair
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Generates a deterministic key pair (PublicKey, SecretKey) from a given `KeyType` and `Seed`.
 - **Implementation:**
   - For `secp256k1`:
@@ -126,7 +126,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 #### randomKeyPair
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Generates a random key pair (PublicKey, SecretKey) for a given `KeyType`.
 - **Implementation:**
   - Calls `randomSecretKey()` to generate a random secret key.
@@ -136,7 +136,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 #### derivePublicKey
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Derives a public key from a given secret key and key type.
 - **Implementation:**
   - For `secp256k1`:
@@ -154,7 +154,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### encodeBase58Token
 
-- **Definition:** [src/libxrpl/protocol/tokens.cpp.txt](src/libxrpl/protocol/tokens.cpp)
+- **Definition:** [src/libxrpl/protocol/tokens.cpp](src/libxrpl/protocol/tokens.cpp)
 - **Purpose:** Encodes a binary token (with type and size) into a Base58-encoded string with a checksum.
 - **Implementation:**
   - Prepares a buffer: [type (1 byte)] + [token data] + [checksum (4 bytes)].
@@ -166,7 +166,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### decodeBase58Token
 
-- **Definition:** [src/libxrpl/protocol/tokens.cpp.txt](src/libxrpl/protocol/tokens.cpp)
+- **Definition:** [src/libxrpl/protocol/tokens.cpp](src/libxrpl/protocol/tokens.cpp)
 - **Purpose:** Decodes a Base58-encoded string representing a token of a specific type.
 - **Implementation:**
   - Prepares a buffer for output.
@@ -180,7 +180,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### RFC1751::getEnglishFromKey
 
-- **Definition:** [src/libxrpl/crypto/RFC1751.cpp.txt](src/libxrpl/crypto/RFC1751.cpp)
+- **Definition:** [src/libxrpl/crypto/RFC1751.cpp](src/libxrpl/crypto/RFC1751.cpp)
 - **Purpose:** Converts a binary key (string) into a sequence of English words (RFC1751 mnemonic).
 - **Implementation:**
   - Splits the 16-byte key into two 8-byte halves.
@@ -194,7 +194,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### RFC1751::getKeyFromEnglish
 
-- **Definition:** [src/libxrpl/crypto/RFC1751.cpp.txt](src/libxrpl/crypto/RFC1751.cpp)
+- **Definition:** [src/libxrpl/crypto/RFC1751.cpp](src/libxrpl/crypto/RFC1751.cpp)
 - **Purpose:** Converts a 12-word English mnemonic into a binary key.
 - **Implementation:**
   - Trims and splits the input into words.
@@ -209,7 +209,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### csprng_engine
 
-- **Definition:** [src/libxrpl/crypto/csprng.cpp.txt](src/libxrpl/crypto/csprng.cpp), [include/xrpl/crypto/csprng.h.txt](include/xrpl/crypto/csprng.h)
+- **Definition:** [src/libxrpl/crypto/csprng.cpp](src/libxrpl/crypto/csprng.cpp), [include/xrpl/crypto/csprng.h](include/xrpl/crypto/csprng.h)
 - **Purpose:** Provides a cryptographically secure pseudorandom number generator (CSPRNG) for the XRPL project.
 - **Key Features:**
   - Uses OpenSSL for entropy and random number generation.
@@ -227,7 +227,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### openssl_sha256_hasher
 
-- **Definition:** [src/libxrpl/protocol/digest.cpp.txt](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
+- **Definition:** [src/libxrpl/protocol/digest.cpp](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
 - **Purpose:** Computes SHA-256 hashes using OpenSSL.
 - **Usage:**
   - Construct the hasher (initializes context).
@@ -236,7 +236,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### openssl_sha512_hasher
 
-- **Definition:** [src/libxrpl/protocol/digest.cpp.txt](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
+- **Definition:** [src/libxrpl/protocol/digest.cpp](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
 - **Purpose:** Computes SHA-512 hashes using OpenSSL.
 - **Usage:**
   - Construct the hasher (initializes context).
@@ -245,7 +245,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### openssl_ripemd160_hasher
 
-- **Definition:** [src/libxrpl/protocol/digest.cpp.txt](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
+- **Definition:** [src/libxrpl/protocol/digest.cpp](src/libxrpl/protocol/digest.cpp), [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
 - **Purpose:** Computes RIPEMD-160 hashes using OpenSSL.
 - **Usage:**
   - Construct the hasher (initializes context).
@@ -254,7 +254,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### sha512Half
 
-- **Definition:** [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
+- **Definition:** [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
 - **Purpose:** Computes a 256-bit hash by taking the first half (32 bytes) of a SHA-512 digest over arbitrary input data.
 - **Implementation:**
   - Variadic template function.
@@ -265,7 +265,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### ripesha_hasher
 
-- **Definition:** [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
+- **Definition:** [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
 - **Purpose:** Computes RIPEMD-160(SHA-256(x)), used for address and identifier generation.
 - **Implementation:**
   - Feeds data into an internal SHA-256 hasher.
@@ -278,7 +278,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### sign
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Signs a message with a secret key, supporting both secp256k1 and ed25519.
 - **Implementation:**
   - Determines key type from public key.
@@ -294,7 +294,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### signDigest
 
-- **Definition:** [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
+- **Definition:** [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
 - **Purpose:** Signs a 256-bit digest using a secp256k1 secret key.
 - **Implementation:**
   - Checks that public key is secp256k1.
@@ -305,7 +305,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### verify
 
-- **Definition:** [src/libxrpl/protocol/PublicKey.cpp.txt](src/libxrpl/protocol/PublicKey.cpp)
+- **Definition:** [src/libxrpl/protocol/PublicKey.cpp](src/libxrpl/protocol/PublicKey.cpp)
 - **Purpose:** Verifies a signature for a given message and public key.
 - **Implementation:**
   - Determines key type from public key.
@@ -324,7 +324,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### secure_erase
 
-- **Definition:** [src/libxrpl/crypto/secure_erase.cpp.txt](src/libxrpl/crypto/secure_erase.cpp)
+- **Definition:** [src/libxrpl/crypto/secure_erase.cpp](src/libxrpl/crypto/secure_erase.cpp)
 - **Purpose:** Securely erases a memory region to prevent sensitive data from lingering in memory.
 - **Implementation:**
   - Calls `OPENSSL_cleanse(dest, bytes)` to overwrite the memory.
@@ -336,7 +336,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### make_SSLContext
 
-- **Definition:** [src/libxrpl/basics/make_SSLContext.cpp.txt](src/libxrpl/basics/make_SSLContext.cpp)
+- **Definition:** [src/libxrpl/basics/make_SSLContext.cpp](src/libxrpl/basics/make_SSLContext.cpp)
 - **Purpose:** Creates and returns a new SSL context configured for anonymous (unauthenticated) use, with a specified cipher list.
 - **Implementation:**
   - Allocates and configures a new SSL context.
@@ -347,7 +347,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### make_SSLContextAuthed
 
-- **Definition:** [src/libxrpl/basics/make_SSLContext.cpp.txt](src/libxrpl/basics/make_SSLContext.cpp)
+- **Definition:** [src/libxrpl/basics/make_SSLContext.cpp](src/libxrpl/basics/make_SSLContext.cpp)
 - **Purpose:** Creates and initializes an authenticated SSL context, loading key, certificate, and chain files, and configuring the cipher list.
 - **Implementation:**
   - Creates a new SSL context with the specified cipher list.
@@ -363,7 +363,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### buildHandshake
 
-- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
+- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
 - **Purpose:** Constructs HTTP headers for the peer handshake process, including cryptographic proofs of node identity and session binding.
 - **Implementation:**
   - Inserts headers:
@@ -379,7 +379,7 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ### verifyHandshake
 
-- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
+- **Definition:** [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
 - **Purpose:** Verifies the integrity and validity of handshake headers received from a peer.
 - **Implementation:**
   - Validates `Server-Domain` header (if present) using `isProperlyFormedTomlDomain`.
@@ -391,16 +391,16 @@ This document provides a detailed, code-based breakdown of the cryptography func
 
 ## References to Source Code
 
-- [include/xrpl/protocol/SecretKey.h.txt](src/libxrpl/protocol/SecretKey.h)
-- [src/libxrpl/protocol/SecretKey.cpp.txt](src/libxrpl/protocol/SecretKey.cpp)
-- [include/xrpl/protocol/PublicKey.h.txt](src/libxrpl/protocol/PublicKey.h)
-- [src/libxrpl/protocol/PublicKey.cpp.txt](src/libxrpl/protocol/PublicKey.cpp)
-- [src/libxrpl/protocol/tokens.cpp.txt](src/libxrpl/protocol/tokens.cpp)
-- [src/libxrpl/crypto/RFC1751.cpp.txt](src/libxrpl/crypto/RFC1751.cpp)
-- [include/xrpl/crypto/csprng.h.txt](include/xrpl/crypto/csprng.h)
-- [src/libxrpl/crypto/csprng.cpp.txt](src/libxrpl/crypto/csprng.cpp)
-- [include/xrpl/protocol/digest.h.txt](include/xrpl/protocol/digest.h)
-- [src/libxrpl/protocol/digest.cpp.txt](src/libxrpl/protocol/digest.cpp)
-- [src/libxrpl/crypto/secure_erase.cpp.txt](src/libxrpl/crypto/secure_erase.cpp)
-- [src/libxrpl/basics/make_SSLContext.cpp.txt](src/libxrpl/basics/make_SSLContext.cpp)
-- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp.txt](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)
+- [include/xrpl/protocol/SecretKey.h](src/libxrpl/protocol/SecretKey.h)
+- [src/libxrpl/protocol/SecretKey.cpp](src/libxrpl/protocol/SecretKey.cpp)
+- [include/xrpl/protocol/PublicKey.h](src/libxrpl/protocol/PublicKey.h)
+- [src/libxrpl/protocol/PublicKey.cpp](src/libxrpl/protocol/PublicKey.cpp)
+- [src/libxrpl/protocol/tokens.cpp](src/libxrpl/protocol/tokens.cpp)
+- [src/libxrpl/crypto/RFC1751.cpp](src/libxrpl/crypto/RFC1751.cpp)
+- [include/xrpl/crypto/csprng.h](include/xrpl/crypto/csprng.h)
+- [src/libxrpl/crypto/csprng.cpp](src/libxrpl/crypto/csprng.cpp)
+- [include/xrpl/protocol/digest.h](include/xrpl/protocol/digest.h)
+- [src/libxrpl/protocol/digest.cpp](src/libxrpl/protocol/digest.cpp)
+- [src/libxrpl/crypto/secure_erase.cpp](src/libxrpl/crypto/secure_erase.cpp)
+- [src/libxrpl/basics/make_SSLContext.cpp](src/libxrpl/basics/make_SSLContext.cpp)
+- [https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp)

@@ -1,8 +1,10 @@
 1. Start with a "theory" powerpoint presentation. Open for questions.
 
-2. Then go through each section, show the code, sometimes line by line.
+2. Then go into the detail;
 
-2.1. Show Code
-2.2. Run Test
-2.3. Explain Debuger
+Options:
 
+2.1. Show Code - Line by Line
+2.2. Run Test - Add Fatal Logging
+2.3. Mini Exercise
+2.4. Full Exercise
