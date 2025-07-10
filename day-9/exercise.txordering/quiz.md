@@ -1,323 +1,121 @@
-# XRPL Consensus Transaction Ordering - Comprehensive Homework Assignment
+## Consensus_TXOrdering Quiz
 
-## Instructions
-This assignment tests your understanding of XRPL's consensus transaction ordering mechanisms. Answer all questions thoroughly, showing your work where applicable. Total points: 200.
+### 1. CanonicalTXSet Ordering and Tie-Breaking
 
----
+**1.1** What is the primary purpose of the `CanonicalTXSet` in the consensus process?  
+a) To store all transactions in the ledger  
+b) To provide a deterministic ordering of transactions for consensus  
+c) To validate transactions  
+d) To calculate transaction fees
 
-## Part 1: Q&A Game - Transaction Ordering and Finality (25 points)
+**1.2** When two transactions from the same account are present in the `CanonicalTXSet`, what is the primary tie-breaker used to determine their order?  
+a) Transaction hash  
+b) Account sequence number  
+c) Fee level  
+d) Ledger index
 
-### Question 1.1 (5 points)
-**Multiple Choice**: In XRPL consensus, when does a transaction become "final"?
-
-A) When it's included in a CanonicalTXSet
-B) When it receives majority validator votes
-C) When the ledger containing it is validated by consensus
-D) When it's applied to the open ledger
-
-**Answer**: _____ **Explanation**: _________________________________
-
-### Question 1.2 (5 points)
-**Short Answer**: List the 5 main steps in transaction ordering during consensus, in correct sequence.
-
-1. _________________________________
-2. _________________________________
-3. _________________________________
-4. _________________________________
-5. _________________________________
-
-### Question 1.3 (10 points)
-**Scenario Analysis**: A validator receives 3 different CanonicalTXSets from peers:
-- Set A: 150 transactions, hash 0x1234...
-- Set B: 148 transactions, hash 0x5678...
-- Set C: 150 transactions, hash 0x9ABC...
-
-Explain the decision process for choosing which set to support, considering:
-- Transaction count differences
-- Hash comparison rules
-- Tie-breaking mechanisms
-
-**Answer**: _________________________________
-
-### Question 1.4 (5 points)
-**True/False with Explanation**: A transaction can be included in multiple CanonicalTXSets simultaneously across different validators.
-
-**Answer**: _____ **Explanation**: _________________________________
+**1.3** True or False: The `CanonicalTXSet` ensures that transactions from different accounts are always ordered by their fee level.
 
 ---
 
-## Part 2: CanonicalTXSet Ordering Mechanisms (35 points)
+### 2. Transaction Set Construction and Proposal
 
-### Question 2.1 (10 points)
-**Code Analysis**: Given this pseudo-code for transaction ordering:
+**2.1** In the consensus process, what is the role of the `TxSet_t` (transaction set)?  
+a) It holds the set of transactions proposed for inclusion in the next ledger.  
+b) It stores the results of transaction execution.  
+c) It tracks failed transactions.  
+d) It manages account balances.
 
-```cpp
-bool compareTransactions(const STTx& tx1, const STTx& tx2, uint256 salt) {
-    auto key1 = sha512Half(tx1.getAccountID(), salt);
-    auto key2 = sha512Half(tx2.getAccountID(), salt);
-    
-    if (key1 != key2)
-        return key1 < key2;
-    
-    // What happens next?
-}
-```
+**2.2** What must be true about the `txns.id()` and `position.position()` in the `ConsensusResult` constructor?  
+a) They must be different  
+b) They must be equal  
+c) They must both be zero  
+d) They must be negative
 
-Complete the function and explain each step:
-
-**Completed Code**:
-```cpp
-// Your completion here
-```
-
-**Explanation**: _________________________________
-
-### Question 2.2 (10 points)
-**Ordering Exercise**: Given these transactions and salt `0xABCD...`, order them correctly:
-
-```
-Tx1: Account=rN7n..., Sequence=100, TxID=0x1111...
-Tx2: Account=rN7n..., Sequence=101, TxID=0x2222...
-Tx3: Account=rM5k..., Sequence=50,  TxID=0x3333...
-Tx4: Account=rM5k..., Sequence=50,  TxID=0x4444...
-```
-
-Assume:
-- sha512Half(rN7n..., salt) = 0x7777...
-- sha512Half(rM5k..., salt) = 0x5555...
-
-**Ordered List**:
-1. _________________________________
-2. _________________________________
-3. _________________________________
-4. _________________________________
-
-**Justification**: _________________________________
-
-### Question 2.3 (15 points)
-**Deep Dive**: Explain the purpose and mechanism of "salted account keys" in transaction ordering:
-
-a) **Why is salting necessary?** (5 points)
-_________________________________
-
-b) **How does the salt prevent manipulation?** (5 points)
-_________________________________
-
-c) **What happens if two validators use different salts?** (5 points)
-_________________________________
+**2.3** Short Answer: Why is it important for all nodes to agree on the transaction set ID during consensus?
 
 ---
 
-## Part 3: DisputedTx Lifecycle (30 points)
+### 3. DisputedTx Lifecycle and Dispute Management
 
-### Question 3.1 (10 points)
-**Multiple Choice**: A DisputedTx is created when:
+**3.1** What is the purpose of the `DisputedTx` class in the consensus process?  
+a) To store all valid transactions  
+b) To track transactions that are not agreed upon by all peers  
+c) To calculate transaction fees  
+d) To manage account sequence numbers
 
-A) A transaction fails validation
-B) Validators disagree on transaction inclusion
-C) A transaction has insufficient fees
-D) The transaction queue is full
+**3.2** When does a transaction become a "disputed" transaction?  
+a) When it is included in the ledger  
+b) When it is proposed by all peers  
+c) When there is disagreement among peers about its inclusion  
+d) When it fails validation
 
-**Answer**: _____ 
-
-**Follow-up**: Describe the exact conditions that trigger DisputedTx creation.
-_________________________________
-
-### Question 3.2 (10 points)
-**State Diagram**: Draw and label the complete lifecycle of a DisputedTx, including:
-- Creation triggers
-- Voting phases
-- Resolution conditions
-- Timeout scenarios
-
-**Diagram**: (Draw below)
-
-### Question 3.3 (10 points)
-**Scenario**: A DisputedTx has the following vote distribution after 3 seconds:
-- 15 validators vote "include"
-- 10 validators vote "exclude"  
-- 8 validators haven't voted
-- Total network: 33 validators
-
-Given a 80% threshold requirement:
-
-a) **Current status**: _________________________________
-b) **Possible outcomes**: _________________________________
-c) **Impact on consensus timing**: _________________________________
+**3.3** Short Answer: What happens to a disputed transaction if consensus is not reached on its inclusion?
 
 ---
 
-## Part 4: checkConsensus Function Analysis (40 points)
+### 4. Consensus State Determination
 
-### Question 4.1 (15 points)
-**Function Signature Analysis**: Given this simplified checkConsensus signature:
+**4.1** Which of the following is NOT a possible value for the consensus state?  
+a) No  
+b) MovedOn  
+c) Yes  
+d) Maybe
 
-```cpp
-ConsensusResult checkConsensus(
-    std::chrono::milliseconds elapsed,
-    std::size_t agreeing,
-    std::size_t total,
-    bool haveCloseTime,
-    std::chrono::milliseconds closeResolution
-);
-```
+**4.2** What are the key parameters used by `checkConsensus` to determine consensus state? (Select all that apply)  
+a) Number of proposers  
+b) Time since consensus started  
+c) Fee level of transactions  
+d) Agreement thresholds
 
-For each parameter, explain:
-a) **elapsed**: _________________________________
-b) **agreeing**: _________________________________
-c) **total**: _________________________________
-d) **haveCloseTime**: _________________________________
-e) **closeResolution**: _________________________________
+**4.3** What is the effect of the `normalConsensusIncreasePercent` and `slowConsensusDecreasePercent` parameters in the `TxQ::Setup` struct?
 
-### Question 4.2 (15 points)
-**Threshold Calculations**: Given these scenarios, determine the consensus result:
-
-**Scenario A**:
-- elapsed: 2000ms
-- agreeing: 25 validators
-- total: 35 validators
-- haveCloseTime: true
-- closeResolution: 10s
-
-**Result**: _____ **Reasoning**: _________________________________
-
-**Scenario B**:
-- elapsed: 8000ms
-- agreeing: 18 validators
-- total: 35 validators
-- haveCloseTime: false
-- closeResolution: 30s
-
-**Result**: _____ **Reasoning**: _________________________________
-
-### Question 4.3 (10 points)
-**Edge Cases**: Describe what happens in these situations:
-
-a) **All validators agree immediately**: _________________________________
-b) **No validators agree after timeout**: _________________________________
-c) **Exactly threshold agreement at timeout**: _________________________________
+**4.4** Short Answer: What does the consensus process do if the required threshold is not met within the timeout period?
 
 ---
 
-## Part 5: TxQ Ordering and Per-Account Logic (25 points)
+### 5. TxQ Ordering and Per-Account Logic
 
-### Question 5.1 (10 points)
-**Queue Mechanics**: Explain how the Transaction Queue (TxQ) orders transactions:
+**5.1** What is the purpose of the `TxQ` (Transaction Queue)?  
+a) To store all validated transactions  
+b) To manage transactions waiting to be included in a ledger, ordered by fee and per-account rules  
+c) To track account balances  
+d) To validate transaction signatures
 
-a) **Primary ordering criteria**: _________________________________
-b) **Per-account sequence handling**: _________________________________
-c) **Fee escalation impact**: _________________________________
+**5.2** What is the `maximumTxnPerAccount` parameter used for in the `TxQ::Setup` struct?  
+a) To limit the number of transactions per ledger  
+b) To limit the number of transactions per account in the queue  
+c) To limit the number of ledgers in the queue  
+d) To limit the number of failed transactions
 
-### Question 5.2 (10 points)
-**Account Sequence Logic**: Given this account state:
-- Account: rABC123...
-- Current Sequence: 100
-- Pending in TxQ: Seq 101, 102, 104, 105
-
-A new transaction arrives with Sequence 103. Explain:
-
-a) **Where it's placed in queue**: _________________________________
-b) **Impact on existing transactions**: _________________________________
-c) **Validation order**: _________________________________
-
-### Question 5.3 (5 points)
-**True/False**: The TxQ can hold multiple transactions with the same sequence number from the same account.
-
-**Answer**: _____ **Explanation**: _________________________________
+**5.3** True or False: The `TxQ` can block transactions from being retried if the per-account limit is reached.
 
 ---
 
-## Part 6: Transaction Finality Determination (20 points)
+### 6. Blockers, Retries, and Per-Account Limits
 
-### Question 6.1 (10 points)
-**Finality Levels**: Rank these transaction states from least to most final:
+**6.1** What happens to a transaction in the `TxQ` if it cannot be applied due to a sequence number gap?  
+a) It is immediately discarded  
+b) It is retried in the next ledger  
+c) It is moved to the front of the queue  
+d) It is marked as disputed
 
-A) In open ledger
-B) In validated ledger
-C) In closed ledger (not yet validated)
-D) In CanonicalTXSet
-E) In TxQ
+**6.2** Short Answer: How does the `retrySequencePercent` parameter affect transaction retries in the queue?
 
-**Ranking**: _____ → _____ → _____ → _____ → _____
-
-### Question 6.2 (10 points)
-**Practical Application**: A client submits a payment transaction. Trace its journey through finality states, explaining what guarantees exist at each stage:
-
-**Stage 1**: _________________________________
-**Stage 2**: _________________________________
-**Stage 3**: _________________________________
-**Stage 4**: _________________________________
-**Stage 5**: _________________________________
+**6.3** What is the effect of the `minimumTxnInLedger` and `targetTxnInLedger` parameters in the `TxQ::Setup` struct?
 
 ---
 
-## Part 7: Consensus State Transitions (15 points)
+### 7. Supporting Classes and Utilities
 
-### Question 7.1 (10 points)
-**State Machine**: Draw the consensus state transition diagram showing:
-- Open phase
-- Establish phase  
-- Accepted phase
-- Transitions and triggers
+**7.1** What is the purpose of the `Metrics` struct in `TxQ`?  
+a) To store transaction hashes  
+b) To track statistics about the transaction queue and fee levels  
+c) To manage account balances  
+d) To validate transactions
 
-**Diagram**: (Draw below)
-
-### Question 7.2 (5 points)
-**Timing**: What are the typical timeouts for each consensus phase?
-
-- **Open phase**: _________________________________
-- **Establish phase**: _________________________________
-- **Accepted phase**: _________________________________
-
----
-
-## Part 8: Practical Scenarios and Edge Cases (10 points)
-
-### Question 8.1 (5 points)
-**Network Partition**: During a network partition, Group A (20 validators) and Group B (15 validators) form separate consensus. Explain:
-
-a) **Which group can make progress**: _________________________________
-b) **What happens when partition heals**: _________________________________
-
-### Question 8.2 (5 points)
-**Byzantine Behavior**: A malicious validator consistently proposes invalid CanonicalTXSets. How does the network handle this?
-
-**Answer**: _________________________________
-
----
-
-## Bonus Questions (10 points extra credit)
-
-### Bonus 1 (5 points)
-**Optimization**: Propose an improvement to the current transaction ordering mechanism that would reduce consensus time while maintaining security.
-
-**Proposal**: _________________________________
-
-### Bonus 2 (5 points)
-**Cross-Chain**: How would transaction ordering need to be modified for cross-chain interoperability?
-
-**Analysis**: _________________________________
-
----
-
-## Submission Guidelines
-
-1. **Format**: Type all answers clearly
-2. **Code**: Use proper syntax highlighting for code blocks
-3. **Diagrams**: Hand-drawn diagrams are acceptable if clear
-4. **Citations**: Reference XRPL documentation where applicable
-5. **Due Date**: [Insert due date]
-6. **Submission**: [Insert submission method]
-
-## Grading Rubric
-
-- **Accuracy**: 60% - Correctness of technical details
-- **Completeness**: 25% - Thoroughness of answers
-- **Understanding**: 10% - Demonstration of conceptual grasp
-- **Clarity**: 5% - Clear communication of ideas
-
-**Total Points**: 200 + 10 bonus = 210 possible points
-
----
-
-*Good luck! This assignment tests comprehensive understanding of XRPL's consensus transaction ordering. Take your time and think through each scenario carefully.*
+**7.2** In the consensus process, what is the role of the `ConsensusTimer`?  
+a) To track the time taken for transaction validation  
+b) To measure the duration of each consensus round  
+c) To calculate transaction fees  
+d) To order transactions

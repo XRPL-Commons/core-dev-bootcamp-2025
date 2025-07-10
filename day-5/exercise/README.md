@@ -1,7 +1,4 @@
 # 🐛 Bug Hunt Dev Challenge: Quantum Validator Exploit
-**Day 4 Homework Assignment**
-
----
 
 ## Challenge Overview
 
@@ -89,10 +86,3 @@ Your development team has been presented with a critical security scenario:
 - `https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/protocol/PublicKey.cpp` - Public key operations
 - `https://github.com/XRPLF/rippled/tree/develop/src/libxrpl/crypto/csprng.cpp` - Random number generation
 - `https://github.com/XRPLF/rippled/blob/develop/src/xrpld/overlay/detail/Handshake.cpp` - Network handshake process
-- Consensus protocol implementation files
-
-### Research Areas:
-- Post-quantum cryptography standards (NIST)
-- Quantum computing threat timeline
-- Blockchain quantum resistance research
-- XRPL technical documentation

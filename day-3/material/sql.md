@@ -136,10 +136,82 @@ This document provides a detailed, code-based breakdown of the SQLDatabase (spec
 
 ### Secondary Databases: Wallet, Manifest, PeerFinder, State
 
-- **Wallet Database:** Schema in `WalletDBInit` ([src/xrpld/app/main/DBInit.h]) includes tables for node identity, peer reservations, validator manifests, and publisher manifests.
-- **Manifest Database:** Managed via `ManifestCache` ([src/xrpld/app/misc/Manifest.h]), supports loading and saving manifests to a database.
-- **PeerFinder Database:** Used for peer discovery, schema and versioning managed in [src/xrpld/app/rdb/detail/PeerFinder.cpp].
-- **State Database:** Used for ledger deletion and rotation, schema includes `DbState` and `CanDelete` tables ([src/xrpld/app/rdb/detail/State.cpp]).
+#### PeerFinder Database
+
+The PeerFinder database is used to persist peer discovery and bootstrap information for the XRPL node. It is initialized and managed via the `initPeerFinderDB` function, which sets up the schema and ensures the database is ready for use.
+
+- **Schema:**
+  - Table: `SchemaVersion`
+    - Columns:
+      - `name` (TEXT PRIMARY KEY)
+      - `version` (INTEGER)
+  - Table: `PeerFinder_BootstrapCache`
+    - Columns:
+      - `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
+      - `address` (TEXT UNIQUE NOT NULL)
+      - `valence` (INTEGER)
+  - Index: `PeerFinder_BootstrapCache_Index` on `PeerFinder_BootstrapCache(address)`
+
+- **Usage:**
+  - The PeerFinder database stores bootstrap addresses and their associated valence (a score or weight for peer selection).
+  - The schema version is tracked in the `SchemaVersion` table.
+  - Functions provided include:
+    - `initPeerFinderDB`: Initializes the schema.
+    - `updatePeerFinderDB`: Handles schema version upgrades.
+    - `readPeerFinderDB`: Reads entries for use in peer discovery.
+    - `savePeerFinderDB`: Persists new or updated peer entries.
+  - The database is used internally by the PeerFinder subsystem for managing peer lists and bootstrapping the node's network connectivity.
+
+- **References:**
+  - [src/xrpld/app/rdb/detail/PeerFinder.cpp.txt]
+  - [src/xrpld/app/rdb/PeerFinder.h.txt]
+
+#### Wallet Database
+
+The Wallet database is used to store node identity, peer reservations, validator manifests, and publisher manifests. The schema is defined in `WalletDBInit` and is initialized at startup.
+
+- **Schema:**
+  - Table: `NodeIdentity`
+    - Stores the node's cryptographic identity.
+  - Table: `PeerReservation`
+    - Stores reserved peer slots and related information.
+  - Table: `ValidatorManifests`
+    - Stores validator manifest data.
+  - Table: `PublisherManifests`
+    - Stores publisher manifest data.
+
+- **Usage:**
+  - The Wallet database is used by the node to persist its own identity and manage peer and validator information.
+  - It is initialized using the schema in `WalletDBInit`.
+  - The database is accessed via free functions in Wallet.[h|cpp], which provide methods for reading, writing, and updating the relevant tables.
+  - The ManifestCache subsystem interacts with this database to load and save manifests.
+
+- **References:**
+  - [src/xrpld/app/main/DBInit.h.txt]
+  - [src/xrpld/app/rdb/detail/Wallet.cpp.txt]
+  - [src/xrpld/app/misc/Manifest.h.txt]
+
+#### State Database
+
+The State database is used for managing ledger deletion, database rotation, and tracking the state of the ledger history. It is used internally by the SHAMapStore and related components.
+
+- **Schema:**
+  - Table: `DbState`
+    - Tracks the current state of the database, including the last rotated ledger.
+  - Table: `CanDelete`
+    - Tracks the minimum ledger sequence that can be safely deleted.
+
+- **Usage:**
+  - The State database is initialized and managed via free functions in State.[h|cpp].
+  - Functions include:
+    - `initStateDB`: Initializes the schema.
+    - `getCanDelete` / `setCanDelete`: Get or set the minimum deletable ledger sequence.
+    - `getSavedState` / `setSavedState`: Get or set the saved state of the database.
+    - `setLastRotated`: Update the last rotated ledger.
+  - The database is used to coordinate online deletion and ensure safe rotation of ledger data.
+
+- **References:**
+  - [src/xrpld/app/rdb/detail/State.cpp.txt]
 
 ---
 

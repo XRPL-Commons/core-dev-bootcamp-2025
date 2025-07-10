@@ -9,18 +9,18 @@
    https://transia-rnd.github.io/xrpl-hex-visualizer/
    ```
 
-2. **Input "TokenEscrow" to get amendment hash**:
+2. **Input "RecurringPayments" to get amendment hash**:
    ```
-   138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF
+   3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4
    ```
 
-3. **Explore the amendment details** - this will show you how the amendment name "TokenEscrow" gets hashed to produce the amendment identifier.
+3. **Explore the amendment details** - this will show you how the amendment name "RecurringPayments" gets hashed to produce the amendment identifier.
 
 ### Step 2: Understanding Amendment Hashing
 
 The amendment hash is created by hashing the amendment name. For example:
-- **Amendment Name**: `TokenEscrow`
-- **Amendment Hash**: `138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF`
+- **Amendment Name**: `RecurringPayments`
+- **Amendment Hash**: `3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4`
 
 This hash is what the XRPL network uses to identify and track amendments.
 
@@ -57,15 +57,15 @@ In the web explorer, run:
 }
 ```
 
-### Look for TokenEscrow Amendment
+### Look for RecurringPayments Amendment
 
 Find this entry in the response:
 ```json
 {
-  "138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF": {
+  "3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4": {
     "count": 0,
     "enabled": false,
-    "name": "TokenEscrow",
+    "name": "RecurringPayments",
     "supported": true,
     "threshold": 1,
     "validations": 1,
@@ -93,7 +93,7 @@ ts-node src/amendment/vote.ts
 
 This will:
 - Connect to your XRPL node
-- Submit a vote for TokenEscrow amendment
+- Submit a vote for RecurringPayments amendment
 - Display transaction results
 
 ### Verify Your Vote
@@ -108,10 +108,10 @@ Return to the web explorer and re-run:
 You should see:
 ```json
 {
-  "138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF": {
+  "3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4": {
     "count": 1,          // ← Increased from 0
     "enabled": false,
-    "name": "TokenEscrow",
+    "name": "RecurringPayments",
     "supported": true,
     "threshold": 1,
     "validations": 1,
@@ -133,11 +133,11 @@ When 80% threshold is reached, you'll see a `majority` field appear:
 
 ```json
 {
-  "138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF": {
+  "3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4": {
     "count": 1,
     "enabled": false,
     "majority": 805385181,    // ← XRPL Time when majority was reached
-    "name": "TokenEscrow",
+    "name": "RecurringPayments",
     "supported": true,
     "threshold": 1,
     "validations": 1,
@@ -175,9 +175,9 @@ Once the EnableAmendment pseudo transaction is processed, the feature command wi
 
 ```json
 {
-  "138B968F25822EFBF54C00F97031221C47B1EAB8321D93C7C2AEAF85F04EC5DF": {
+  "3B95AC1581B355A45AC47DDFA65BE283519CD444B455A9719A1CAE6DE5A1E7A4": {
     "enabled": true,        // ← Amendment is now active
-    "name": "TokenEscrow",
+    "name": "RecurringPayments",
     "supported": true
   }
 }

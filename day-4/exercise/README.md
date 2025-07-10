@@ -1,16 +1,5 @@
 # XRPL Cryptography Deep Dive: Transaction Signing & Verification
 
-## 🎯 Exercise Overview
-
-This exercise will guide you through the XRPL (XRP Ledger) codebase to understand how transactions are cryptographically signed and verified. You'll explore the core security mechanisms that protect the network from fraudulent transactions.
-
-### Learning Objectives
-- Understand the transaction signature verification pipeline
-- Identify cryptographic methods used in XRPL
-- Trace public key validation flows
-- Explore multi-signature implementation
-- Analyze security measures against replay attacks
-
 ## 🔍 Quest Tasks
 
 ### Task 1: Signature Verification Discovery
@@ -119,28 +108,3 @@ Create a **technical write-up** (GitHub issue style) that includes:
    - Anti-replay mechanisms
    - Forgery detection
    - Sequence number validation
-
-### Optional Enhancements
-- **Visual Diagram**: Flow chart showing signature validation path
-- **Annotated Code Snippets**: Key functions with explanatory comments
-- **Performance Analysis**: Benchmarking different signature schemes
-- **Post-Quantum Proposal**: Design document for quantum-resistant signatures
-
-## 🎯 Success Criteria
-
-Your investigation is complete when you can:
-- [ ] Explain the complete signature verification flow
-- [ ] Identify all cryptographic methods used
-- [ ] Trace public key validation end-to-end
-- [ ] Describe multi-signature handling
-- [ ] Analyze security mechanisms
-- [ ] Propose post-quantum modifications
-
-## 💡 Investigation Tips
-
-### Code Navigation Strategy
-1. **Start High-Level**: Begin at transaction processing entry points
-2. **Follow the Data**: Trace signature data through the system
-3. **Identify Abstractions**: Look for crypto interface boundaries
-4. **Check Error Paths**: Understand failure modes
-5. **Review Tests**: Unit tests often reveal implementation details
