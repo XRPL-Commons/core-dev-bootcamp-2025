@@ -1,6 +1,5 @@
 1. Network & Servers
 
-- https://xrpl.org/docs/concepts/networks-and-servers
 - https://xrpl.org/docs/concepts/networks-and-servers/peer-protocol
 - https://xrpl.org/docs/concepts/networks-and-servers/transaction-censorship-detection
 - https://xrpl.org/docs/concepts/networks-and-servers/parallel-networks
