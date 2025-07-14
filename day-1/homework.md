@@ -31,7 +31,6 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
 
 1. **Remove standalone configuration:**
    - Comment out or remove the `[network_id]` section
-   - Remove any standalone-specific settings
 
 2. **Update peer port configuration:**
    ```ini
