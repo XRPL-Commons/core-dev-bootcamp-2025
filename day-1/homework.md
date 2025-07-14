@@ -59,7 +59,7 @@ Edit your `rippled.cfg` file to connect to the XRPL mainnet:
 5. **Configure logging for analysis:**
    ```ini
    [rpc_startup]
-   { "command": "log_level", "severity": "trace" }
+   { "command": "log_level", "severity": "info" }
    ```
 
 ### Task 3: Run Mainnet Sync

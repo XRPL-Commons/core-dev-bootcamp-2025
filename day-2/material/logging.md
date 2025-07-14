@@ -194,6 +194,3 @@ To see more log output, use `kTrace` or `kDebug` as shown above.
 - [xrpl/basics/Log.cpp](https://github.com/XRPLF/rippled/blob/develop/src/ripple/basics/Log.cpp)
 - [xrpld/app/main/Application.h](https://github.com/XRPLF/rippled/blob/develop/src/ripple/app/main/Application.h)
 - [xrpld/rpc/handlers/LogLevel.cpp](https://github.com/XRPLF/rippled/blob/develop/src/ripple/rpc/handlers/LogLevel.cpp)
-
-
-cmake --build . --target rippled --parallel 10 && ./rippled -u ripple.app.AMM

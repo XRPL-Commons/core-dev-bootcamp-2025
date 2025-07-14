@@ -211,3 +211,12 @@ ws.on('open', () => {
   }));
 });
 ```
+
+## Next Steps
+
+Once your standalone environment is running smoothly:
+1. Explore the playground scripts to understand XRPL interactions
+2. Use the Explorer's command interface to test API calls
+3. Develop and test your own applications against the local node
+4. Experiment with different transaction types and features
+5. Consider setting up a multi-node test network for advanced scenarios
