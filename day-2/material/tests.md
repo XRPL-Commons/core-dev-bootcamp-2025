@@ -49,7 +49,7 @@ The `Env` class is the core of the XRPL test framework, implemented in `src/test
 
 **Example:**
 ```cpp
-Env env{*this, supported_amendments() | featureSingleAssetVault};
+Env env{*this, supported_amendments() - featureSingleAssetVault};
 ```
 This creates a new test environment with specific protocol features enabled.
 

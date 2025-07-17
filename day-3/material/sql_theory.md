@@ -1,5 +1,16 @@
 # Theory Lesson: Understanding SQLDatabase Functionality
 
+Agenda
+
+1. Introduction to Relational Databases
+2. The Role of an SQLDatabase Interface
+3. Database Configuration
+4. Database Initialization
+5. Database Operations
+6. Error Handling and Logging
+7. Security Considerations
+8. Extensibility and Maintainability
+
 ## 1. Introduction to Relational Databases
 
 A **relational database** is a type of database that organizes data into tables, which are collections of rows and columns. Each table represents a specific entity (such as users, transactions, or products), and each row in a table represents a unique record. The relational model allows for the establishment of relationships between tables, enabling complex queries and data integrity.

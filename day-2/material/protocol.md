@@ -278,8 +278,8 @@ auto obj = parsed.object;
 
 ### Optional Fields
 
-- `x[sfFoo]` returns the value of 'Foo' if it exists, or the default value if it doesn't.
-- `x[~sfFoo]` returns the value of 'Foo' if it exists, or nothing if it doesn't.
+- `stobject[sfFoo]` returns the value of 'Foo' if it exists, or the default value if it doesn't.
+- `stobject[~sfFoo]` returns the value of 'Foo' if it exists, or nothing if it doesn't.
 - Assignment like `x[~sfFoo] = y[~sfFoo]` copies the value or omits the field if not present.
 
 **Example:**

@@ -1,5 +1,11 @@
 # Theory Lesson: Understanding the NodeStore Concept
 
+Agenda
+
+1. Purpose and Role
+2. Core Concepts
+3. Design Considerations
+
 ## 1. Purpose and Role
 
 A NodeStore is a specialized storage system designed to persistently manage and retrieve discrete units of data, called "nodes," which represent the fundamental building blocks of a larger data structure—such as a ledger, database, or distributed record. The NodeStore ensures that these nodes are reliably stored, efficiently accessed, and consistently maintained across system restarts or failures.
@@ -107,5 +113,3 @@ A robust NodeStore is designed to handle failures gracefully, ensuring that:
 ## 4. Summary
 
 The NodeStore is a foundational concept for any system that needs to persistently, efficiently, and securely manage discrete units of data. By organizing data into uniquely identifiable node objects, abstracting storage details, and focusing on integrity and performance, the NodeStore enables complex systems—such as ledgers, databases, or distributed records—to function reliably and at scale.
-
-In essence, the NodeStore is the guardian and organizer of a system’s most important data, ensuring it is always available, trustworthy, and efficiently managed.
