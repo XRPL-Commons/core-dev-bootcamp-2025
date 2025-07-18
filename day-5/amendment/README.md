@@ -17,7 +17,7 @@ The first step is integrating the Dilithium cryptographic library into our CMake
 
 ### Create the Dilithium CMake Module
 - Create `cmake/deps/dilithium.cmake` to fetch and build the Dilithium library from the pq-crystals repository
-- Configure it to build Dilithium-2 mode with randomized signing and AES support
+- Configure it to build Dilithium-2 mode with randomized signing and AES support: [dilithium.cmake](https://github.com/Transia-RnD/rippled/blob/bc8f0c2e13002887d57e69e27eafd0f11260bac2/cmake/deps/dilithium.cmake)
 - Set up imported targets for the static libraries (`libdilithium2_ref.a`, `libdilithium2aes_ref.a`, `libfips202_ref.a`)
 
 ### Update Main CMake Files
@@ -105,8 +105,7 @@ Ensure all protocol changes build correctly.
 ## Step 5: Create Comprehensive Tests
 
 ### Create Integration Test
-- Add `src/test/app/Wildcard_test.cpp` to test:
-  - Wildcard network signing behavior
+- Add `src/test/app/MyTests_test.cpp` to test:
   - Simple payment with Dilithium signatures
   - ForceQuantum flag functionality
 
@@ -124,65 +123,207 @@ Ensure all protocol changes build correctly.
 
 ### Run the Primary Integration Test
 ```bash
-cmake --build . --target rippled --parallel 10 && ./rippled -u ripple.app.Wildcard
+cmake --build . --target rippled --parallel 10 && ./rippled -u ripple.app.MyTests
 ```
 
-This will compile and run the Wildcard test that demonstrates quantum signature functionality.
+## Step 7: Create Quantum Key Ledger Entry
 
-### Run Additional Cryptography Tests
-```bash
-# Test public key functionality
-./rippled -u ripple.protocol.PublicKey
+Now we need to create a new ledger entry type to store quantum public keys on-ledger. This allows accounts to register their quantum keys and enables validation during transaction processing.
 
-# Test secret key functionality  
-./rippled -u ripple.protocol.SecretKey
+### Add LedgerNameSpace Entry
 
-# Test seed functionality
-./rippled -u ripple.protocol.Seed
+First, add the quantum key namespace to the `LedgerNameSpace` enum in `src/xrpl/protocol/Indexes.cpp`:
+
+```cpp
+enum class LedgerNameSpace : std::uint16_t {
+    // ... existing entries ...
+    VAULT = 'V',
+    QUANTUM_KEY = 'Q',  // Add this new entry
+
+    // No longer used or supported entries...
+};
 ```
 
-### Test Transaction Flow
-1. Create account with Dilithium keys
-2. Set ForceQuantum flag on account
-3. Verify only Dilithium signatures are accepted
-4. Test transaction signing and validation
+### Add New Ledger Entry Type
 
-### Review Implementation
-- Verify signature sizes and formats
-- Check key generation determinism
-- Validate Base58 encoding for large keys
-- Test amendment activation behavior
+Update `ledger_entries.macro` to define the new `QuantumKey` ledger entry:
 
-## Next Steps: Validator Support
-
-The current implementation focuses on account signatures, but validators will also need quantum-resistant protection:
-
-1. **Validator Key Updates**: Extend validator key infrastructure to support Dilithium
-2. **Consensus Integration**: Update consensus protocol to handle quantum-resistant validator signatures  
-3. **Network Transition**: Plan staged rollout for validator quantum signature adoption
-4. **Performance Optimization**: Optimize Dilithium operations for high-throughput validation
-
-## Key Technical Considerations
-
-- **Key Size Impact**: Dilithium signatures are significantly larger (~2.5KB vs ~70 bytes), affecting transaction size and network bandwidth
-- **Performance**: Dilithium verification is slower than traditional algorithms, requiring performance testing under load
-- **Backwards Compatibility**: The amendment system ensures old nodes continue working until upgrade
-- **Base58 Encoding**: Large key sizes required extending the encoding system beyond original limits
-
-## Build and Test Commands Summary
-
-```bash
-# Initial build after CMake changes
-cmake --build . --target rippled --parallel 10
-
-# Build and test after cryptographic implementation
-cmake --build . --target rippled --parallel 10
-
-# Final build and run integration test
-cmake --build . --target rippled --parallel 10 && ./rippled -u ripple.app.Wildcard
-
-# Run individual unit tests
-./rippled -u ripple.protocol.PublicKey
-./rippled -u ripple.protocol.SecretKey
-./rippled -u ripple.protocol.Seed
+```cpp
+LEDGER_ENTRY(ltQUANTUM_KEY, 0x0071, QuantumKey, quantumKey, ({
+    {sfAccount,              soeREQUIRED},
+    {sfQuantumPublicKey,     soeREQUIRED},
+    {sfPreviousTxnID,        soeREQUIRED},
+    {sfPreviousTxnLgrSeq,    soeREQUIRED},
+    {sfOwnerNode,            soeREQUIRED},
+}))
 ```
+
+### Add New SField for Quantum Public Key
+
+Update `sfields.macro` to add the quantum public key field:
+
+```cpp
+TYPED_SFIELD(sfQuantumPublicKey, BLOB, 19)
+```
+
+### Add Keylet Support
+
+Add the quantum key keylet function to the `keylet` namespace in `src/xrpl/protocol/Indexes.cpp`:
+
+```cpp
+namespace keylet {
+
+// ... existing keylet functions ...
+
+Keylet
+quantum(AccountID const& account, Slice const& quantumPublicKey) noexcept
+{
+    return {
+        ltQUANTUM_KEY,
+        indexHash(
+            LedgerNameSpace::QUANTUM_KEY,
+            account,
+            quantumPublicKey)
+    };
+}
+
+}  // namespace keylet
+```
+
+And declare it in `include/xrpl/protocol/Indexes.h`:
+
+```cpp
+namespace keylet {
+
+// ... existing declarations ...
+
+Keylet
+quantum(AccountID const& account, Slice const& quantumPublicKey) noexcept;
+
+}  // namespace keylet
+```
+
+## Step 8: Create SetQuantumKey Transaction
+
+Now we need to create a new transaction type that allows accounts to register their quantum public keys.
+
+### Add Transaction Type
+
+#### Update `transactions.macro`
+Add the new transaction type:
+```cpp
+TRANSACTION(ttSET_QUANTUM_KEY, 25, SetQuantumKey, Delegation::nondelegatable, ({
+    {sfQuantumPublicKey, soeREQUIRED},
+}))
+```
+
+### Create Transaction Implementation
+
+Create `src/xrpld/app/tx/detail/SetQuantumKey.cpp` with the basic structure:
+
+```cpp
+#include <xrpld/app/tx/detail/SetQuantumKey.h>
+#include <xrpl/protocol/Feature.h>
+#include <xrpl/protocol/KeyType.h>
+#include <xrpl/protocol/PublicKey.h>
+#include <xrpl/protocol/Indexes.h>
+
+namespace ripple {
+
+NotTEC
+SetQuantumKey::preflight(PreflightContext const& ctx)
+{
+    if (!ctx.rules.enabled(featureQuantum))
+        return temDISABLED;
+
+    if (auto const ret = preflight1(ctx); !isTesSuccess(ret))
+        return ret;
+
+    // TODO: Validate quantum public key format and size
+    // Hint: Check sfQuantumPublicKey field exists and is valid Dilithium key
+
+    return preflight2(ctx);
+}
+
+TER
+SetQuantumKey::preclaim(PreclaimContext const& ctx)
+{
+    // TODO: Check if quantum key already exists for this account
+    // Hint: Use keylet::quantum() to check if ledger entry exists
+    
+    return tesSUCCESS;
+}
+
+TER
+SetQuantumKey::doApply()
+{
+    // TODO: Create or update the quantum key ledger entry
+    // Hint: Use keylet::quantum() to create the entry
+    // Set all required fields: sfAccount, sfQuantumPublicKey, etc.
+    
+    return tesSUCCESS;
+}
+
+} // namespace ripple
+```
+
+### Create Header File
+
+Create `src/xrpld/app/tx/detail/SetQuantumKey.h`:
+```cpp
+#pragma once
+
+#include <xrpld/app/tx/detail/Transactor.h>
+
+namespace ripple {
+
+class SetQuantumKey : public Transactor
+{
+public:
+    static constexpr ConsequencesFactoryType ConsequencesFactory{Normal};
+
+    explicit SetQuantumKey(ApplyContext& ctx) : Transactor(ctx)
+    {
+    }
+
+    static NotTEC
+    preflight(PreflightContext const& ctx);
+
+    static TER
+    preclaim(PreclaimContext const& ctx);
+
+    TER
+    doApply() override;
+};
+
+} // namespace ripple
+```
+
+## Step 9: Update Signature Validation
+
+### Modify Transaction Validation
+
+Update the signature validation logic in `src/xrpld/app/tx/detail/Transactor.cpp` to check for quantum keys when validating signatures:
+
+```cpp
+// In checkSign() method, add quantum key validation:
+if (publicKeyType(signingPubKey) == KeyType::dilithium)
+{
+    // TODO: Verify that the quantum public key exists in the ledger
+    // Hint: Use keylet::quantum() to lookup the key
+    // Ensure the signing key matches the registered quantum key
+}
+```
+
+## Testing Strategy
+
+### Unit Tests
+1. Test quantum key index generation with various inputs
+2. Validate keylet creation and lookup functions
+3. Test error conditions and edge cases
+
+### Integration Tests
+1. Test complete quantum key registration flow
+2. Validate signature verification with registered keys
+3. Test interaction with ForceQuantum account flag
+4. Test key rotation scenarios
