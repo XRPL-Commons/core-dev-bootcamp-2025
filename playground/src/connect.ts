@@ -1,7 +1,7 @@
-import { Client, ServerInfoRequest } from 'xrpl'
+import { Client, ServerInfoRequest, SubscribeRequest } from 'xrpl'
 import 'dotenv/config'
 
-async function main() {
+export async function rpc() {
   try {
     const client = new Client(process.env.WSS_ENDPOINT || '')
     await client.connect()
@@ -18,4 +18,27 @@ async function main() {
   }
 }
 
-main()
+export async function subscribe() {
+  try {
+    const client = new Client(process.env.WSS_ENDPOINT || '')
+    await client.connect()
+
+    client.on('ledgerClosed', (tx: any) => {
+      console.log(`ledger: ${JSON.stringify(tx, null, 2)}`)
+    })
+    const subscribeRequest: SubscribeRequest = {
+      command: 'subscribe',
+      streams: ['ledger'],
+    }
+    const response = await client.request(subscribeRequest)
+    console.log(JSON.stringify(response, null, 2))
+
+    // await client.disconnect()
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// rpc()
+subscribe()

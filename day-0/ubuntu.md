@@ -25,7 +25,7 @@ make --jobs $(nproc)
 make install
 cd ..
 
-pipx install 'conan<2'
+pipx install 'conan>2'
 pipx ensurepath
 ```
 
@@ -46,13 +46,13 @@ Set up Conan with the correct compiler settings:
 
 ```bash
 # Create default profile
-conan profile new default --detect
+#conan profile new default --detect
+conan profile detect --force
+
+nano ~/.conan2/profiles/default
 
 # Configure C++ standard
 conan profile update settings.compiler.cppstd=20 default
-
-# Enable recipe revisions (Conan 1.x)
-conan config set general.revisions_enabled=1
 
 # Link libstdc++
 conan profile update settings.compiler.libcxx=libstdc++11 default

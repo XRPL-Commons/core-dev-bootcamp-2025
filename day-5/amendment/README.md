@@ -24,8 +24,26 @@ The first step is integrating the Dilithium cryptographic library into our CMake
 - Add `include(deps/dilithium)` to the main `CMakeLists.txt`
 - Update `cmake/RippledCore.cmake` to link `NIH::dilithium2_ref` to the main target
 
-### Compile and Test Build System
+### Delete the build dir
+```
+cd .. && rm -r build
+```
+
+### Recompile The Build System
 ```bash
+eval "$(pyenv init -)" && \
+mkdir -p build && cd build && \
+conan install .. --output-folder . --build --settings build_type=Debug && \
+cmake -G Ninja \
+    -DCMAKE_TOOLCHAIN_FILE:FILEPATH=build/generators/conan_toolchain.cmake \
+    -DCMAKE_CXX_FLAGS=-DBOOST_ASIO_HAS_STD_INVOKE_RESULT \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DUNIT_TEST_REFERENCE_FEE=200 \
+    -Dtests=TRUE \
+    -Dxrpld=TRUE \
+    -Dstatic=OFF \
+    -Dassert=TRUE \
+    -Dwerr=TRUE ..
 cmake --build . --target rippled --parallel 10
 ```
 
@@ -109,16 +127,6 @@ Ensure all protocol changes build correctly.
   - Simple payment with Dilithium signatures
   - ForceQuantum flag functionality
 
-### Update Unit Tests
-- Update `src/test/protocol/PublicKey_test.cpp`:
-  - Add Dilithium key generation and validation tests
-  - Test Base58 encoding/decoding for large keys
-- Update `src/test/protocol/SecretKey_test.cpp`:
-  - Add Dilithium key derivation tests
-  - Test signing and verification with Dilithium
-- Update `src/test/protocol/Seed_test.cpp`:
-  - Add Dilithium keypair generation tests
-
 ## Step 6: Testing and Validation
 
 ### Run the Primary Integration Test
@@ -163,7 +171,7 @@ LEDGER_ENTRY(ltQUANTUM_KEY, 0x0071, QuantumKey, quantumKey, ({
 Update `sfields.macro` to add the quantum public key field:
 
 ```cpp
-TYPED_SFIELD(sfQuantumPublicKey, BLOB, 19)
+TYPED_SFIELD(sfQuantumPublicKey, VL, 19)
 ```
 
 ### Add Keylet Support
@@ -212,7 +220,7 @@ Now we need to create a new transaction type that allows accounts to register th
 #### Update `transactions.macro`
 Add the new transaction type:
 ```cpp
-TRANSACTION(ttSET_QUANTUM_KEY, 25, SetQuantumKey, Delegation::nondelegatable, ({
+TRANSACTION(ttSET_QUANTUM_KEY, 25, SetQuantumKey, Delegation::notDelegatable, ({
     {sfQuantumPublicKey, soeREQUIRED},
 }))
 ```
