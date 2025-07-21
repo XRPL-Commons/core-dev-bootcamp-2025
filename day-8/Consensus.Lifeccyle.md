@@ -296,6 +296,17 @@ Processes the transaction queue for the closed ledger, handling any remaining or
 
 ---
 
+####### 3.2.3.3.3 app_.openLedger().accept
+
+**Summary:**  
+Finalizes the open ledger by:
+- Applying any local transactions that were not included in the closed ledger.
+- Processing retries and pending transactions.
+- Ensuring the open ledger is ready for the next consensus round.
+- Updating the ledger state to reflect all valid local activity.
+
+---
+
 ##### 3.2.4 NetworkOPsImp::endConsensus
 
 **Summary:**  
