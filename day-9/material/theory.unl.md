@@ -1,139 +1,228 @@
-# Consensus UNL and Negative UNL: Theory Lesson
-
-## Agenda
-
-- Introduction
-- Consensus UNL Overview
-- Consensus State Transitions
-- Edge Cases and Recovery
-- Negative UNL: Structure and Lifecycle
-- Evaluating Participants
-- Candidate Selection and Deterministic Choice
-- Proposing and Applying Changes
-- Integration with Consensus
-- Interaction with Other Governance Processes
-- Example Scenario
-- Handling Failures and Limits
-- Parameterization and Rationale
-- Supporting Structures
-- Summary & Q&A
-
-
-## Introduction
-
-In any system where many independent participants must agree on a shared outcome, a process called consensus is used. For consensus to be effective and trustworthy, it is important to decide who is allowed to participate in making these decisions. The Consensus UNL mechanism is a way to manage this, ensuring that only reliable participants are counted, and that the system can adapt if some participants become unreliable.
+# Consensus UNL in XRPL: Theory and Concepts
 
 ---
 
-## Consensus UNL Overview
+## Slide 1: Introduction to Consensus UNL
 
-Consensus UNL is a method for managing the group of participants whose agreement is needed for the system to move forward. This group is carefully chosen to include only those who are considered trustworthy and reliable. The mechanism also includes a way to temporarily exclude participants who are not behaving reliably, without removing them permanently. This temporary exclusion is called the Negative UNL.
+### What is Consensus UNL?
 
----
+**Unique Node List (UNL)**
+- Set of trusted validators that participate in consensus
+- Forms the foundation of XRPL's consensus mechanism
+- Determines which nodes can propose and validate ledgers
 
-## Consensus State Transitions
+**Negative UNL (N-UNL)**
+- Mechanism to temporarily disable unreliable validators
+- Subset of UNL that are excluded from consensus participation
+- Provides automatic recovery without permanent removal
 
-The consensus process moves through several possible states:
-
-- **No Agreement**: Not enough participants agree, so the system waits or tries again.
-- **Agreement Reached**: Enough participants agree, so the system accepts the decision and moves forward.
-- **Moved On**: The system progresses to a new decision, even if not everyone agreed, to avoid getting stuck.
-- **Expired**: The process times out or is abandoned for this round, and the system may try to recover.
-
-These states help the system handle both normal operation and unusual situations, such as when agreement cannot be reached.
-
----
-
-## Edge Cases and Recovery
-
-Sometimes, consensus cannot be reached, or the system faces unusual situations:
-
-- If agreement is not reached, the system may try again or move forward to avoid stalling.
-- The Negative UNL has a limit on how many participants can be temporarily excluded at once, to ensure the group remains large enough for decisions.
-- If there are no suitable candidates for exclusion or re-inclusion, the system simply makes no changes for that round.
+**Core Purpose**: Ensure network reliability while maintaining decentralization
 
 ---
 
-## Negative UNL: Structure and Lifecycle
+## Slide 2: Why Consensus UNL Matters
 
-The Negative UNL is a record of which participants are currently excluded from decision-making, and which are being considered for exclusion or re-inclusion. Its lifecycle involves:
+### Critical Network Functions
 
-1. **Initialization**: The list starts empty or with previously excluded participants.
-2. **Evaluation**: The system regularly reviews participant reliability.
-3. **Proposal**: If needed, the system proposes to exclude or re-include participants.
-4. **Application**: Once agreed, the changes take effect and the list is updated.
+**Security Maintenance**
+- Only reliable validators participate in consensus
+- Prevents malicious or faulty nodes from disrupting network
 
-This process ensures that only reliable participants are counted, and that exclusions are reversible.
+**Automatic Recovery**
+- Temporarily unreliable validators can be re-enabled
+- No permanent exclusion - maintains validator diversity
 
----
+**Network Resilience**
+- Prevents disruption from validator failures
+- Maintains consensus even with poor-performing nodes
 
-## Evaluating Participants
-
-The system regularly reviews how well each participant is performing. It keeps track of how often each participant takes part in decisions over a recent period. If a participant is missing too often, they may be considered for temporary exclusion. If an excluded participant starts behaving reliably again, they may be considered for re-inclusion.
-
----
-
-## Candidate Selection and Deterministic Choice
-
-When deciding whom to exclude or re-include, the system:
-
-- Identifies all participants who meet the criteria for exclusion or re-inclusion.
-- Uses a fair and predictable method to choose among candidates, so that all participants can independently reach the same decision.
-
-This ensures the process is transparent and not subject to manipulation.
+**Decentralization Preservation**
+- Avoids permanent validator exclusion
+- Maintains distributed nature of the network
 
 ---
 
-## Proposing and Applying Changes
+## Slide 3: Core Components Overview
 
-If a participant is chosen for exclusion or re-inclusion, the system proposes this change as part of the decision-making process. If the proposal is accepted, the change is applied, and the participant's status is updated. If the proposal is not accepted or is invalid, no change occurs.
+### Key System Elements
 
----
+**Validator Scoring System**
+- Tracks reliability by counting validations over time
+- Measures participation rates during consensus rounds
 
-## Integration with Consensus
+**Candidate Selection Process**
+- Identifies underperforming validators for disabling
+- Identifies recovered validators for re-enabling
 
-The process of evaluating, proposing, and applying changes to the Negative UNL is integrated into the regular consensus process. This means that decisions about participant reliability are made alongside other important decisions, ensuring that the system remains responsive and up-to-date.
+**Deterministic Voting Mechanism**
+- Uses cryptographic randomness for fair selection
+- Prevents bias in validator management decisions
 
----
-
-## Interaction with Other Governance Processes
-
-Decisions about participant reliability are made together with other governance decisions, such as adjusting system parameters or adopting new features. This ensures that all important changes are considered together, maintaining the system's overall health and adaptability.
-
----
-
-## Example Scenario
-
-Suppose a participant is consistently missing from decision-making. The system notices this pattern, proposes to temporarily exclude the participant, and—if enough agreement is reached—updates the Negative UNL. Later, if the participant becomes reliable again, the system can propose to re-include them.
+**Automatic Management**
+- Operates without human intervention
+- Self-regulating system maintains network health
 
 ---
 
-## Handling Failures and Limits
+## Slide 4: The Consensus Process - Phase 1
 
-The system is designed to handle various failure scenarios:
+### Performance Monitoring & Scoring
 
-- If a proposed change cannot be agreed upon, nothing changes.
-- If too many participants are already excluded, no further exclusions are made until space becomes available.
-- If a proposal is invalid or the process is interrupted, the system simply continues as before.
+**Continuous Monitoring**
+- System tracks validator participation over FLAG_LEDGER_INTERVAL periods
+- Records validation submissions for each consensus round
 
-These safeguards ensure that the system remains stable and fair.
+**Score Table Construction**
+- Builds comprehensive reliability metrics
+- Counts successful validations per validator
+- Calculates participation percentages
 
----
-
-## Parameterization and Rationale
-
-The rules for when to exclude or re-include participants, how many can be excluded at once, and how performance is measured are all carefully chosen. These parameters balance the need for reliability, fairness, and adaptability. They are set to ensure that the system can continue to function even if some participants become unreliable, but without making it too easy to exclude participants.
-
----
-
-## Supporting Structures
-
-Various supporting structures help manage the list of participants, track their performance, and ensure that all changes are made transparently and fairly. These structures work together to maintain the integrity of the consensus process.
+**Performance Assessment**
+- Compares actual vs. expected validation counts
+- Identifies patterns of reliability or unreliability
 
 ---
 
-## Summary
+## Slide 5: The Consensus Process - Phase 2
 
-Consensus UNL is a mechanism for managing who gets to participate in making decisions in a distributed system. By carefully selecting, monitoring, and—when necessary—temporarily excluding participants, the system ensures that decisions are made reliably and fairly. The process is transparent, adaptable, and designed to handle both normal operation and unusual situations, maintaining trust and stability in the system.
+### Candidate Identification & Selection
+
+**Candidate Identification**
+- **Disable Candidates**: Validators below reliability thresholds
+- **Re-enable Candidates**: Disabled validators showing recovery
+
+**Deterministic Selection**
+- Uses previous ledger hash as cryptographic randomness
+- Ensures fair, unbiased validator selection
+- Prevents gaming or manipulation of the process
+
+**Transaction Creation**
+- Generates UNL_MODIFY transactions
+- Implements changes through normal consensus process
 
 ---
+
+## Slide 6: Key Thresholds and Parameters
+
+### Critical Performance Metrics
+
+**Low Water Mark**
+- Threshold: 50% of FLAG_LEDGER_INTERVAL
+- Validators below this may be disabled
+- Indicates consistently poor performance
+
+**High Water Mark**
+- Threshold: 80% of FLAG_LEDGER_INTERVAL
+- Disabled validators above this may be re-enabled
+- Shows recovery and reliable participation
+
+**Safety Limits**
+- Maximum 25% of UNL can be on Negative UNL
+- New validator grace period protection
+- Prevents excessive network disruption
+
+---
+
+## Slide 7: Quorum Dynamics
+
+### Adaptive Consensus Requirements
+
+**Base Quorum Calculation**
+- Formula: max(80% of effective UNL, 60% of total UNL)
+- Ensures sufficient validator participation
+
+**Effective UNL**
+- Total UNL minus validators on Negative UNL
+- Represents currently active validator set
+
+**Dynamic Adjustment**
+- Quorum automatically adjusts as validators are disabled/enabled
+- Maintains consensus viability under changing conditions
+
+**Safety Mechanisms**
+- Prevents network halt from insufficient participation
+- Maintains minimum viable consensus requirements
+
+---
+
+## Slide 8: State Management System
+
+### Tracking Validator Status
+
+**Current State**
+- Active Negative UNL stored in ledger state
+- Real-time view of disabled validators
+
+**Pending Changes**
+- Validators scheduled for disable/re-enable actions
+- Queued for next voting cycle
+
+**Consensus States**
+- No/Yes/MovedOn/Expired states track progress
+- Manages transition through consensus process
+
+**Recovery Mechanisms**
+- System resilience against various failure scenarios
+- Automatic state consistency maintenance
+
+---
+
+## Slide 9: Benefits and Design Goals
+
+### System Advantages
+
+**Automatic Resilience**
+- Network self-heals from validator issues
+- No manual intervention required
+
+**Fairness and Transparency**
+- Deterministic selection prevents bias
+- All actions recorded on-ledger and auditable
+
+**Network Stability**
+- Gradual changes prevent sudden disruptions
+- Maintains consensus continuity
+
+**Decentralization Preservation**
+- No central authority controls participation
+- Maintains distributed validator ecosystem
+
+---
+
+## Slide 10: Summary and Key Takeaways
+
+### Consensus UNL: A Self-Regulating System
+
+**Core Innovation**
+- Automatic validator reliability management
+- Balances network security with decentralization
+
+**Key Mechanisms**
+- Performance-based scoring and selection
+- Deterministic, fair decision-making process
+- Dynamic quorum adjustment
+
+**Network Benefits**
+- Enhanced reliability without centralization
+- Automatic recovery from validator issues
+- Transparent, auditable validator management
+
+**Result**: A robust, self-maintaining consensus network that preserves decentralization while ensuring reliability
+
+---
+
+## Slide 11: Questions for Further Study
+
+### Deep Dive Topics
+
+1. How does the scoring system handle edge cases in validator performance?
+
+2. What happens when the maximum N-UNL size limit is reached?
+
+3. How does the system balance between network security and validator inclusion?
+
+4. What are the implications of different FLAG_LEDGER_INTERVAL values?
+
+5. How does this mechanism interact with other XRPL consensus features?
+
+**Next Steps**: Explore implementation details and real-world performance data
