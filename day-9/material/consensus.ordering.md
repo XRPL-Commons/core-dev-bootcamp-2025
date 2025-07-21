@@ -1,5 +1,3 @@
----
-
 # Consensus_TXOrdering Functionality and Architecture: Comprehensive Lesson Plan
 
 This document provides a detailed, code-based breakdown of the Consensus_TXOrdering functionality in the XRPL (XRP Ledger) source code. It covers every aspect of how transactions are ordered, disputed, and agreed upon during consensus, including the architecture, data structures, dispute management, peer proposal handling, and the canonical ordering mechanisms. All explanations are strictly grounded in the provided source code and documentation.

@@ -20,7 +20,7 @@ export async function rpc() {
 
 export async function subscribe() {
   try {
-    const client = new Client(process.env.WSS_ENDPOINT || '')
+    const client = new Client('wss://xrplcluster.com')
     await client.connect()
 
     client.on('ledgerClosed', (tx: any) => {
