@@ -232,62 +232,6 @@ if (BEAST_EXPECT(sim.synchronized()))
 }
 ```
 
-### Close the Function
-
-```cpp
-} // End of testCustomDispute()
-```
-
-## Running Your Test
-
-### Build and Test
-
-```bash
-# From rippled root directory
-mkdir build && cd build
-cmake ..
-make consensus_test
-
-# Run only your test
-./consensus_test --unittest=Consensus_test,custom\ 50%\ dispute
-```
-
-### Expected Output
-
-```
-Consensus_test: custom 50% dispute
-=== 50% Dispute Test Setup ===
-Group A: 3 validators
-Group B: 3 validators
-Initial round complete - network synchronized
-Peer 0 (Group A) has transaction 100
-Peer 1 (Group A) has transaction 100
-Peer 2 (Group A) has transaction 100
-Peer 3 (Group B) has transaction 200
-Peer 4 (Group B) has transaction 200
-Peer 5 (Group B) has transaction 200
-=== Dispute Setup Complete ===
-Group A wants: Tx{100} + Tx{999}
-Group B wants: Tx{200} + Tx{999}
-
-=== Starting Consensus Round ===
-🔄 Peer 0 changed position (change #1)
-   New position has 1 transactions
-🔄 Peer 3 changed position (change #1)
-   New position has 1 transactions
-...
-Network synchronized: YES
-Final synchronization: YES
-Total position changes: 6
-
-=== FINAL ANALYSIS ===
-Final ledger sequence: 2
-Final transaction count: 1
-Transaction 100 (Group A): EXCLUDED
-Transaction 200 (Group B): EXCLUDED  
-Transaction 999 (Common):  INCLUDED
-```
-
 ## Advanced Challenges
 
 ### Challenge 1: Uneven Splits
