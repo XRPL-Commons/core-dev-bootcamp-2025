@@ -256,21 +256,3 @@ Create scenarios where transaction fees affect dispute resolution.
 2. **Which validators changed positions first?**
 3. **What determined the final transaction set?**
 4. **How did the 50/50 split resolve?**
-
-## Debugging Tips
-
-### Enable Verbose Logging
-```cpp
-for (Peer* p : network)
-    p->sink.threshold(beast::severities::kAll);
-```
-
-### Step-by-Step Execution
-```cpp
-sim.scheduler.step();  // Single step instead of sim.run()
-```
-
-### Monitor Consensus State
-```cpp
-std::cout << "Consensus phase: " << peer->consensus.phase() << std::endl;
-```
