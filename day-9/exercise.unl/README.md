@@ -44,7 +44,7 @@ Key principles:
 Create your validator's master key pair:
 
 ```bash
-validator-keys create_keys
+cd validator-keys && ./validator-keys create_keys
 ```
 
 Expected output:
