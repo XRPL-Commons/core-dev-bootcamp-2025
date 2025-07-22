@@ -365,5 +365,4 @@ if (lifecycleComplete) {
 }
 
 std::cout << "\n=== Validator Lifecycle Test Complete ===" << std::endl;
-} // End of testValidatorLifecycle()
 ```
