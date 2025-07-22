@@ -2,7 +2,7 @@
 
 ---
 
-## Slide 1: Overview of Consensus_Validations and Its Purpose in XRPL
+## Overview of Consensus_Validations and Its Purpose in XRPL
 
 ### What is Consensus_Validations?
 - **Core Component**: Central validation management system in XRPL's consensus mechanism
@@ -23,7 +23,7 @@
 
 ---
 
-## Slide 2: Validation Message Structure and Design Philosophy
+## Validation Message Structure and Design Philosophy
 
 ### STValidation: The Core Message Format
 - **Signed Statements**: Cryptographically signed declarations of ledger consensus
@@ -46,7 +46,7 @@
 
 ---
 
-## Slide 3: Timing Parameters and Network Stability
+## Timing Parameters and Network Stability
 
 ### ValidationParms: The Timing Framework
 ```
@@ -71,7 +71,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 4: Core Data Structures and Their Roles
+## Core Data Structures and Their Roles
 
 ### Validations Template Class
 - **Generic Design**: Parameterized by validation and ledger types
@@ -99,7 +99,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 5: Validation Lifecycle and Trust Management
+## Validation Lifecycle and Trust Management
 
 ### Validation Journey
 1. **Reception**: Validation messages arrive from network peers
@@ -124,7 +124,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 6: Ledger Support and Preferred Ledger Determination
+## Ledger Support and Preferred Ledger Determination
 
 ### Support Calculation Mechanism
 - **Validator Weighting**: Trusted validators have higher influence
@@ -152,7 +152,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 7: Thread Safety and Concurrency Considerations
+## Thread Safety and Concurrency Considerations
 
 ### Multi-Threading Challenges
 - **Concurrent Access**: Multiple threads reading/writing validation data
@@ -180,7 +180,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 8: Integration Patterns and Consensus Integration
+## Integration Patterns and Consensus Integration
 
 ### Adaptor Pattern Implementation
 - **Interface Abstraction**: Generic validation handling regardless of specific types
@@ -208,7 +208,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 9: Byzantine Behavior Detection and Network Security
+## Byzantine Behavior Detection and Network Security
 
 ### Byzantine Fault Types
 - **Sequence Violations**: Validators submitting out-of-order validations
@@ -238,7 +238,7 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 
 ---
 
-## Slide 10: Advanced Features - Negative UNL and Amendment Voting
+## Advanced Features - Negative UNL and Amendment Voting
 
 ### Negative UNL (nUNL) Mechanism
 - **Purpose**: Temporarily exclude validators that are offline or misbehaving

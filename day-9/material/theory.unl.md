@@ -2,7 +2,7 @@
 
 ---
 
-## Slide 1: Introduction to Consensus UNL
+<!-- ## Slide 1: Introduction to Consensus UNL -->
 
 ### What is Consensus UNL?
 
@@ -20,7 +20,7 @@
 
 ---
 
-## Slide 2: Why Consensus UNL Matters
+<!-- ## Slide 2: Why Consensus UNL Matters -->
 
 ### Critical Network Functions
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Slide 3: Core Components Overview
+<!-- ## Slide 3: Core Components Overview -->
 
 ### Key System Elements
 
@@ -64,7 +64,7 @@
 
 ---
 
-## Slide 4: The Consensus Process - Phase 1
+<!-- ## Slide 4: The Consensus Process - Phase 1 -->
 
 ### Performance Monitoring & Scoring
 
@@ -83,7 +83,7 @@
 
 ---
 
-## Slide 5: The Consensus Process - Phase 2
+<!-- ## Slide 5: The Consensus Process - Phase 2 -->
 
 ### Candidate Identification & Selection
 
@@ -102,7 +102,7 @@
 
 ---
 
-## Slide 6: Key Thresholds and Parameters
+<!-- ## Slide 6: Key Thresholds and Parameters -->
 
 ### Critical Performance Metrics
 
@@ -123,7 +123,7 @@
 
 ---
 
-## Slide 7: Quorum Dynamics
+<!-- ## Slide 7: Quorum Dynamics -->
 
 ### Adaptive Consensus Requirements
 
@@ -145,7 +145,7 @@
 
 ---
 
-## Slide 8: State Management System
+<!-- ## Slide 8: State Management System -->
 
 ### Tracking Validator Status
 
@@ -167,7 +167,7 @@
 
 ---
 
-## Slide 9: Benefits and Design Goals
+<!-- ## Slide 9: Benefits and Design Goals -->
 
 ### System Advantages
 
@@ -189,7 +189,7 @@
 
 ---
 
-## Slide 10: Summary and Key Takeaways
+<!-- ## Slide 10: Summary and Key Takeaways -->
 
 ### Consensus UNL: A Self-Regulating System
 
@@ -210,19 +210,3 @@
 **Result**: A robust, self-maintaining consensus network that preserves decentralization while ensuring reliability
 
 ---
-
-## Slide 11: Questions for Further Study
-
-### Deep Dive Topics
-
-1. How does the scoring system handle edge cases in validator performance?
-
-2. What happens when the maximum N-UNL size limit is reached?
-
-3. How does the system balance between network security and validator inclusion?
-
-4. What are the implications of different FLAG_LEDGER_INTERVAL values?
-
-5. How does this mechanism interact with other XRPL consensus features?
-
-**Next Steps**: Explore implementation details and real-world performance data
