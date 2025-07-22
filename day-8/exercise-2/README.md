@@ -145,14 +145,12 @@ struct DisputeMonitor
     template <class E>
     void on(csf::PeerID, csf::SimTime, E const&) {}
     
-    void on(csf::PeerID who, csf::SimTime when, csf::ChangePosition const& e)
+    void on(csf::PeerID who, csf::SimTime when)
     {
         positionChanges++;
         peerChanges[who]++;
         std::cout << "🔄 Peer " << who << " changed position (change #" 
                   << peerChanges[who] << ")" << std::endl;
-        std::cout << "   New position has " << e.newPosition.txns().size() 
-                  << " transactions" << std::endl;
     }
     
     void on(csf::PeerID who, csf::SimTime when, csf::AcceptLedger const& e)
