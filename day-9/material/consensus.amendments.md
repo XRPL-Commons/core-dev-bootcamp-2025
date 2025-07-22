@@ -1,12 +1,12 @@
-# Consensus_Amendments Functionality and Architecture: Comprehensive Lesson Plan
+# Consensus Amendments Functionality and Architecture: Comprehensive Lesson Plan
 
-This document provides a detailed, code-based breakdown of the Consensus_Amendments functionality in the XRPL (XRP Ledger) source code. It covers every aspect of Consensus_Amendments, including its architecture, amendment state management, voting, consensus integration, ledger application, persistence, interactions with the consensus engine and ledger, consensus phases and states, handling of obsolete/retired amendments, amendment registration, RPC/admin interfaces, operational consequences of unsupported amendments, edge cases, standalone mode, and interactions with Negative UNL. All explanations are strictly grounded in the provided source code and documentation.
+This document provides a detailed, code-based breakdown of the Consensus Amendments functionality in the XRPL (XRP Ledger) source code. It covers every aspect of Consensus Amendments, including its architecture, amendment state management, voting, consensus integration, ledger application, persistence, interactions with the consensus engine and ledger, consensus phases and states, handling of obsolete/retired amendments, amendment registration, RPC/admin interfaces, operational consequences of unsupported amendments, edge cases, standalone mode, and interactions with Negative UNL. All explanations are strictly grounded in the provided source code and documentation.
 
 ---
 
 ## Table of Contents
 
-- [Consensus_Amendments Overview](#consensus_amendments-overview)
+- [Consensus Amendments Overview](#Consensus Amendments-overview)
 - [Consensus Process Phases and States](#consensus-process-phases-and-states)
 - [AmendmentTable Architecture](#amendmenttable-architecture)
   - [AmendmentTable Interface](#amendmenttable-interface)
@@ -41,39 +41,14 @@ This document provides a detailed, code-based breakdown of the Consensus_Amendme
 
 ---
 
-## Consensus_Amendments Overview
+## Consensus Amendments Overview
 
-Consensus_Amendments is the subsystem responsible for managing protocol amendments (features/upgrades) in the XRPL. It tracks supported and enabled amendments, collects validator votes, determines amendment majorities, and coordinates the activation of amendments through the consensus process. Amendments are only enabled if they achieve at least 80% validator support for a two-week period, as enforced by the consensus and ledger logic.
+Consensus Amendments is the subsystem responsible for managing protocol amendments (features/upgrades) in the XRPL. It tracks supported and enabled amendments, collects validator votes, determines amendment majorities, and coordinates the activation of amendments through the consensus process. Amendments are only enabled if they achieve at least 80% validator support for a two-week period, as enforced by the consensus and ledger logic.
 
 - Amendments are proposed protocol changes that affect transaction processing and consensus ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/README.md)).
 - Amendments must be accepted by a network majority through a consensus process before being utilized.
 - An Amendment must receive at least an 80% approval rate from validating nodes for a period of two weeks before being accepted.
 - Validators that support an amendment that is not yet enabled announce their support in their validations. If 80% support is achieved, they will introduce a pseudo-transaction to track the amendment's majority status in the ledger. If an amendment holds majority status for two weeks, validators will introduce a pseudo-transaction to enable the amendment ([README](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/misc/README.md)).
-
----
-
-## Consensus Process Phases and States
-
-The consensus process in XRPL is divided into phases and states, which directly impact amendment voting and activation.
-
-### Consensus Phases
-
-Defined in [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h):
-
-- **open**: The ledger is open for transaction proposals.
-- **establish**: Validators exchange proposals and attempt to reach agreement.
-- **accepted**: Consensus has been reached and the ledger is closed.
-
-### Consensus States
-
-Defined in [ConsensusTypes.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/ConsensusTypes.h):
-
-- **ConsensusState::No**: Consensus has not been reached.
-- **ConsensusState::Yes**: Consensus has been reached.
-- **ConsensusState::MovedOn**: 80% of nodes have moved on, but consensus was not reached.
-- **ConsensusState::Expired**: Consensus round expired due to timeouts.
-
-Amendment voting occurs during the consensus process, specifically in the "establish" phase. If consensus is reached (ConsensusState::Yes), the results—including amendment votes—are applied to the ledger. If consensus is not reached (No, MovedOn, Expired), amendments are not enabled, and the process repeats in the next round.
 
 ---
 
@@ -251,13 +226,6 @@ Amendment voting occurs during the consensus process, specifically in the "estab
 ---
 
 ## Consensus Engine and Amendment Voting
-
-### Consensus Class and RCLConsensus Adaptor
-
-- The consensus process is managed by the generic `Consensus` class ([Consensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/consensus/Consensus.h)), parameterized by an Adaptor.
-- The XRPL-specific adaptor is `RCLConsensus` ([RCLConsensus.cpp](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.cpp), [RCLConsensus.h](https://github.com/XRPLF/rippled/blob/develop/src/xrpld/app/consensus/RCLConsensus.h)):
-  - Handles acquiring ledgers, sharing proposals, building new ledgers, and applying transactions.
-  - Integrates with the amendment voting subsystem by calling `doVoting` and `doValidation` as part of the consensus round.
 
 ### Consensus Parameters and Thresholds
 

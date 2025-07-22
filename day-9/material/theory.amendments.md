@@ -2,15 +2,12 @@
 
 ---
 
-## Slide 1: Title Slide
 # XRPL Consensus & Amendments
 ## Understanding Distributed Governance and Protocol Evolution
-### A Comprehensive Theory Lesson
 
 ---
 
-## Slide 2: Learning Objectives
-# What You'll Learn Today
+# Agenda
 
 - **Amendment Fundamentals**: What amendments are and why they exist
 - **Consensus Architecture**: How distributed agreement works
@@ -21,7 +18,7 @@
 
 ---
 
-## Slide 3: The Big Picture
+<!-- ## Slide 3: The Big Picture -->
 # Why Do We Need Amendments?
 
 ## The Challenge
@@ -37,7 +34,7 @@
 
 ---
 
-## Slide 4: Amendment Overview - What Is An Amendment?
+<!-- ## Slide 4: Amendment Overview - What Is An Amendment? -->
 # Understanding Amendments
 
 ## Definition
@@ -55,7 +52,7 @@ An **Amendment** is a proposed change to the XRPL's core rules that affects:
 
 ---
 
-## Slide 5: Amendment Lifecycle Overview
+<!-- ## Slide 5: Amendment Lifecycle Overview -->
 # The Journey of an Amendment
 
 ```
@@ -72,7 +69,7 @@ Proposal → Development → Testing → Voting → Activation → Integration
 
 ---
 
-## Slide 6: Phase 1 - Community Proposal
+<!-- ## Slide 6: Phase 1 - Community Proposal -->
 # Where Amendments Begin
 
 ## The Democratic Process
@@ -89,7 +86,7 @@ Proposal → Development → Testing → Voting → Activation → Integration
 
 ---
 
-## Slide 7: Phase 2 - Development & Testing
+<!-- ## Slide 7: Phase 2 - Development & Testing -->
 # From Idea to Code
 
 ## Development Process
@@ -106,7 +103,7 @@ Proposal → Development → Testing → Voting → Activation → Integration
 
 ---
 
-## Slide 8: Phase 3 - Network Deployment
+<!-- ## Slide 8: Phase 3 - Network Deployment -->
 # Preparing for Democracy
 
 ## Code Distribution
@@ -122,7 +119,7 @@ Proposal → Development → Testing → Voting → Activation → Integration
 
 ---
 
-## Slide 9: Consensus Architecture - The Foundation
+<!-- ## Slide 9: Consensus Architecture - The Foundation -->
 # How Distributed Agreement Works
 
 ## Core Principles
@@ -136,7 +133,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 10: Voting Mechanisms - The Democratic Process
+<!-- ## Slide 10: Voting Mechanisms - The Democratic Process -->
 # How Validators Express Their Will
 
 ## Voting Participants
@@ -151,7 +148,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 11: The 80% Threshold - Why This Number?
+<!-- ## Slide 11: The 80% Threshold - Why This Number? -->
 # Understanding the Supermajority Requirement
 
 ## Why 80%?
@@ -167,7 +164,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 12: The Two-Week Period - Time-Based Validation
+<!-- ## Slide 12: The Two-Week Period - Time-Based Validation -->
 # Why Sustained Support Matters
 
 ## Purpose of the Waiting Period
@@ -183,7 +180,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 13: Ledger Integration - Where Voting Happens
+<!-- ## Slide 13: Ledger Integration - Where Voting Happens -->
 # The Technical Foundation of Democracy
 
 ## Voting Ledgers
@@ -199,7 +196,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 14: Persistence Concepts - Permanent Records
+<!-- ## Slide 14: Persistence Concepts - Permanent Records -->
 # How Amendment History Is Preserved
 
 ## Immutable Voting Record
@@ -215,7 +212,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 15: Activation Process - The Moment of Change
+<!-- ## Slide 15: Activation Process - The Moment of Change -->
 # When Democracy Becomes Reality
 
 ## Activation Trigger
@@ -231,7 +228,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 16: Operational Consequences - Real-World Impact
+<!-- ## Slide 16: Operational Consequences - Real-World Impact -->
 # What Happens When Amendments Activate
 
 ## For Node Operators
@@ -248,7 +245,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 17: Veto Power - The Right to Say No
+<!-- ## Slide 17: Veto Power - The Right to Say No -->
 # How Minorities Can Protect Themselves
 
 ## Veto Mechanism
@@ -265,37 +262,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 18: Edge Cases - When Things Get Complicated
-# Unusual Scenarios and Their Handling
-
-## Scenario 1: Support Fluctuation
-- **Problem**: Support wavers around 80% threshold
-- **Solution**: Clock resets when support drops below 80%
-- **Outcome**: Only sustained support triggers activation
-
-## Scenario 2: Last-Minute Opposition
-- **Problem**: Strong opposition emerges near activation
-- **Solution**: Validators can change votes until activation
-- **Outcome**: Democratic process remains responsive
-
----
-
-## Slide 19: Edge Cases Continued
-# More Complex Scenarios
-
-## Scenario 3: Network Partition
-- **Problem**: Network splits during voting period
-- **Solution**: Consensus process handles partition naturally
-- **Outcome**: Amendment only activates if majority partition supports it
-
-## Scenario 4: Validator Coordination Failure
-- **Problem**: Some validators don't update software
-- **Solution**: Outdated validators are excluded from consensus
-- **Outcome**: Network continues with compliant validators
-
----
-
-## Slide 20: Critical Bug Fixes - Emergency Procedures
+<!-- ## Slide 20: Critical Bug Fixes - Emergency Procedures -->
 # When Speed Matters More Than Process
 
 ## Special Considerations
@@ -311,7 +278,7 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 
 ---
 
-## Slide 21: Fee Voting - A Special Case
+<!-- ## Slide 21: Fee Voting - A Special Case -->
 # How Network Fees Are Determined
 
 ## Different from Amendments
@@ -325,172 +292,5 @@ Converting subjective preferences into objective yes/no decisions that can be pr
 - **Majority convergence**: Must agree on specific values
 - **Economic impact**: Affects all network participants
 
----
 
-## Slide 22: Governance Philosophy - Democratic Principles
-# The Theory Behind the System
-
-## Core Values
-- **Decentralization**: No single point of control
-- **Transparency**: All decisions are public and verifiable
-- **Inclusivity**: Anyone can participate in the process
-- **Stability**: Changes require broad consensus
-
-## Balance of Powers
-- **Proposers**: Can suggest changes
-- **Developers**: Can implement changes
-- **Validators**: Can approve/reject changes
-- **Community**: Can influence all stakeholders
-
----
-
-## Slide 23: Comparison with Other Systems
-# XRPL vs. Other Blockchain Governance
-
-## Bitcoin
-- **Informal process**: No formal amendment mechanism
-- **Contentious forks**: Disagreements can split the network
-- **Conservative approach**: Very difficult to make changes
-
-## Ethereum
-- **EIP process**: Ethereum Improvement Proposals
-- **Hard forks**: Coordinated network upgrades
-- **Developer-driven**: Core developers have significant influence
-
-## XRPL Advantages
-- **Formal process**: Clear, predictable amendment mechanism
-- **Democratic**: Validators vote directly on changes
-- **Stable**: High threshold prevents contentious splits
-
----
-
-## Slide 24: Security Considerations
-# Protecting the Network During Changes
-
-## Attack Vectors
-- **Malicious amendments**: Harmful changes disguised as improvements
-- **Coordination attacks**: Attempts to manipulate voting
-- **Social engineering**: Influencing validators through non-technical means
-
-## Defense Mechanisms
-- **High threshold**: 80% requirement makes attacks difficult
-- **Time delay**: Two-week period allows scrutiny
-- **Transparency**: All votes are public and auditable
-- **Veto power**: Minorities can block harmful changes
-
----
-
-## Slide 25: Future Evolution - What's Next?
-# How the System Might Evolve
-
-## Potential Improvements
-- **Governance tokens**: Possible future voting mechanisms
-- **Delegation systems**: Allowing vote delegation
-- **Weighted voting**: Different validator weights
-- **Amendment categories**: Different thresholds for different types
-
-## Ongoing Challenges
-- **Participation rates**: Ensuring active validator engagement
-- **Technical complexity**: Making process accessible to non-developers
-- **Global coordination**: Managing timezone and communication challenges
-
----
-
-## Slide 26: Best Practices - For All Participants
-# How to Engage Effectively
-
-## For Validators
-- **Stay informed**: Monitor amendment proposals actively
-- **Vote responsibly**: Consider network-wide impact
-- **Communicate clearly**: Explain voting decisions
-- **Update promptly**: Keep software current
-
-## For Community Members
-- **Participate in discussions**: Share perspectives and concerns
-- **Provide feedback**: Help improve proposals
-- **Stay educated**: Understand implications of changes
-- **Respect the process**: Accept democratic outcomes
-
----
-
-## Slide 27: Real-World Examples
-# Learning from Amendment History
-
-## Successful Amendments
-- **New transaction types**: Adding capabilities like escrow
-- **Performance improvements**: Optimizing consensus algorithms
-- **Security enhancements**: Fixing vulnerabilities
-- **User experience**: Simplifying common operations
-
-## Lessons Learned
-- **Community engagement**: Early discussion improves outcomes
-- **Thorough testing**: Prevents post-activation problems
-- **Clear communication**: Reduces confusion and opposition
-- **Patience**: Good amendments take time to develop consensus
-
----
-
-## Slide 28: Common Misconceptions
-# Clearing Up Confusion
-
-## Myth: "Amendments are just software updates"
-- **Reality**: They're fundamental rule changes that require consensus
-
-## Myth: "Ripple controls amendments"
-- **Reality**: Validators vote independently; no central control
-
-## Myth: "80% is arbitrary"
-- **Reality**: Carefully chosen balance between progress and stability
-
-## Myth: "Amendments can be reversed"
-- **Reality**: Once activated, amendments are permanent
-
----
-
-## Slide 29: Key Takeaways
-# Essential Points to Remember
-
-## The Amendment System Is:
-- **Democratic**: Based on validator voting
-- **Transparent**: All processes are public
-- **Conservative**: High threshold protects stability
-- **Evolutionary**: Enables network improvement over time
-
-## Success Factors:
-- **Broad consensus**: Changes need wide support
-- **Technical excellence**: Code must be thoroughly tested
-- **Community engagement**: Discussion improves outcomes
-- **Patience**: Good governance takes time
-
----
-
-## Slide 30: Conclusion
-# The Power of Distributed Democracy
-
-## What We've Learned
-The XRPL amendment system represents a sophisticated approach to blockchain governance that balances:
-- **Innovation** with **stability**
-- **Democracy** with **technical expertise**
-- **Decentralization** with **coordination**
-- **Progress** with **safety**
-
-## The Bigger Picture
 This system demonstrates how distributed networks can evolve and improve while maintaining consensus and avoiding the pitfalls that have affected other blockchain projects.
-
----
-
-## Slide 31: Questions & Discussion
-# Let's Explore Together
-
-## Discussion Topics
-- How does this compare to governance in other systems you know?
-- What potential improvements would you suggest?
-- How might this system handle controversial changes?
-- What role should different stakeholders play?
-
-## Thank You!
-### Questions?
-
----
-
-*This comprehensive lesson covers the theoretical foundations of XRPL's consensus and amendment system, focusing on concepts and principles rather than technical implementation details. The material is designed to be accessible to both technical and non-technical audiences while providing thorough coverage of all major aspects of the system.*
