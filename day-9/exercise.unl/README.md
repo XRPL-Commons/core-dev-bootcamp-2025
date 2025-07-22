@@ -56,7 +56,7 @@ Validator keys stored in /home/ubuntu/.ripple/validator-keys.json
 Create a validator token for your rippled server:
 
 ```bash
-validator-keys create_token
+./validator-keys create_token
 ```
 
 Expected output:
@@ -98,7 +98,7 @@ To understand what's inside your validator token, you can use the XRPL Binary Vi
 You should periodically rotate your validator tokens for security. Generate a new token:
 
 ```bash
-validator-keys create_token
+./validator-keys create_token
 ```
 
 **Exercise Tasks**:
@@ -119,7 +119,7 @@ Revoke your validator keys if:
 ⚠️ **WARNING**: This action is irreversible and permanently disables your validator identity.
 
 ```bash
-validator-keys revoke_keys
+./validator-keys revoke_keys
 ```
 
 Expected output:
