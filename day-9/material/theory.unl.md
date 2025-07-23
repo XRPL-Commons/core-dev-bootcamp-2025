@@ -189,24 +189,4 @@
 
 ---
 
-<!-- ## Slide 10: Summary and Key Takeaways -->
-
-### Consensus UNL: A Self-Regulating System
-
-**Core Innovation**
-- Automatic validator reliability management
-- Balances network security with decentralization
-
-**Key Mechanisms**
-- Performance-based scoring and selection
-- Deterministic, fair decision-making process
-- Dynamic quorum adjustment
-
-**Network Benefits**
-- Enhanced reliability without centralization
-- Automatic recovery from validator issues
-- Transparent, auditable validator management
-
-**Result**: A robust, self-maintaining consensus network that preserves decentralization while ensuring reliability
-
----
+Consensus UNL creates a robust, self-maintaining network that automatically manages validator reliability without sacrificing decentralization—ensuring XRPL remains both secure and distributed.

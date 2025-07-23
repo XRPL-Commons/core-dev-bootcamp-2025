@@ -1,12 +1,12 @@
-# Consensus_Validations Functionality and Architecture: Comprehensive Lesson Plan
+# Consensus Validations Functionality and Architecture: Comprehensive Lesson Plan
 
-This document provides a detailed, code-based breakdown of the Consensus_Validations subsystem in the XRPL (XRP Ledger) source code. It covers every aspect of Consensus_Validations, including its architecture, timing parameters, data structures, validation message creation and handling, trust management, validation tracking, ledger acceptance, mismatch detection, thread safety, error handling, inter-module relationships, and the Negative UNL voting process. All explanations are strictly grounded in the provided source code and documentation.
+This document provides a detailed, code-based breakdown of the Consensus Validations subsystem in the XRPL (XRP Ledger) source code. It covers every aspect of Consensus Validations, including its architecture, timing parameters, data structures, validation message creation and handling, trust management, validation tracking, ledger acceptance, mismatch detection, thread safety, error handling, inter-module relationships, and the Negative UNL voting process. All explanations are strictly grounded in the provided source code and documentation.
 
 ---
 
 ## Table of Contents
 
-- [Consensus_Validations Overview](#consensus_validations-overview)
+- [Consensus Validations Overview](#Consensus Validations-overview)
 - [Validation Timing Parameters (ValidationParms)](#validation-timing-parameters-validationparms)
 - [File and Module-Level Overviews](#file-and-module-level-overviews)
 - [Validation Message Creation and Broadcasting](#validation-message-creation-and-broadcasting)
@@ -21,10 +21,10 @@ This document provides a detailed, code-based breakdown of the Consensus_Validat
 
 ---
 
-## Consensus_Validations Overview
+## Consensus Validations Overview
 
 **Purpose:**  
-Consensus_Validations is the subsystem responsible for managing the creation, distribution, reception, trust assessment, and tracking of validation messages in the XRPL consensus process. It ensures that only ledgers with sufficient trusted validations are accepted as validated, detects and diagnoses mismatches or byzantine behavior, and supports the Negative UNL mechanism for network reliability.
+Consensus Validations is the subsystem responsible for managing the creation, distribution, reception, trust assessment, and tracking of validation messages in the XRPL consensus process. It ensures that only ledgers with sufficient trusted validations are accepted as validated, detects and diagnoses mismatches or byzantine behavior, and supports the Negative UNL mechanism for network reliability.
 
 ---
 
@@ -220,31 +220,6 @@ Indicates whether to bypass certain acceptance checks when processing a validati
 3. `LedgerTrie` organizes the validated ledgers.
 4. `LedgerMaster` uses the results to advance the ledger.
 5. `ValidatorList` scores and tracks validator participation.
-
----
-
-## Negative UNL Voting Process
-
-**Purpose:**  
-The Negative UNL (Unique Node List) mechanism allows the network to temporarily disable unreliable validators, improving consensus reliability.
-
-**Validation History Usage:**  
-The `Validations` module tracks the freshness and frequency of validations from each validator using the `validationFRESHNESS` parameter.
-
-**Scoring Validators:**  
-Validators are scored based on how often they submit fresh validations within the `validationFRESHNESS` window, using a score table built over a configurable interval (e.g., `FLAG_LEDGER_INTERVAL`).
-
-**Candidate Selection:**  
-- **Disabling:** Validators with low scores (i.e., missing validations) are candidates for disabling.
-- **Re-enabling:** Disabled validators that resume submitting fresh validations are candidates for re-enabling.
-
-**Thresholds and Logic:**  
-- A validator is considered for disabling if it fails to submit fresh validations for a configurable number of rounds.
-- Re-enabling occurs when a disabled validator consistently submits fresh validations again.
-- The Negative UNL does not exceed protocol-defined limits, and new validators are not disabled prematurely.
-
-**Impact on Consensus:**  
-The Negative UNL is factored into quorum calculations, ensuring that consensus can be reached even if some validators are temporarily offline or unreliable.
 
 ---
 

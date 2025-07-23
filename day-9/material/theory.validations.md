@@ -2,9 +2,9 @@
 
 ---
 
-## Overview of Consensus_Validations and Its Purpose in XRPL
+## Overview of Consensus Validations
 
-### What is Consensus_Validations?
+### What are Consensus Validations?
 - **Core Component**: Central validation management system in XRPL's consensus mechanism
 - **Primary Purpose**: Collect, validate, and manage validation messages from network validators
 - **Network Coordination**: Enables distributed agreement on ledger state across the network
@@ -23,7 +23,7 @@
 
 ---
 
-## Validation Message Structure and Design Philosophy
+## Validation Message Structure
 
 ### STValidation: The Core Message Format
 - **Signed Statements**: Cryptographically signed declarations of ledger consensus
@@ -237,56 +237,5 @@ validationFRESHNESS = 20 seconds      // Individual validation freshness
 - **UNL Updates**: Remove consistently Byzantine validators from trust lists
 
 ---
-
-## Advanced Features - Negative UNL and Amendment Voting
-
-### Negative UNL (nUNL) Mechanism
-- **Purpose**: Temporarily exclude validators that are offline or misbehaving
-- **Consensus-Based**: Network collectively decides on nUNL membership
-- **Automatic Recovery**: Validators can be removed from nUNL when they recover
-- **Threshold Protection**: Prevents abuse by requiring supermajority agreement
-
-### Amendment Voting System
-- **Feature Activation**: Validators vote on protocol upgrades and new features
-- **Supermajority Requirement**: Typically 80% agreement needed for activation
-- **Time-Based Windows**: Voting occurs over specific time periods
-- **Backward Compatibility**: Ensures smooth transitions during upgrades
-
-### Why These Features?
-- **Network Resilience**: nUNL maintains consensus even when validators fail
-- **Evolution Capability**: Amendment voting enables protocol improvements
-- **Democratic Process**: All validators participate in governance decisions
-- **Safety First**: High thresholds prevent accidental or malicious changes
-
-### Implementation in Validations
-- **Vote Tracking**: Validations carry amendment voting information
-- **nUNL State**: Validation processing considers nUNL membership
-- **Consensus Integration**: Voting results influence consensus decisions
-- **Historical Records**: Maintains audit trail of all governance decisions
-
-### Impact on Network Governance
-- **Decentralized Upgrades**: No central authority needed for protocol changes
-- **Fault Tolerance**: Network continues operating despite validator failures
-- **Community Consensus**: All stakeholders participate in decision-making
-- **Predictable Evolution**: Clear processes for network improvements
-
----
-
-## Summary: The Complete Validation Ecosystem
-
-### Key Takeaways
-1. **Comprehensive System**: Validations handle all aspects of distributed consensus validation
-2. **Security Focus**: Multiple layers of protection against Byzantine behavior
-3. **Performance Optimized**: Efficient data structures and concurrent processing
-4. **Flexible Design**: Adapts to different consensus algorithms and requirements
-5. **Governance Enabled**: Supports democratic network evolution and maintenance
-
-### Why It All Matters
-The Consensus_Validations system is the foundation that enables XRPL to achieve:
-- **Decentralized Trust**: No single point of failure or control
-- **Byzantine Fault Tolerance**: Continues operating despite malicious actors
-- **High Performance**: Processes thousands of validations efficiently
-- **Network Evolution**: Supports upgrades and improvements over time
-- **Global Consensus**: Enables worldwide agreement on transaction ordering
 
 This comprehensive validation system is what makes XRPL a reliable, secure, and scalable distributed ledger technology.

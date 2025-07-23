@@ -1,12 +1,12 @@
-# Consensus_TXOrdering Functionality and Architecture: Comprehensive Lesson Plan
+# Consensus TXOrdering Functionality and Architecture: Comprehensive Lesson Plan
 
-This document provides a detailed, code-based breakdown of the Consensus_TXOrdering functionality in the XRPL (XRP Ledger) source code. It covers every aspect of how transactions are ordered, disputed, and agreed upon during consensus, including the architecture, data structures, dispute management, peer proposal handling, and the canonical ordering mechanisms. All explanations are strictly grounded in the provided source code and documentation.
+This document provides a detailed, code-based breakdown of the Consensus TXOrdering functionality in the XRPL (XRP Ledger) source code. It covers every aspect of how transactions are ordered, disputed, and agreed upon during consensus, including the architecture, data structures, dispute management, peer proposal handling, and the canonical ordering mechanisms. All explanations are strictly grounded in the provided source code and documentation.
 
 ---
 
 ## Table of Contents
 
-- [Consensus_TXOrdering Overview](#consensus_txordering-overview)
+- [Consensus TXOrdering Overview](#Consensus TXOrdering-overview)
 - [Canonical Transaction Ordering](#canonical-transaction-ordering)
   - [CanonicalTXSet: Full Sort Key, Tie-Breaking, and Updates](#canonicaltxset-full-sort-key-tie-breaking-and-updates)
 - [Transaction Set Construction and Proposal](#transaction-set-construction-and-proposal)
@@ -22,9 +22,9 @@ This document provides a detailed, code-based breakdown of the Consensus_TXOrder
 
 ---
 
-## Consensus_TXOrdering Overview
+## Consensus TXOrdering Overview
 
-Consensus_TXOrdering in XRPL is the process by which the network deterministically orders transactions for inclusion in a ledger during consensus. This ordering is critical for ensuring all nodes apply transactions in the same order, preventing double-spending, and achieving deterministic ledger state. The process involves:
+Consensus TXOrdering in XRPL is the process by which the network deterministically orders transactions for inclusion in a ledger during consensus. This ordering is critical for ensuring all nodes apply transactions in the same order, preventing double-spending, and achieving deterministic ledger state. The process involves:
 
 - Collecting candidate transactions from the open ledger.
 - Canonically ordering them using a salted, deterministic scheme.
@@ -88,88 +88,6 @@ uint256 CanonicalTXSet::accountKey(AccountID const& account)
 - Prepares the initial transaction set and proposal for the next consensus round.
 - Gathers open transactions, applies canonical ordering, and finalizes the set for proposal.
 - See [src/xrpld/app/consensus/RCLConsensus.cpp] for details.
-
----
-
-## Consensus Process and Dispute Management
-
-### DisputedTx Lifecycle: Creation, Voting, Stalling, and Consensus Impact
-
-**Creation:**
-- A `DisputedTx` is created when a transaction is present in one peer's transaction set but not another's during consensus comparison ([src/xrpld/consensus/Consensus.h]).
-- The constructor takes the transaction, the local node's initial vote, the number of peers, and a logging journal ([src/xrpld/consensus/DisputedTx.h]).
-
-**Vote Tracking:**
-- Each peer's vote (yes/no) is tracked in a map keyed by peer NodeID.
-- The local node's vote is stored separately.
-- The class maintains counts of "yays" and "nays" for efficient threshold checks.
-
-**Vote Updates:**
-- As new proposals or transaction sets are received, votes are updated via `setVote`.
-- If a peer changes their vote, the counts are adjusted.
-- The local node may change its vote using `updateVote`, which considers peer votes, consensus parameters, and the Avalanche state machine.
-
-**Stalling:**
-- A dispute is considered "stalled" if votes have not changed for a configured number of consensus rounds (`peerUnchangedCounter_`), as determined by `DisputedTx::stalled` ([src/xrpld/consensus/DisputedTx.h]).
-- Stalling indicates that further progress on this transaction is unlikely without new proposals or network events.
-
-**Consensus Impact:**
-- If the number of "yays" crosses the acceptance threshold, the transaction is included in the consensus set.
-- If "nays" cross the rejection threshold, the transaction is dropped.
-- Stalled disputes can prevent consensus from progressing and may trigger fallback or timeout logic.
-
-**Lifecycle Summary:**
-1. Created when a difference is found between local and peer sets.
-2. Votes are tracked and updated as proposals arrive.
-3. If votes stabilize (stalled), consensus may be delayed or fallback logic triggered.
-4. Once consensus is reached (enough yays or nays), the dispute is resolved.
-
----
-
-## Consensus State Determination
-
-### checkConsensus: Parameters, Thresholds, Timeouts, and Return States
-
-**Function:** `ConsensusState checkConsensus(...)` ([src/xrpld/consensus/Consensus.h], [src/xrpld/consensus/Consensus.cpp])
-
-**Input Parameters:**
-- `prevProposers`: Number of proposers in the previous round.
-- `currentProposers`: Number of proposers in the current round.
-- `currentAgree`: Number of agreeing proposers in the current round.
-- `currentFinished`: Number of proposers that have finished.
-- `previousAgreeTime`: Duration of previous consensus round.
-- `currentAgreeTime`: Duration of current consensus round.
-- `stalled`: Whether consensus is stalled (e.g., all disputes are stalled).
-- `ConsensusParms const& parms`: Consensus configuration parameters.
-- `proposing`: Whether the local node is proposing.
-- `beast::Journal j`: Logging.
-- `clog`: Optional logging stream.
-
-**Thresholds:**
-- Acceptance and rejection thresholds are defined in `ConsensusParms` (e.g., `minCONSENSUS_PCT`).
-- The Avalanche state machine (see `ConsensusParms::AvalancheState`) adjusts thresholds over time.
-
-**Timeouts:**
-- `ledgerMIN_CONSENSUS`: Minimum time before consensus can be reached.
-- `ledgerMAX_CONSENSUS`: Maximum time to wait for consensus before considering it failed.
-- `ledgerABANDON_CONSENSUS`: Absolute maximum time before abandoning consensus.
-
-**Stalls:**
-- If all disputes are stalled (no vote changes for a configured number of rounds), consensus may be considered stalled.
-- Stalling can trigger fallback logic or cause consensus to be declared as failed/expired.
-
-**Return States (enum ConsensusState):**
-- `No`: Consensus not yet reached.
-- `Yes`: Consensus reached (sufficient agreement).
-- `MovedOn`: Most nodes have moved on without consensus.
-- `Expired`: Consensus round has taken too long and is expired.
-
-**Logic Summary:**
-- If not enough time has passed or not enough proposers, returns `No`.
-- If sufficient agreement, returns `Yes`.
-- If most nodes have moved on, returns `MovedOn`.
-- If consensus round has taken too long, returns `Expired`.
-- Otherwise, returns `No`.
 
 ---
 
