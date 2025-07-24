@@ -46,7 +46,8 @@ The `RecurringPayment` ledger entry stores the details of the recurring payment,
 | sfClaimedThisPeriod  | Amount    | ✔️       | The total amount claimed in the current period.                                                                                  |
 | sfLockedFunds        | Amount    | ✔️       | The total amount of funds currently locked for this recurring payment.                                                           |
 | sfPublicKey          | Blob      | *        | **Required if no Destination is set. The public key of the account owner, used for signature verification on open claims.**      |
-| sfFlags              | UInt32    |          | Bitwise flags. (Reserved for future use.)                                                                                        |
+| sfOwnerNode          | UInt32    |          | Owner Node Reference                                                                                                             |
+| sfDestinationNode    | UInt32    |          | Destination Node Reference                                                                                                             |
 
 > **Note:**  
 > - If `sfDestination` is omitted, `sfPublicKey` **must** be present and is stored in the ledger entry.
@@ -80,12 +81,10 @@ Used to create or update a recurring payment.
 | sfStartTime          | UInt32    |          | (Optional) The time (Ripple epoch time) when the recurring payment starts. If not set, starts immediately.|
 | sfExpiration         | UInt32    |          | (Optional) The time (Ripple epoch time) when the recurring payment ends.                                 |
 | sfRecurringPaymentID | Hash256   |          | (Optional) Used for updating a recurring payment.                                                        |
-| sfPublicKey          | Blob      | *        | **Required if no Destination is set. The public key of the account owner.**                              |
-| sfFlags              | UInt32    |          | Bitwise flags. (Reserved for future use.)                                                                |
+| sfPublicKey          | Blob      | *        | **Required if no Destination is set. A public key.**                              |
 
 #### **Failure Conditions (Create/Update)**
 
-- If `sfDestination` is omitted, `sfPublicKey` **must** be present and must match the account's master or regular key.
 - `Destination` is the same as `Account`.
 - `Amount` is invalid OR <= 0.
 - `Frequency` <= SYSTEM_MINIMUM.

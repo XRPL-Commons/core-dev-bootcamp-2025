@@ -1,12 +1,12 @@
-# XRPL Ledger Functionality and Architecture
+# XRP Ledger Functionality and Architecture
 ## Comprehensive Theory Lesson
 
 ---
 
-### What is the XRPL Ledger?
+### What is the XRP Ledger?
 
 **Fundamental Definition:**
-The XRPL Ledger is a cryptographically-secured, immutable record of the complete state of the XRP Ledger network at a specific point in time.
+The XRP Ledger is a cryptographically-secured, immutable record of the complete state of the XRP Ledger network at a specific point in time.
 
 **Core Characteristics:**
 - **Immutable**: Once validated, ledger data cannot be altered
@@ -47,7 +47,7 @@ Genesis Ledger → Ledger 1 → Ledger 2 → ... → Current Ledger
 - Current state overwrites previous state
 - History may be lost or archived separately
 
-**XRPL Ledger Approach:**
+**XRP Ledger Approach:**
 - Immutable state snapshots
 - Complete history preserved
 - State changes through new ledger creation
@@ -334,4 +334,4 @@ How do thousands of independent nodes create identical ledgers without central c
 ---
  
 **The Big Picture:**
-The XRPL Ledger represents a sophisticated solution to the challenges of distributed financial infrastructure, combining theoretical computer science principles with practical engineering solutions to create a reliable, scalable, and trustworthy system for global value transfer.
+The XRP Ledger represents a sophisticated solution to the challenges of distributed financial infrastructure, combining theoretical computer science principles with practical engineering solutions to create a reliable, scalable, and trustworthy system for global value transfer.

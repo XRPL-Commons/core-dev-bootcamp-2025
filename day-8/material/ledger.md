@@ -1,4 +1,4 @@
-# XRPL Ledger Functionality and Architecture: Comprehensive Lesson Plan
+# XRP Ledger Functionality and Architecture: Comprehensive Lesson Plan
 
 This document provides a detailed, code-based breakdown of the Ledger functionality in the XRPL (XRP Ledger) source code. It covers every aspect of the ledger system, including its architecture, acquisition, assembly, validation, storage, publication, and the interaction between all relevant components. All explanations are strictly grounded in the provided source code and documentation.
 

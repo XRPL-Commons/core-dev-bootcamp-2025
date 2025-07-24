@@ -27,9 +27,12 @@ recurringPaymentSet()
 https://github.com/XRPLF/rippled/pull/5136
 
 1. Create Feature
-2. Transactions, Ledger Entries & Fields
+2. Add any transactions, ledger entries and sfields.
+    - transactions.macro
+    - ledger.entries.marco
+    - sfields.macro
 3. Transaction Files: RecurringPaymentSet.cpp/h etc
-- Create with return tesSUCCESS preflight, preclaim, do apply
+    - Create with return tesSUCCESS preflight, preclaim, do apply
 4. Create Test File: RecurringPayment_test.cpp
 5. Create Test Helpers: recurringPaymentSet()
 6. Create testEnabled()

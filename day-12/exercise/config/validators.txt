@@ -1,0 +1,5 @@
+[validator_list_sites]
+    http://vl/vl.json
+
+[validator_list_keys]
+    ED87E0EA91AAFFA130B78B75D2CC3E53202AA1BD8AB3D5E7BAC530C8440E328501

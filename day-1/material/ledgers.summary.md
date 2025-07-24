@@ -1,6 +1,6 @@
 ## https://xrpl.org/docs/concepts/ledgers/index
 
-# XRPL Ledgers Documentation Summary
+# XRP Ledgers Documentation Summary
 
 ## Overview
 The XRP Ledger is a shared, global ledger that maintains data integrity through a distributed network where each server keeps a full copy of the ledger database. Ledgers are organized as a series of blocks (ledger versions) that record transaction history and state changes through a consensus process.
@@ -31,7 +31,7 @@ Byzantine failures can cause servers to reach different conclusions about the la
 
 ## https://xrpl.org/docs/concepts/ledgers/ledger-structure
 
-# XRPL Ledger Structure Documentation Summary
+# XRP Ledger Structure Documentation Summary
 
 ## Overview
 The XRP Ledger is a blockchain where each block is called a "ledger version" that contains state data, a transaction set, and a header with metadata. The consensus protocol builds new validated ledger versions by having validators agree on transactions to apply to the previous ledger, creating an immutable chain of transaction history.
@@ -88,7 +88,7 @@ Transactions in open ledgers show only tentative results that may differ from fi
 
 ## https://xrpl.org/docs/concepts/ledgers/ledger-close-times
 
-# XRPL Ledger Close Times Summary
+# XRP Ledger Close Times Summary
 
 ## Overview
 The XRP Ledger records when each ledger version closes using a `close_time` field that is rounded to 10-second intervals to facilitate network consensus. This rounding system ensures that ledger close times are strictly increasing, with child ledgers always having close times at least 1 second later than their parent ledgers.
