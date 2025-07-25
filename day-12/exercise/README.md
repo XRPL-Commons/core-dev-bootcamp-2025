@@ -138,7 +138,13 @@ craft --version
 ### Step 1: Build KYC Contract
 
 ```bash
-craft build kyc --mode release --opt aggressive
+craft build kyc --release --opt aggressive
+```
+
+### Step 1.5: Deploy to Standalone Node
+
+```bash
+cd reference/js && npm install
 ```
 
 ### Step 2: Deploy to Standalone Node

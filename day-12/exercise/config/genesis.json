@@ -105,6 +105,9 @@
                 "ReferenceFeeUnits": 10,
                 "ReserveBase": 1000000,
                 "ReserveIncrement": 200000,
+                "ExtensionComputeLimit": 1000000,
+                "ExtensionSizeLimit": 100000,
+                "GasPrice": 1000000,
                 "index": "4BC50C9B0D8515D3EAAE1E74B29A95804346C491EE1A95BF25E4AAB854A6A651"
             }
         ],
