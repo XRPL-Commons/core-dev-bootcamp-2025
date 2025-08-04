@@ -42,8 +42,11 @@ If your Clang version is not version 15 or 16, you'll need to install the correc
    # Move to Applications directory
    sudo mv Xcode_16.2.app /Applications/
 
-   # Set as default toolchain
+   # Set as default toolchain (persistent)
    sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+
+   # Set as environment variable (temporary)
+   export DEVELOPER_DIR=/Applications/Xcode_16.2.app/Contents/Developer
    ```
 
 3. **Verify Installation**
