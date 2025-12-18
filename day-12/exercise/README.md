@@ -183,7 +183,7 @@ Where:
 ### Step 2: Execute Smart Escrow
 
 ```bash
-node reference/js/finish_escrow_kyc_standalone.js rEmwSjhsCpJSJE4pGTPMyUFjdgRiY1VoUj sEd7p6m4H6MdBBMz3zQDXzs26N9xNkH rEmwSjhsCpJSJE4pGTPMyUFjdgRiY1VoUj 7
+node reference/js/finish_escrow_kyc_standalone.js rxeLxErPJQQtR4dXU8LiNpnKjZ66tbX9y sEdSxbGm8R3F2YLym7LshiQg5cMYBWK rxeLxErPJQQtR4dXU8LiNpnKjZ66tbX9y 3
 ```
 
 ### Step 3: Monitor Execution
